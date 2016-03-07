@@ -45,8 +45,8 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function init() {
-		add_action( 'admin_menu', __CLASS__ . '::attach_menus' );
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'attach_menus' ) );
 	}
 
 	/**
@@ -54,13 +54,13 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function attach_menus() {
+	public function attach_menus() {
 		add_menu_page(
 			'WooCommerce Synchrotron',
 			'Synchrotron Admin',
 			'manage_woocommerce',
 			'wc-synchrotron',
-			__CLASS__ . '::display_menu_page',
+			array( $this, 'display_menu_page' ),
 			null,
 			56
 		);
@@ -71,7 +71,7 @@ class WC_Synchrotron {
 			'Coupons',
 			'manage_woocommerce',
 			'wc-synchrotron-coupons',
-			__CLASS__ . '::display_coupons_page'
+			array( $this, 'display_coupons_page' )
 		);
 	}
 
@@ -80,7 +80,7 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function display_menu_page() {
+	public function display_menu_page() {
 ?>
 		<div class='wrap'>
 			<h1>WooCommerce Synchrotron Admin</h1>
@@ -96,7 +96,7 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function display_coupons_page() {
+	public function display_coupons_page() {
 ?>
 		<div id='coupons_page' class='wrap'>
 			<h1>Coupons</h1>
@@ -109,7 +109,7 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function woocommerce_inactive_notice() {
+	public function woocommerce_inactive_notice() {
 			if (current_user_can( 'activate_plugins' ) && is_woocommerce-active() ) {
 ?>
 				<div id'message' class='error'>
@@ -127,5 +127,5 @@ class WC_Synchrotron {
 	}
 }
 
-WC_Synchrotron::init();
+return new WC_Synchrotron();
 
