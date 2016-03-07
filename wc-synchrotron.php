@@ -46,7 +46,7 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public static function init() {
-		add_action( 'admin_menu', __CLASS__ . '::attach_menu' );
+		add_action( 'admin_menu', __CLASS__ . '::attach_menus' );
 	}
 
 	/**
@@ -54,18 +54,29 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public static function attach_menu() {
+	public static function attach_menus() {
 		add_menu_page(
 			'WooCommerce Synchrotron',
 			'Synchrotron Admin',
-			'manage_options',
+			'manage_woocommerce',
 			'wc-synchrotron',
-			__CLASS__ . '::display_menu_page'
+			__CLASS__ . '::display_menu_page',
+			null,
+			56
+		);
+
+		add_submenu_page(
+			'wc-synchrotron',
+			'WooCommerce Coupons',
+			'Coupons',
+			'manage_woocommerce',
+			'wc-synchrotron-coupons',
+			__CLASS__ . '::display_coupons_page'
 		);
 	}
 
 	/**
-	 * Display page for submenu.
+	 * Display page for main Synchrotron menu.
 	 *
 	 * @since 1.0
 	 */
@@ -74,8 +85,21 @@ class WC_Synchrotron {
 		<div class='wrap'>
 			<h1>WooCommerce Synchrotron Admin</h1>
 			<p>
-				This is a placeholder for much greater things.
+				Synchrotron Main Page
 			</p>
+		</div>
+<?php
+	}
+
+	/**
+	 * Display page for coupons.
+	 *
+	 * @since 1.0
+	 */
+	public static function display_coupons_page() {
+?>
+		<div id='coupons_page' class='wrap'>
+			<h1>Coupons</h1>
 		</div>
 <?php
 	}
