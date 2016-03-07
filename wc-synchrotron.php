@@ -97,9 +97,19 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function display_coupons_page() {
+		wp_enqueue_script(
+			'wc-synchrotron-coupons',
+			plugins_url( 'dist/coupons_bundle.js', __FILE__ ),
+			array(),
+			WC_Synchrotron::VERSION,
+			true
+		);
+
 ?>
-		<div id='coupons_page' class='wrap'>
+		<div class='wrap'>
 			<h1>Coupons</h1>
+			<div id='coupons_page'>
+			</div>
 		</div>
 <?php
 	}
