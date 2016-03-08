@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CouponPage from '../components/coupons_page';
+import CouponsScreen from '../components/coupons_screen';
 
 ReactDOM.render(
-		<CouponPage />,
-		document.getElementById( 'coupons_page' )
+		<CouponsScreen />,
+		document.getElementById( 'coupons_screen' )
 );
 

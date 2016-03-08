@@ -60,7 +60,7 @@ class WC_Synchrotron {
 			'Synchrotron Admin',
 			'manage_woocommerce',
 			'wc-synchrotron',
-			array( $this, 'display_menu_page' ),
+			array( $this, 'display_menu_screen' ),
 			null,
 			56
 		);
@@ -71,32 +71,32 @@ class WC_Synchrotron {
 			'Coupons',
 			'manage_woocommerce',
 			'wc-synchrotron-coupons',
-			array( $this, 'display_coupons_page' )
+			array( $this, 'display_coupons_screen' )
 		);
 	}
 
 	/**
-	 * Display page for main Synchrotron menu.
+	 * Display screen for main Synchrotron menu.
 	 *
 	 * @since 1.0
 	 */
-	public function display_menu_page() {
+	public function display_menu_screen() {
 ?>
 		<div class='wrap'>
 			<h1>WooCommerce Synchrotron Admin</h1>
 			<p>
-				Synchrotron Main Page
+				Synchrotron Main Screen
 			</p>
 		</div>
 <?php
 	}
 
 	/**
-	 * Display page for coupons.
+	 * Display screen for coupons.
 	 *
 	 * @since 1.0
 	 */
-	public function display_coupons_page() {
+	public function display_coupons_screen() {
 		wp_enqueue_script(
 			'wc-synchrotron-coupons',
 			plugins_url( 'dist/coupons_bundle.js', __FILE__ ),
@@ -108,7 +108,7 @@ class WC_Synchrotron {
 ?>
 		<div class='wrap'>
 			<h1>Coupons</h1>
-			<div id='coupons_page'>
+			<div id='coupons_screen'>
 			</div>
 		</div>
 <?php
