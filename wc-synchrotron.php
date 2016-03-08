@@ -9,6 +9,9 @@
  * Requires at least: 4.4
  * Tested up to: 4.4
  *
+ * Text Domain: wc-synchrotron
+ * Domain Path: /i18n/languages/
+ *
  * @package WC_Synchrotron
  * @category Core
  * @author WooThemes
@@ -76,8 +79,8 @@ class WC_Synchrotron {
 	 */
 	public function attach_menus() {
 		add_menu_page(
-			'WooCommerce Synchrotron',
-			'Synchrotron Admin',
+			__( 'WooCommerce Synchrotron', 'wc-synchrotron' ),
+			__( 'Synchrotron Admin', 'wc-synchrotron' ),
 			'manage_woocommerce',
 			'wc-synchrotron',
 			array( $this, 'display_menu_screen' ),
@@ -89,8 +92,8 @@ class WC_Synchrotron {
 		if ( $this->are_dependencies_ok() ) {
 			add_submenu_page(
 				'wc-synchrotron',
-				'WooCommerce Coupons',
-				'Coupons',
+				__( 'WooCommerce Coupons', 'wc-synchrotron' ),
+				__( 'Coupons', 'wc-synchrotron' ),
 				'manage_woocommerce',
 				'wc-synchrotron-coupons',
 				array( $this, 'display_coupons_screen' )
@@ -110,10 +113,10 @@ class WC_Synchrotron {
 		}
 
 		?>
-			<div class='wrap'>
-				<h1>WooCommerce Synchrotron Admin</h1>
+			<div class="wrap">
+				<h1><?php _e( 'WooCommerce Synchrotron Admin', 'wc-synchrotron' ) ?></h1>
 				<p>
-					Synchrotron Main Screen
+					(Placeholder: Synchrotron Main Screen)
 				</p>
 			</div>
 		<?php
@@ -139,9 +142,9 @@ class WC_Synchrotron {
 		);
 
 		?>
-			<div class='wrap'>
-				<h1>Coupons</h1>
-				<div id='coupons_screen'>
+			<div class="wrap">
+			<h1><?php _e( 'Coupons', 'wc-synchrotron' ) ?></h1>
+				<div id="coupons_screen">
 				</div>
 			</div>
 		<?php
@@ -180,14 +183,21 @@ class WC_Synchrotron {
 		?>
 		<div id="message" class="error">
 			<p>
-				<strong>WooCommerce Synchrotron is inactive.</strong>
-				<?php if ( current_user_can( 'activate_plugins' ) ) { ?>
-					The <a href="<?php echo( $wc_url ) ?>">WooCommerce plugin</a>
-					must be active for WooCommerce Synchrotron to work.
-					Please <a href="<?php echo( $plugins_url ) ?>">Install &amp; Activate WooCommerce &raquo;</a>
-				<?php } else { ?>
-						Please contact your administrator to check the site plugins.
-				<?php } ?>
+				<strong><?php _e( 'WooCommerce Synchrotron is inactive.', 'wc-synchrotron' ) ?></strong>
+				<?php if ( current_user_can( 'activate_plugins' ) ) {
+					printf( '<a href="%s">%s</a> %s ',
+						$wc_url,
+						__( 'The WooCommerce plugin', 'wc-synchrotron' ),
+						__( 'must be active for WooCommerce Synchrotron to work.', 'wc-synchrotron' )
+					);
+
+					printf( '<a href="%s">%s &raquo;</a> ',
+						$plugins_url,
+						__( 'Please Install and Activate WooCommerce', 'wc-synchrotron' )
+					);
+				} else {
+					_e( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+				} ?>
 			</p>
 		</div>
 
@@ -202,14 +212,24 @@ class WC_Synchrotron {
 		<div id="message" class="error">
 			<p>
 				<strong>WooCommerce Synchrotron is inactive.</strong>
-				<?php if ( current_user_can( 'activate_plugins' ) ) { ?>
-					The <a href="<?php echo( $wc_url ) ?>">WooCommerce plugin</a>
-					must be at least version <?php echo( WC_Synchrotron::WC_MIN_VERSION ) ?>
-					for WooCommerce Synchrotron to work.
-					Please <a href="<?php echo( $plugins_url ) ?>">Update &amp; WooCommerce &raquo;</a>
-				<?php } else { ?>
-						Please contact your administrator to check the site plugins.
-				<?php } ?>
+				<?php if ( current_user_can( 'activate_plugins' ) ) {
+					printf( '<a href="%s">%s</a> ',
+						$wc_url,
+						__( 'The WooCommerce plugin', 'wc-synchrotron' )
+					);
+					printf(
+						__( 'must be at least version %1$s for WooCommerce Synchrotron to work', 'wc-synchrotron' ),
+						WC_Synchrotron::WC_MIN_VERSION
+					);
+					printf( '</a> ' );
+
+					printf( '<a href="%s">%s &raquo;</a> ',
+						$plugins_url,
+						__( 'Update WooCommerce' )
+					);
+				} else {
+					_e( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+				} ?>
 			</p>
 		</div>
 
@@ -225,15 +245,16 @@ class WC_Synchrotron {
 			<p>
 				There's something Sychrotron needs to run that isn't quite right.
 			</p>
-			<?php if ( current_user_can( 'activate_plugins' ) ) { ?>
-				<p>
-					Please <a href="<?php echo( $plugins_url ) ?>">check the plugins page &raquo;</a>
-				<p>
-			<?php } else { ?>
-				<p>
-					Please contact your administrator to check the site plugins.
-				<p>
-			<?php } ?>
+			<p>
+				<?php if ( current_user_can( 'activate_plugins' ) ) {
+					printf( '<a href="%s">%s &raquo;</a> ',
+						$plugins_url,
+						__( 'Please check the plugins page', 'wc-synchrotron' )
+					);
+				} else {
+					_e( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+				} ?>
+			</p>
 		</div>
 		<?php
 	}
