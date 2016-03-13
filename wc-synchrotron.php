@@ -28,6 +28,8 @@ class WC_Synchrotron {
 	const VERSION = '1.0.0';
 	const WC_MIN_VERSION = '2.5';
 
+	private $errors = [];
+
 	/**
 	 * Set up class including hooks and filters.
 	 *
@@ -54,7 +56,7 @@ class WC_Synchrotron {
 	 *
 	 * @since 1.0
 	 */
-	public function is_woocommerce_version_ok() {
+	public function is_woocommerce_version_supported() {
 		return version_compare(
 			get_option( 'woocommerce_db_version' ),
 			WC_Synchrotron::WC_MIN_VERSION,
@@ -63,33 +65,25 @@ class WC_Synchrotron {
 	}
 
 	/**
-	 * Checks if all dependencies are okay for us to run.
-	 *
-	 * @since 1.0
-	 */
-	public function are_dependencies_ok() {
-		return $this->is_woocommerce_active() &&
-		       $this->is_woocommerce_version_ok();
-	}
-
-	/**
 	 * Attaches a top-level admin menu for WooCommerce Synchrotron.
 	 *
 	 * @since 1.0
 	 */
 	public function attach_menus() {
-		add_menu_page(
-			__( 'WooCommerce Synchrotron', 'wc-synchrotron' ),
-			__( 'Synchrotron Admin', 'wc-synchrotron' ),
-			'manage_woocommerce',
-			'wc-synchrotron',
-			array( $this, 'display_menu_screen' ),
-			null,
-			56
-		);
+		// Only add menus if WC is usable.
+		if ( $this->is_woocommerce_active() &&
+		     $this->is_woocommerce_version_supported() ) {
 
-		// Only add the submenus if we're good to go.
-		if ( $this->are_dependencies_ok() ) {
+			add_menu_page(
+				__( 'WooCommerce Synchrotron', 'wc-synchrotron' ),
+				__( 'Synchrotron Admin', 'wc-synchrotron' ),
+				'manage_woocommerce',
+				'wc-synchrotron',
+				array( $this, 'display_menu_screen' ),
+				null,
+				56
+			);
+
 			add_submenu_page(
 				'wc-synchrotron',
 				__( 'WooCommerce Coupons', 'wc-synchrotron' ),
@@ -107,11 +101,6 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function display_menu_screen() {
-		if ( ! $this->are_dependencies_ok() ) {
-			$this->display_inactive_screen_dependencies();
-			return;
-		}
-
 		?>
 			<div class="wrap">
 				<h1><?php _e( 'WooCommerce Synchrotron Admin', 'wc-synchrotron' ) ?></h1>
@@ -128,11 +117,6 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function display_coupons_screen() {
-		if ( ! $this->are_dependencies_ok() ) {
-			$this->display_inactive_screen_dependencies();
-			return;
-		}
-
 		wp_enqueue_script(
 			'wc-synchrotron-coupons',
 			plugins_url( 'dist/coupons_bundle.js', __FILE__ ),
@@ -156,84 +140,85 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function check_dependencies() {
-		if ( ! $this->are_dependencies_ok() ) {
-			add_action( 'admin_notices', array( $this, 'admin_notice_dependencies' ) );
+		$wc_errors = $this->get_woocommerce_error_messages( current_user_can( 'activate_plugins' ) );
+		$this->errors = $this->errors + $wc_errors;
+
+		if ( $this->errors ) {
+			add_action( 'admin_notices', array( $this, 'display_admin_notices' ) );
 		}
 	}
 
 	/**
-	 * Called when this plugin's dependencies are not met.
-	 * It displays an admin notice for those users who can do something about it.
+	 * Displays any active admin notices for this plugin.
+	 * This function should be hooked to the admin_notices event.
 	 *
 	 * @since 1.0
 	 */
-	public function admin_notice_dependencies() {
-		if ( ! $this->is_woocommerce_active() ) {
-			$this->display_admin_woocommerce_inactive();
-
-		} elseif ( ! $this->is_woocommerce_version_ok() ) {
-			$this->display_admin_woocommerce_wrong_version();
+	public function display_admin_notices() {
+		if ( $this->errors ) {
+			?>
+				<div id="message" class="error">
+					<strong><?php _e( 'WooCommerce Synchrotron is inactive.', 'wc-synchrotron' ) ?></strong>
+					<?php foreach( $this->errors as $error ) { ?>
+						<p>
+							<?php echo $error ?>
+						</p>
+					<?php } ?>
+				</div>
+			<?php
 		}
 	}
 
-	private function display_admin_woocommerce_inactive() {
-		$wc_url = 'http://wordpress.org/extend/plugins/woocommerce/';
-		$plugins_url = esc_url( admin_url( 'plugins.php' ) );
+	private function get_woocommerce_error_messages( $can_activate_plugins ) {
+		$errors = [];
 
-		?>
-		<div id="message" class="error">
-			<p>
-				<strong><?php _e( 'WooCommerce Synchrotron is inactive.', 'wc-synchrotron' ) ?></strong>
-				<?php if ( current_user_can( 'activate_plugins' ) ) {
-					printf( '<a href="%s">%s</a> %s ',
-						$wc_url,
-						__( 'The WooCommerce plugin', 'wc-synchrotron' ),
-						__( 'must be active for WooCommerce Synchrotron to work.', 'wc-synchrotron' )
-					);
+		if ( ! $this->is_woocommerce_active() ) {
+			$errors[] = $this->get_error_woocommerce_inactive( $can_activate_plugins );
 
-					printf( '<a href="%s">%s &raquo;</a> ',
-						$plugins_url,
-						__( 'Please Install and Activate WooCommerce', 'wc-synchrotron' )
-					);
-				} else {
-					_e( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
-				} ?>
-			</p>
-		</div>
+		} elseif ( ! $this->is_woocommerce_version_supported() ) {
+			$errors[] = $this->get_error_woocommerce_wrong_version( $can_activate_plugins );
+		}
 
-		<?php
+		return $errors;
 	}
 
-	private function display_admin_woocommerce_wrong_version() {
+	private function get_error_woocommerce_inactive( $can_activate_plugins ) {
 		$wc_url = 'http://wordpress.org/extend/plugins/woocommerce/';
 		$plugins_url = esc_url( admin_url( 'plugins.php' ) );
 
-		?>
-		<div id="message" class="error">
-			<p>
-				<strong>WooCommerce Synchrotron is inactive.</strong>
-				<?php if ( current_user_can( 'activate_plugins' ) ) {
-					printf( '<a href="%s">%s</a> ',
-						$wc_url,
-						__( 'The WooCommerce plugin', 'wc-synchrotron' )
-					);
-					printf(
-						__( 'must be at least version %1$s for WooCommerce Synchrotron to work', 'wc-synchrotron' ),
-						WC_Synchrotron::WC_MIN_VERSION
-					);
-					printf( '</a> ' );
+		if ( $can_activate_plugins ) {
+			return
+				'<a href="' . $wc_url . '">' .
+				__( 'The WooCommerce plugin', 'wc-synchrotron' ) . ' ' .
+				'</a>' .
+				__( 'must be at active', 'wc-synchrotron' ) . ' ' .
+				__( 'for WooCommerce Synchrotron to work.', 'wc-synchrotron' ) .  ' ' .
+				'<a href="' . $plugins_url . '">' .
+				__( 'Please Install and Activate WooCommerce', 'wc-synchrotron' ) . ' &raquo;' .
+				'</a>';
+		} else {
+			return __( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+		}
+	}
 
-					printf( '<a href="%s">%s &raquo;</a> ',
-						$plugins_url,
-						__( 'Update WooCommerce' )
-					);
-				} else {
-					_e( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
-				} ?>
-			</p>
-		</div>
+	private function get_error_woocommerce_wrong_version( $can_activate_plugins ) {
+		$wc_url = 'http://wordpress.org/extend/plugins/woocommerce/';
+		$plugins_url = esc_url( admin_url( 'plugins.php' ) );
 
-		<?php
+		if ( $can_activate_plugins ) {
+			return
+				'<a href="' . $wc_url . '">' .
+				__( 'The WooCommerce plugin', 'wc-synchrotron' ) . ' ' .
+				'</a> ' .
+				__( 'must be at least version', 'wc-synchrotron' ) . ' ' .
+				WC_Synchrotron::WC_MIN_VERSION . ' ' .
+				__( 'for WooCommerce Synchrotron to work.', 'wc-synchrotron' ) .  ' ' .
+				'<a href="' . $plugins_url . '">' .
+				__( 'Update WooCommerce' ) . ' &raquo;' .
+				'</a>';
+		} else {
+			return __( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+		}
 	}
 
 	private function display_inactive_screen_dependencies() {
