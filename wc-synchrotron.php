@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/Automattic/wc-synchrotron
  * Description: The new JavaScript and API powered interface for WooCommerce
  * Version: 1.0.0-dev
- * Author: WooThemes
+ * Author: Automattic
  * Author URI: http://woothemes.com
  * Requires at least: 4.4
  * Tested up to: 4.4
@@ -14,7 +14,7 @@
  *
  * @package WC_Synchrotron
  * @category Core
- * @author WooThemes
+ * @author Automattic
  */
 defined( 'ABSPATH' ) or die( 'No direct access.' );
 
@@ -183,41 +183,14 @@ class WC_Synchrotron {
 	}
 
 	private function get_error_woocommerce_inactive( $can_activate_plugins ) {
-		$wc_url = 'http://wordpress.org/extend/plugins/woocommerce/';
-		$plugins_url = esc_url( admin_url( 'plugins.php' ) );
-
 		if ( $can_activate_plugins ) {
-			return
-				'<a href="' . $wc_url . '">' .
-				__( 'The WooCommerce plugin', 'wc-synchrotron' ) . ' ' .
-				'</a>' .
-				__( 'must be at active', 'wc-synchrotron' ) . ' ' .
-				__( 'for WooCommerce Synchrotron to work.', 'wc-synchrotron' ) .  ' ' .
-				'<a href="' . $plugins_url . '">' .
-				__( 'Please Install and Activate WooCommerce', 'wc-synchrotron' ) . ' &raquo;' .
-				'</a>';
-		} else {
-			return __( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+			return sprintf( __( 'The WooCommerce plugin must be active for WC Synchrotron to work. %sPlease install and activate WooCommerce%s.', 'wc-synchrotron' ), '<a href="' .esc_url( admin_url( 'plugin-install.php?tab=search&s=woocommerce' ) ) . '">', '</a>' );
 		}
 	}
 
 	private function get_error_woocommerce_wrong_version( $can_activate_plugins ) {
-		$wc_url = 'http://wordpress.org/extend/plugins/woocommerce/';
-		$plugins_url = esc_url( admin_url( 'plugins.php' ) );
-
 		if ( $can_activate_plugins ) {
-			return
-				'<a href="' . $wc_url . '">' .
-				__( 'The WooCommerce plugin', 'wc-synchrotron' ) . ' ' .
-				'</a> ' .
-				__( 'must be at least version', 'wc-synchrotron' ) . ' ' .
-				WC_Synchrotron::WC_MIN_VERSION . ' ' .
-				__( 'for WooCommerce Synchrotron to work.', 'wc-synchrotron' ) .  ' ' .
-				'<a href="' . $plugins_url . '">' .
-				__( 'Update WooCommerce' ) . ' &raquo;' .
-				'</a>';
-		} else {
-			return __( 'Please contact your administrator to check the site plugins.', 'wc-synchrotron' );
+			return sprintf( __( 'The WooCommerce plugin must be at least version %s for WC Synchrotron to work. %sPlease upgrade WooCommerce%s.', 'wc-synchrotron' ), WC_Synchrotron::WC_MIN_VERSION, '<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">', '</a>' );
 		}
 	}
 
@@ -246,4 +219,3 @@ class WC_Synchrotron {
 }
 
 return new WC_Synchrotron();
-
