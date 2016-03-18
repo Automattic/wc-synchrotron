@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { fetchCoupons } from '../state/coupons/actions';
 
 export default class CouponsScreen extends React.Component {
@@ -9,7 +10,7 @@ export default class CouponsScreen extends React.Component {
 	}
 
 	onClick() {
-		this.props.dispatch( fetchCoupons() );
+		this.props.fetchCoupons();
 	}
 
 	render() {
@@ -23,12 +24,15 @@ export default class CouponsScreen extends React.Component {
 }
 
 CouponsScreen.propTypes = {
-	dispatch: PropTypes.func.isRequired
 };
 
 function mapStateToProps( state ) {
 	return { };
 }
 
-export default connect( mapStateToProps )( CouponsScreen );
+function mapDispatchToProps( dispatch ) {
+	return bindActionCreators( { fetchCoupons }, dispatch );
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )( CouponsScreen );
 
