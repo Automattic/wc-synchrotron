@@ -3,7 +3,7 @@ var webpack = require( 'webpack' );
 
 module.exports = {
 	entry: {
-		coupons: './entry/coupons.jsx'
+		coupons: './client/entry/coupons.jsx'
 	},
 	output: {
 		path: path.join( __dirname, 'dist' ),
@@ -15,8 +15,7 @@ module.exports = {
 			{
 				test: /\.jsx?$/,
 				include: [
-					path.resolve( __dirname, 'components' ),
-					path.resolve( __dirname, 'entry' )
+					path.resolve( __dirname, './client/' ),
 				],
 				loader: 'babel'
 			}
