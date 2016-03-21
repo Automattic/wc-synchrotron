@@ -10,7 +10,10 @@ export default class CouponsScreen extends React.Component {
 	}
 
 	onClick() {
-		this.props.fetchCoupons();
+		// TODO: This is not the right place to get this data. Figure out where this should be done.
+		const apiData = JSON.parse( document.getElementById( 'wc_coupon_screen_data' ).text );
+
+		this.props.fetchCoupons( apiData.endpoints.get_coupons, apiData.nonce );
 	}
 
 	render() {
