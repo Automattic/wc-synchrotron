@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCoupons } from '../state/coupons/actions';
+import screenData from '../utils/screen_data';
 
 export default class CouponsScreen extends React.Component {
 	constructor( props ) {
@@ -10,10 +11,9 @@ export default class CouponsScreen extends React.Component {
 	}
 
 	onClick() {
-		// TODO: This is not the right place to get this data. Figure out where this should be done.
-		const apiData = JSON.parse( document.getElementById( 'wc_coupon_screen_data' ).text );
+		const { data } = this.props;
 
-		this.props.fetchCoupons( apiData.endpoints.get_coupons, apiData.nonce );
+		this.props.fetchCoupons( data.endpoints.get_coupons, data.nonce );
 	}
 
 	render() {
@@ -27,6 +27,7 @@ export default class CouponsScreen extends React.Component {
 }
 
 CouponsScreen.propTypes = {
+	data: PropTypes.object.isRequired
 };
 
 function mapStateToProps( state ) {

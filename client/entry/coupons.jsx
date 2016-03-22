@@ -4,12 +4,14 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import CouponsScreen from '../components/coupons_screen';
 import configureStore from '../state';
+import screenData from '../utils/screen_data';
 
+const data = screenData( 'wc_coupon_screen_data' );
 const store = configureStore();
 
 const rootComponent =
 	<Provider store={ store }>
-		<CouponsScreen />
+		<CouponsScreen data={ data } />
 	</Provider>;
 
 ReactDOM.render( rootComponent, document.getElementById( 'coupons_screen' ) );
