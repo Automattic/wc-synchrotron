@@ -4,7 +4,6 @@ import { createAction } from 'redux-actions';
 
 // TODO: Make action names better prefixed, maybe some helper code to do this?
 export const ACTION_NAMES = {
-	COUPONS_FETCH: 'COUPONS_FETCH',
 	COUPONS_FETCHING: 'COUPONS_FETCHING',
 	COUPONS_FETCHED: 'COUPONS_FETCHED',
 	COUPONS_SET_ERROR: 'COUPONS_SET_ERROR'

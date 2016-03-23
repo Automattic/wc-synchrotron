@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCoupons } from '../state/coupons/actions';
 import screenData from '../utils/screen_data';
+import CouponsList from './coupons_list';
 
 export default class CouponsScreen extends React.Component {
 	constructor( props ) {
@@ -18,20 +19,35 @@ export default class CouponsScreen extends React.Component {
 
 	render() {
 		return (
-			<div>
-				<h3>React output for Coupons Screen.</h3>
+			<div className="wrap">
 				<button onClick={ this.onClick }>Click me</button>
+				{ this.renderCouponsList( this.props.coupons ) }
 			</div>
 		);
+	}
+
+	renderCouponsList( couponsState ) {
+		const { isFetching, isFetched, coupons, error } = couponsState;
+
+		if ( isFetched ) {
+			return <CouponsList coupons={ coupons } />;
+		} else if ( isFetching ) {
+			return <h4>Please wait...</h4>;
+		}
 	}
 }
 
 CouponsScreen.propTypes = {
-	data: PropTypes.object.isRequired
+	data: PropTypes.object.isRequired,
+	coupons: PropTypes.object.isRequired
 };
 
 function mapStateToProps( state ) {
-	return { };
+	const { coupons } = state;
+
+	return {
+		coupons
+	};
 }
 
 function mapDispatchToProps( dispatch ) {
