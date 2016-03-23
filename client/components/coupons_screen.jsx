@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCoupons } from '../state/coupons/actions';
-import screenData from '../utils/screen_data';
 import CouponsList from './coupons_list';
 
 export default class CouponsScreen extends React.Component {
