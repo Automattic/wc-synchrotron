@@ -2,7 +2,7 @@ import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import CouponsScreen from '../components/coupons_screen';
+import CouponsScreen from '../components/coupons/coupons-screen';
 import configureStore from '../state';
 import screenData from '../utils/screen-data';
 

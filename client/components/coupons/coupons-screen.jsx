@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchCoupons } from '../state/coupons/actions';
-import CouponsList from './coupons_list';
+import { fetchCoupons } from '../../state/coupons/actions';
+import CouponsList from './coupons-list';
 
 export default class CouponsScreen extends React.Component {
 	constructor( props ) {
