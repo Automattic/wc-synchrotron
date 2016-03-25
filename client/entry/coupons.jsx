@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import CouponsScreen from '../components/coupons/coupons-screen';
+import '../../assets/stylesheets/style.scss';
 import configureStore from '../state';
 import screenData from '../utils/screen-data';
 

@@ -1,5 +1,6 @@
 var path = require( 'path' );
 var webpack = require( 'webpack' );
+var ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 module.exports = {
 	entry: {
@@ -15,18 +16,37 @@ module.exports = {
 			{
 				test: /\.jsx?$/,
 				include: [
-					path.resolve( __dirname, './client/' ),
+					path.resolve( __dirname, 'client' ),
+					path.resolve( __dirname, 'node_modules', 'wp-calypso', 'client' ),
 				],
 				loader: 'babel'
+			},
+			{
+				test: /\.scss$/,
+				include: [
+					path.resolve( __dirname, 'assets', 'stylesheets' )
+				],
+				loader: ExtractTextPlugin.extract( 'style', 'css?minimize!sass' )
 			}
 		]
 	},
+	sassLoader: {
+		includePaths: [
+			path.resolve( __dirname, 'node_modules', 'wp-calypso', 'client' ),
+			path.resolve( __dirname, 'node_modules', 'wp-calypso', 'assets', 'stylesheets' )
+		]
+	},
 	resolve: {
-		extensions: [ '', '.js', '.jsx' ],
-		modulesDirectories: [ 'node_modules' ]
+		extensions: [ '', '.js', '.jsx', '.scss' ],
+		modulesDirectories: [ 'node_modules' ],
+		root: [
+			path.join( __dirname, 'client' ),
+			path.join( __dirname, 'node_modules', 'wp-calypso', 'client' )
+		]
 	},
 	plugins: [
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		new ExtractTextPlugin( '[name].css' )
 	]
 };
 
