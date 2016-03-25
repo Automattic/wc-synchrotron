@@ -2,14 +2,16 @@ import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import CouponsScreen from '../components/coupons_screen';
+import CouponsScreen from '../components/coupons/coupons-screen';
 import configureStore from '../state';
+import screenData from '../utils/screen-data';
 
+const data = screenData( 'wc_coupon_screen_data' );
 const store = configureStore();
 
 const rootComponent =
 	<Provider store={ store }>
-		<CouponsScreen />
+		<CouponsScreen data={ data } />
 	</Provider>;
 
 ReactDOM.render( rootComponent, document.getElementById( 'coupons_screen' ) );
