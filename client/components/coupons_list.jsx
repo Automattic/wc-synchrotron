@@ -6,7 +6,7 @@ export default class CouponsList extends React.Component {
 	}
 
 	render() {
-		let { coupons } = this.props;
+		const { coupons } = this.props;
 
 		return (
 			<table className="wp-list-table widefat fixed striped posts">
@@ -34,9 +34,13 @@ export default class CouponsList extends React.Component {
 }
 
 class CouponRow extends React.Component {
+	propTypes: {
+		coupon: PropTypes.object.isRequired
+	}
+
 	render() {
-		let { coupon } = this.props;
-		let trId = "trCoupon-" + coupon.id;
+		const { coupon } = this.props;
+		const trId = "trCoupon-" + coupon.id;
 
 		return (
 			<tr id={ trId } className="type-shop_coupon hentry">
@@ -58,11 +62,7 @@ class CouponRow extends React.Component {
 					{ coupon.amount }
 				</td>
 				<td className="amount column-usage" data-colname="Usage / Limit">
-					{
-						coupon.product_ids.map( ( id ) => {
-							return id.toString() + ' ';
-						} )
-					}
+					{ coupon.product_ids.join( ' ' ) }
 				</td>
 				<td className="amount column-expiry_date" data-colname="Expiry Date">
 					{ coupon.expiry_date }
