@@ -24,7 +24,8 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				include: [
-					path.resolve( __dirname, 'assets', 'stylesheets' )
+					path.resolve( __dirname, 'assets', 'stylesheets' ),
+					path.resolve( __dirname, 'client' )
 				],
 				loader: ExtractTextPlugin.extract( 'style', 'css?minimize!sass' )
 			}

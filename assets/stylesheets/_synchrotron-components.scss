@@ -1,11 +1,10 @@
 // ==========================================================================
-// Components
+// Synchrotron Components
 //
-// This is an import af all component CSS we use from Calypso.
+// This is an import af all component CSS from within Synchrotron.
 // Please keep these imports sorted and use specificity to ensure that
 // stylesheet order does not matter.
 // ==========================================================================
 
-@import 'components/card/style';
-@import 'components/gridicon/style';
+@import '../../client/components/coupons/style';
 

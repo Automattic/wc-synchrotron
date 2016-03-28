@@ -1,0 +1,15 @@
+.coupon-card {
+	border-style: dashed;
+	border-width: 5px;
+	border-color: #505050;
+
+	strong {
+		font-size: 150%;
+		font-weight: bold;
+	}
+	.edit-icon {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+}
