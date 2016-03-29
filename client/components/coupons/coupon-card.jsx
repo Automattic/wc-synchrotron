@@ -13,7 +13,10 @@ export default class CouponCard extends React.Component {
 		let editIcon;
 
 		if ( onEditClick ) {
-			editIcon = <Gridicon className="edit-icon" icon="cog" onClick={ onEditClick } />;
+			editIcon = <Gridicon
+				className="edit-icon"
+				icon="cog"
+				onClick={ () => { onEditClick( coupon ) } } />;
 		} else {
 			editIcon = null;
 		}
