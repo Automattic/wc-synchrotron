@@ -131,6 +131,12 @@ class WC_Synchrotron {
 			true
 		);
 
+		wp_enqueue_style(
+			'wc-synchrotron',
+			plugins_url( 'dist/coupons.css', __FILE__ ),
+			array()
+		);
+
 		$coupon_screen_data = apply_filters(
 			'wc_coupon_screen_data',
 			array(
@@ -144,7 +150,7 @@ class WC_Synchrotron {
 		?>
 			<div class="wrap">
 			<h1><?php _e( 'Coupons', 'wc-synchrotron' ) ?></h1>
-				<div id="coupons_screen">
+				<div id="coupons_screen" class="wc-synchrotron">
 				</div>
 			</div>
 

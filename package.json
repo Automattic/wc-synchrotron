@@ -42,7 +42,13 @@
     "babel": "^5.8.35",
     "babel-core": "^5.8.35",
     "babel-loader": "^5.4.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^3.4.2",
     "rimraf": "^2.5.2",
-    "webpack": "^1.12.14"
+    "sass-loader": "^3.2.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.12.14",
+    "wp-calypso": "github:automattic/wp-calypso"
   }
 }
