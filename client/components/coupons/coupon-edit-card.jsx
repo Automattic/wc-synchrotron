@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import i18n from 'lib/mixins/i18n';
+import i18n, { translate as __ } from 'lib/mixins/i18n';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
 import FormCheckbox from 'components/forms/form-checkbox';
@@ -21,14 +21,14 @@ export default class CouponEditCard extends React.Component {
 		super( props );
 
 		this.couponTypes = {
-			fixed_cart: { displayName: "Cart Discount", formDiv: this.fixedDiscountDiv },
-			percent: { displayName: "Cart % Discount", formDiv: this.percentDiscountDiv },
-			fixed_product: { displayName: "Product Discount", formDiv: this.fixedDiscountDiv },
-			percent_product: { displayName: "Product % Discount", formDiv: this.percentDiscountDiv },
-			sign_up_fee: { displayName: "Sign Up Fee Discount", formDiv: this.fixedDiscountDiv },
-			sign_up_fee_percent: { displayName: "Sign Up Fee % Discount", formDiv: this.percentDiscountDiv },
-			recurring_fee: { displayName: "Recurring Product Discount", formDiv: this.fixedDiscountDiv },
-			recurring_percent: { displayName: "Recurring Product % Discount", formDiv: this.percentDiscountDiv }
+			fixed_cart: { displayName: __( "Cart Discount" ), formDiv: this.fixedDiscountDiv },
+			percent: { displayName: __( "Cart % Discount" ), formDiv: this.percentDiscountDiv },
+			fixed_product: { displayName: __( "Product Discount" ), formDiv: this.fixedDiscountDiv },
+			percent_product: { displayName: __( "Product % Discount" ), formDiv: this.percentDiscountDiv },
+			sign_up_fee: { displayName: __( "Sign Up Fee Discount" ), formDiv: this.fixedDiscountDiv },
+			sign_up_fee_percent: { displayName: __( "Sign Up Fee % Discount" ), formDiv: this.percentDiscountDiv },
+			recurring_fee: { displayName: __( "Recurring Product Discount" ), formDiv: this.fixedDiscountDiv },
+			recurring_percent: { displayName: __( "Recurring Product % Discount" ), formDiv: this.percentDiscountDiv }
 		}
 
 		this.onFieldChange = this.onFieldChange.bind( this );
@@ -52,7 +52,7 @@ export default class CouponEditCard extends React.Component {
 		return (
 			<div>
 				<FormLabel htmlFor="amount">
-					Discount:
+					{ __( 'Discount:' ) }
 				</FormLabel>
 				<FormTextInputWithAffixes
 						name="amount"
@@ -67,7 +67,7 @@ export default class CouponEditCard extends React.Component {
 		return (
 			<div>
 				<FormLabel htmlFor="amount">
-					Discount:
+					{ __( 'Discount:' ) }
 				</FormLabel>
 				<FormTextInputWithAffixes
 						name="amount"
@@ -91,7 +91,7 @@ export default class CouponEditCard extends React.Component {
 				<form>
 					<div>
 						<FormLabel htmlFor="code">
-							Coupon Code:
+							{ __( 'Coupon Code:' ) }
 						</FormLabel>
 						<FormTextInput
 								name="code"
@@ -101,7 +101,7 @@ export default class CouponEditCard extends React.Component {
 
 					<div>
 						<FormLabel htmlFor="description">
-							Description:
+							{ __( 'Description:' ) }
 						</FormLabel>
 						<FormTextInput
 								name="description"
@@ -111,7 +111,7 @@ export default class CouponEditCard extends React.Component {
 
 					<div>
 						<FormLabel htmlFor="type">
-							Type:
+							{ __( 'Type:' ) }
 						</FormLabel>
 						<FormSelect
 								name="type"
@@ -125,7 +125,7 @@ export default class CouponEditCard extends React.Component {
 
 					<div>
 						<FormLabel htmlFor="enable_free_shipping">
-							Free Shipping?
+							{ __( 'Free Shipping?' ) }
 						</FormLabel>
 						<input type="checkbox"
 								name="enable_free_shipping"
@@ -135,7 +135,7 @@ export default class CouponEditCard extends React.Component {
 
 					<div>
 						<FormLabel htmlFor="expiry_date">
-							Expiration Date:
+							{ __( 'Expiration Date:' ) }
 						</FormLabel>
 						<FormDateInput
 								name="expiry_date"
