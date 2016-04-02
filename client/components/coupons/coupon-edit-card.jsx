@@ -1,8 +1,12 @@
 import React, { PropTypes } from 'react';
+import i18n from 'lib/mixins/i18n';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
+import FormCheckbox from 'components/forms/form-checkbox';
 import FormLabel from 'components/forms/form-label';
 import FormTextInput from 'components/forms/form-text-input';
+import FormDateInput from 'components/forms/form-date-input';
+import FormTextInputWithAffixes from 'components/forms/form-text-input-with-affixes';
 import FormSelect from 'components/forms/form-select';
 
 export default class CouponEditCard extends React.Component {
@@ -17,56 +21,61 @@ export default class CouponEditCard extends React.Component {
 		super( props );
 
 		this.couponTypes = {
-			fixed_cart: { displayName: "Cart Discount", formDiv: this.cartFixedDiscountDiv },
-			percent: { displayName: "Cart % Discount", formDiv: this.cartPercentDiscountDiv },
-			fixed_product: { displayName: "Product Discount", formDiv: this.productDiscountDiv },
-			percent_product: { displayName: "Product % Discount", formDiv: this.productPercentDiscountDiv },
-			sign_up_fee: { displayName: "Sign Up Fee Discount", formDiv: this.signUpFeeDiscountDiv },
-			sign_up_fee_percent: { displayName: "Sign Up Fee % Discount", formDiv: this.signUpFeePercentDiscountDiv },
-			recurring_fee: { displayName: "Recurring Product Discount", formDiv: this.recurringProductDiscountDiv },
-			recurring_percent: { displayName: "Recurring Product % Discount", formDiv: this.recurringProductPercentDiscountDiv }
+			fixed_cart: { displayName: "Cart Discount", formDiv: this.fixedDiscountDiv },
+			percent: { displayName: "Cart % Discount", formDiv: this.percentDiscountDiv },
+			fixed_product: { displayName: "Product Discount", formDiv: this.fixedDiscountDiv },
+			percent_product: { displayName: "Product % Discount", formDiv: this.percentDiscountDiv },
+			sign_up_fee: { displayName: "Sign Up Fee Discount", formDiv: this.fixedDiscountDiv },
+			sign_up_fee_percent: { displayName: "Sign Up Fee % Discount", formDiv: this.percentDiscountDiv },
+			recurring_fee: { displayName: "Recurring Product Discount", formDiv: this.fixedDiscountDiv },
+			recurring_percent: { displayName: "Recurring Product % Discount", formDiv: this.percentDiscountDiv }
 		}
 
 		this.onFieldChange = this.onFieldChange.bind( this );
+		this.onCheckboxChange = this.onCheckboxChange.bind( this );
 	}
 
 	onFieldChange( e ) {
 		const { coupon, onEdit } = this.props;
 
-		console.log( e.target.name + "=" + e.target.value );
 		onEdit( coupon, e.target.name, e.target.value );
 	}
 
-	cartFixedDiscountDiv() {
-		return <div>[Cart Fixed Discount]</div>;
+	onCheckboxChange( e ) {
+		const { coupon, onEdit } = this.props;
+
+		onEdit( coupon, e.target.name, e.target.checked );
 	}
 
-	cartPercentDiscountDiv() {
-		return <div>[Cart Percent Discount]</div>;
+	fixedDiscountDiv( coupon, onChange ) {
+		// TODO: Change $ with appropriate currency symbol.
+		return (
+			<div>
+				<FormLabel htmlFor="amount">
+					Discount:
+				</FormLabel>
+				<FormTextInputWithAffixes
+						name="amount"
+						prefix="$"
+						value={ coupon.amount }
+						onChange={ onChange } />
+			</div>
+		);
 	}
 
-	productDiscountDiv() {
-		return <div>[Product Discount]</div>;
-	}
-
-	productPercentDiscountDiv() {
-		return <div>[Product Percent Discount]</div>;
-	}
-
-	signUpFeeDiscountDiv() {
-		return <div>[Sign Up Fee Discount]</div>;
-	}
-
-	signUpFeePercentDiscountDiv() {
-		return <div>[Sign Up Fee Percent Discount]</div>;
-	}
-
-	recurringProductDiscountDiv() {
-		return <div>[Recurring Product Discount]</div>;
-	}
-
-	recurringProductPercentDiscountDiv() {
-		return <div>[Recurring Product Percent Discount]</div>;
+	percentDiscountDiv( coupon, onChange ) {
+		return (
+			<div>
+				<FormLabel htmlFor="amount">
+					Discount:
+				</FormLabel>
+				<FormTextInputWithAffixes
+						name="amount"
+						suffix="%"
+						value={ coupon.amount }
+						onChange={ onChange } />
+			</div>
+		);
 	}
 
 	render() {
@@ -110,6 +119,28 @@ export default class CouponEditCard extends React.Component {
 								onChange={ this.onFieldChange } >
 							{ options }
 						</FormSelect>
+					</div>
+
+					{ this.couponTypes[coupon.type].formDiv( coupon, this.onFieldChange ) }
+
+					<div>
+						<FormLabel htmlFor="enable_free_shipping">
+							Free Shipping?
+						</FormLabel>
+						<input type="checkbox"
+								name="enable_free_shipping"
+								checked={ coupon.enable_free_shipping }
+								onChange={ this.onCheckboxChange } />
+					</div>
+
+					<div>
+						<FormLabel htmlFor="expiry_date">
+							Expiration Date:
+						</FormLabel>
+						<FormDateInput
+								name="expiry_date"
+								value={ coupon.expiry_date }
+								onChange={ this.onFieldChange } />
 					</div>
 
 					<Gridicon

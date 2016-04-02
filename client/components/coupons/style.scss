@@ -20,13 +20,16 @@
 
 	label {
 		display: inline-block;
+		float: none;
 		width: 25%;
 		text-align: right;
 		vertical-align: bottom;
 		margin-right: 10px;
 	}
 
-	input {
+	input, .form-text-input-with-affixes {
+		display: inline-block;
+		float: none;
 		width: auto;
 	}
 
