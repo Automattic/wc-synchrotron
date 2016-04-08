@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { fetchCoupons, editCoupon, cancelCouponEdit } from '../../state/coupons/actions';
 import CouponsList from './coupons-list';
 
-export default class CouponsScreen extends React.Component {
+class CouponsScreen extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.onClick = this.onClick.bind( this );

@@ -2,6 +2,7 @@ import debug from 'debug';
 import ReactInjection from 'react/lib/ReactInjection';
 import classes from 'component-classes';
 import i18n from 'lib/mixins/i18n';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import touchDetect from 'lib/touch-detect';
 
 const bootDebug = debug( 'synchrotron:calypso-boot' );
@@ -25,6 +26,9 @@ export default function boot() {
 	} else {
 		classes( document.documentElement ).add( 'notouch' );
 	}
+
+	// Initialize touch
+	injectTapEventPlugin();
 }
 
 boot();

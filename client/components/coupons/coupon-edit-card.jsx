@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import i18n, { translate as __ } from 'lib/mixins/i18n';
+import Accordion from 'components/accordion';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
 import FormCheckbox from 'components/forms/form-checkbox';
@@ -127,7 +128,7 @@ export default class CouponEditCard extends React.Component {
 						<FormLabel htmlFor="enable_free_shipping">
 							{ __( 'Free Shipping?' ) }
 						</FormLabel>
-						<input type="checkbox"
+						<FormCheckbox
 								name="enable_free_shipping"
 								checked={ coupon.enable_free_shipping }
 								onChange={ this.onCheckboxChange } />
@@ -142,6 +143,50 @@ export default class CouponEditCard extends React.Component {
 								value={ coupon.expiry_date }
 								onChange={ this.onFieldChange } />
 					</div>
+
+					<Accordion title={ __( "Restrictions" ) } >
+
+						<div>
+							<FormLabel htmlFor="minimum_amount">
+								{ __( 'Minimum Cart:' ) }
+							</FormLabel>
+							<FormTextInput
+									name="minimum_amount"
+									value={ coupon.minimum_amount }
+									onChange={ this.onFieldChange } />
+						</div>
+
+						<div>
+							<FormLabel htmlFor="maximum_amount">
+								{ __( 'Maximum Cart:' ) }
+							</FormLabel>
+							<FormTextInput
+									name="maximum_amount"
+									value={ coupon.maximum_amount }
+									onChange={ this.onFieldChange } />
+						</div>
+
+						<div>
+							<FormLabel htmlFor="individual_use">
+								{ __( 'Individual Use Only?' ) }
+							</FormLabel>
+							<FormCheckbox
+									name="individual_use"
+									checked={ coupon.individual_use }
+									onChange={ this.onCheckboxChange } />
+						</div>
+
+						<div>
+							<FormLabel htmlFor="exclude_sale_items">
+								{ __( 'Exclude Sale Items?' ) }
+							</FormLabel>
+							<FormCheckbox
+									name="exclude_sale_items"
+									checked={ coupon.exclude_sale_items }
+									onChange={ this.onCheckboxChange } />
+						</div>
+
+					</Accordion>
 
 					<Gridicon
 						className="cancel-icon"
