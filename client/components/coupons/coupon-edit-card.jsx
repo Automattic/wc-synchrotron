@@ -111,26 +111,26 @@ export default class CouponEditCard extends React.Component {
 					</div>
 
 					<div>
-						<FormLabel htmlFor="type">
+						<FormLabel htmlFor="discount_type">
 							{ __( 'Type:' ) }
 						</FormLabel>
 						<FormSelect
-								name="type"
-								value={ coupon.type }
+								name="discount_type"
+								value={ coupon.discount_type }
 								onChange={ this.onFieldChange } >
 							{ options }
 						</FormSelect>
 					</div>
 
-					{ this.couponTypes[coupon.type].formDiv( coupon, this.onFieldChange ) }
+					{ this.couponTypes[coupon.discount_type].formDiv( coupon, this.onFieldChange ) }
 
 					<div>
-						<FormLabel htmlFor="enable_free_shipping">
+						<FormLabel htmlFor="free_shipping">
 							{ __( 'Free Shipping?' ) }
 						</FormLabel>
 						<FormCheckbox
-								name="enable_free_shipping"
-								checked={ coupon.enable_free_shipping }
+								name="free_shipping"
+								checked={ coupon.free_shipping }
 								onChange={ this.onCheckboxChange } />
 					</div>
 
