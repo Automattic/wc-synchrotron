@@ -7,7 +7,8 @@
 		font-size: 150%;
 		font-weight: bold;
 	}
-	.edit-icon, .cancel-icon {
+	.edit-icon,
+	.cancel-icon {
 		position: absolute;
 		top: 0px;
 		right: 0px;
@@ -27,7 +28,8 @@
 		margin-right: 10px;
 	}
 
-	input, .form-text-input-with-affixes {
+	input,
+	.form-text-input-with-affixes {
 		display: inline-block;
 		float: none;
 		width: auto;

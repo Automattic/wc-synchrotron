@@ -44,7 +44,7 @@ class CouponsScreen extends React.Component {
 
 CouponsScreen.propTypes = {
 	data: PropTypes.object.isRequired,
-	coupons: PropTypes.object.isRequired
+	coupons: PropTypes.object.isRequired,
 };
 
 function mapStateToProps( state ) {
@@ -60,7 +60,7 @@ function mapDispatchToProps( dispatch ) {
 		{
 			fetchCoupons,
 			editCoupon,
-			cancelCouponEdit
+			cancelCouponEdit,
 		},
 		dispatch
 	);

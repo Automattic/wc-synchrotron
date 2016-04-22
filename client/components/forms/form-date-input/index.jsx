@@ -14,7 +14,7 @@ export default class FormDateInput extends React.Component {
 			this.props.className,
 			{
 				'form-date-input': true,
-				'is-error': this.props.isError
+				'is-error': this.props.isError,
 			}
 		);
 

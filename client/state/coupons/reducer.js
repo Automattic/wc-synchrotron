@@ -6,7 +6,7 @@ export const initialState = {
 	isFetched: false,
 	error: null,
 	coupons: [],
-	editing: {}
+	editing: {},
 };
 
 export default handleActions( {
@@ -14,7 +14,7 @@ export default handleActions( {
 	[ ACTION_NAMES.COUPONS_CANCEL_EDIT ]: couponsCancelEdit,
 	[ ACTION_NAMES.COUPONS_FETCHING ]: couponsFetching,
 	[ ACTION_NAMES.COUPONS_FETCHED ]: couponsFetched,
-	[ ACTION_NAMES.COUPONS_SET_ERROR ]: couponsError
+	[ ACTION_NAMES.COUPONS_SET_ERROR ]: couponsError,
 }, initialState );
 
 function couponsEdit( state, action ) {
@@ -57,7 +57,7 @@ function couponsFetched( state, action ) {
 		isFetching: false,
 		isFetched: true,
 		error: null,
-		coupons: action.payload
+		coupons: action.payload,
 	} );
 }
 

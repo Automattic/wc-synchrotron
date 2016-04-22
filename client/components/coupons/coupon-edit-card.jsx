@@ -15,7 +15,7 @@ export default class CouponEditCard extends React.Component {
 		coupon: PropTypes.object.isRequired,
 		onEdit: PropTypes.func.isRequired,
 		onCancelClick: PropTypes.func.isRequired,
-		onSaveClick: PropTypes.func.isRequired
+		onSaveClick: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
@@ -29,7 +29,7 @@ export default class CouponEditCard extends React.Component {
 			sign_up_fee: { displayName: __( "Sign Up Fee Discount" ), formDiv: this.fixedDiscountDiv },
 			sign_up_fee_percent: { displayName: __( "Sign Up Fee % Discount" ), formDiv: this.percentDiscountDiv },
 			recurring_fee: { displayName: __( "Recurring Product Discount" ), formDiv: this.fixedDiscountDiv },
-			recurring_percent: { displayName: __( "Recurring Product % Discount" ), formDiv: this.percentDiscountDiv }
+			recurring_percent: { displayName: __( "Recurring Product % Discount" ), formDiv: this.percentDiscountDiv },
 		}
 
 		this.onFieldChange = this.onFieldChange.bind( this );
