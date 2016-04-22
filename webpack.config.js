@@ -22,11 +22,20 @@ module.exports = {
 				loader: 'babel'
 			},
 			{
+				test: /\.json$/,
+				loader: 'json-loader'
+			},
+			{
 				test: /\.scss$/,
 				include: [
-					path.resolve( __dirname, 'assets', 'stylesheets' )
+					path.resolve( __dirname, 'assets', 'stylesheets' ),
+					path.resolve( __dirname, 'client' )
 				],
 				loader: ExtractTextPlugin.extract( 'style', 'css?minimize!sass' )
+			},
+			{
+				test: /\.html$/,
+				loader: 'html-loader'
 			}
 		]
 	},
@@ -37,7 +46,7 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: [ '', '.js', '.jsx', '.scss' ],
+		extensions: [ '', '.js', '.jsx', '.scss', '.html' ],
 		modulesDirectories: [ 'node_modules' ],
 		root: [
 			path.join( __dirname, 'client' ),

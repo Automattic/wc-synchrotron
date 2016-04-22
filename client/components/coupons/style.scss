@@ -1,0 +1,41 @@
+.coupon-card {
+	border-style: dashed;
+	border-width: 5px;
+	border-color: #505050;
+
+	strong {
+		font-size: 150%;
+		font-weight: bold;
+	}
+	.edit-icon,
+	.cancel-icon {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+	.save-icon {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+
+	label {
+		display: inline-block;
+		float: none;
+		width: 35%;
+		text-align: right;
+		vertical-align: bottom;
+		margin-right: 10px;
+	}
+
+	input,
+	.form-text-input-with-affixes {
+		display: inline-block;
+		float: none;
+		width: auto;
+	}
+
+	select {
+		height: auto;
+	}
+}

@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchCoupons } from '../../state/coupons/actions';
+import { fetchCoupons, editCoupon, cancelCouponEdit } from '../../state/coupons/actions';
 import CouponsList from './coupons-list';
 
-export default class CouponsScreen extends React.Component {
+class CouponsScreen extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.onClick = this.onClick.bind( this );
@@ -26,10 +26,16 @@ export default class CouponsScreen extends React.Component {
 	}
 
 	renderCouponsList( couponsState ) {
-		const { isFetching, isFetched, coupons, error } = couponsState;
+		const { isFetching, isFetched, coupons, editing, error } = couponsState;
+		const { editCoupon, cancelCouponEdit, saveCoupon } = this.props;
 
 		if ( isFetched ) {
-			return <CouponsList coupons={ coupons } />;
+			return <CouponsList
+				coupons={ coupons }
+				editing={ editing }
+				onCouponEdit={ editCoupon }
+				onCouponCancel={ cancelCouponEdit }
+				onCouponSave={ saveCoupon } />;
 		} else if ( isFetching ) {
 			return <h4>Please wait...</h4>;
 		}
@@ -38,7 +44,7 @@ export default class CouponsScreen extends React.Component {
 
 CouponsScreen.propTypes = {
 	data: PropTypes.object.isRequired,
-	coupons: PropTypes.object.isRequired
+	coupons: PropTypes.object.isRequired,
 };
 
 function mapStateToProps( state ) {
@@ -50,7 +56,14 @@ function mapStateToProps( state ) {
 }
 
 function mapDispatchToProps( dispatch ) {
-	return bindActionCreators( { fetchCoupons }, dispatch );
+	return bindActionCreators(
+		{
+			fetchCoupons,
+			editCoupon,
+			cancelCouponEdit,
+		},
+		dispatch
+	);
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( CouponsScreen );
