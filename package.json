@@ -21,6 +21,8 @@
     "url": "https://github.com/Automattic/wc-synchrotron/issues"
   },
   "scripts": {
+    "test": "npm run build-dev && npm run test-client",
+    "test-client": "NODE_ENV=test NODE_PATH=test:client TEST_ROOT=client node test/runner.babel.js",
     "build-dev": "npm run clean && npm run calypso-regenerate-client-dev && npm run build-client-dev",
     "build-client-dev": "node_modules/webpack/bin/webpack.js -d --progress --colors",
     "calypso-regenerate-client-dev": "node_modules/wp-calypso/server/config/regenerate-client.js > node_modules/wp-calypso/client/config/index.js",
@@ -30,6 +32,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.35",
     "classnames": "1.1.1",
+    "commander": "^2.3.0",
     "component-classes": "^1.2.1",
     "debug": "^2.2.0",
     "lodash.omit": "3.1.0",
