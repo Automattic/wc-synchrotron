@@ -1,14 +1,6 @@
-import debug from 'debug';
 import Mocha from 'mocha';
-import path from 'path';
 import program from 'commander';
 import glob from 'glob';
-
-const TEST_DIR_NAME = 'test';
-const JS_EXTENSION = '.js';
-
-const log = debug( 'test-runner' );
-const rootDir = path.join( __dirname, '..' );
 
 program
 	.usage( '[options]' )

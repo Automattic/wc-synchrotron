@@ -11,32 +11,42 @@ export default class CouponsList extends React.Component {
 		onCouponSave: PropTypes.func,
 	}
 
+	constructor( props ) {
+		super( props );
+
+		this.renderCard = this.renderCard.bind( this );
+	}
+
 	render() {
-		const { coupons, editing } = this.props;
-		const { onCouponEdit, onCouponCancel, onCouponSave } = this.props;
+		const { coupons } = this.props;
 
 		return (
 			<div>
-				{
-					coupons.map( ( coupon ) => {
-						if ( coupon.id in editing ) {
-							return <CouponEditCard
-								coupon={ editing[coupon.id] }
-								key={ coupon.id }
-								onEdit={ onCouponEdit }
-								onCancelClick={ onCouponCancel }
-								onSaveClick={ onCouponSave } />;
-
-						} else {
-							return <CouponCard
-								coupon={ coupon }
-								key={ coupon.id }
-								onEditClick={ onCouponEdit } />;
-						}
-					} )
-				}
+				{ coupons.map( this.renderCard ) }
 			</div>
 		);
+	}
+
+	renderCard( coupon ) {
+		const { editing } = this.props;
+		const { onCouponEdit, onCouponCancel, onCouponSave } = this.props;
+		let card;
+
+		if ( coupon.id in editing ) {
+			card = <CouponEditCard
+				coupon={ editing[coupon.id] }
+				key={ coupon.id }
+				onEdit={ onCouponEdit }
+				onCancelClick={ onCouponCancel }
+				onSaveClick={ onCouponSave } />;
+		} else {
+			card = <CouponCard
+				coupon={ coupon }
+				key={ coupon.id }
+				onEditClick={ onCouponEdit } />;
+		}
+
+		return card;
 	}
 }
 

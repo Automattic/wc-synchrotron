@@ -10,7 +10,7 @@ import couponsReducer, {
 } from '../reducer';
 
 describe( 'reducer', () => {
-	it ( 'state should default to initialState', () => {
+	it( 'state should default to initialState', () => {
 		const state = couponsReducer( undefined, {} );
 		expect( state ).to.equal( initialState );
 	} );
@@ -21,7 +21,7 @@ describe( 'reducer', () => {
 	const coupon2 = { id: 345, code: 'coupon2' };
 
 	describe( '#couponsEdit()', () => {
-		it ( 'should add coupon to editing list', () => {
+		it( 'should add coupon to editing list', () => {
 			const stateIn = {
 				coupons: [ coupon1, coupon2 ],
 				editing: {},
@@ -43,7 +43,7 @@ describe( 'reducer', () => {
 	} );
 
 	describe( '#couponsCancelEdit()', () => {
-		it ( 'should remove coupon from editing list', () => {
+		it( 'should remove coupon from editing list', () => {
 			const stateIn = {
 				coupons: [ coupon1, coupon2 ],
 				editing: {
@@ -64,7 +64,7 @@ describe( 'reducer', () => {
 	} );
 
 	describe( '#couponsFetching()', () => {
-		it ( 'should set status fields and not touch coupons array', () => {
+		it( 'should set status fields and not touch coupons array', () => {
 			const stateIn = {
 				coupons: [ coupon1 ],
 			};
@@ -78,7 +78,7 @@ describe( 'reducer', () => {
 	} );
 
 	describe( '#couponsFetched()', () => {
-		it ( 'should set status fields and coupons array', () => {
+		it( 'should set status fields and coupons array', () => {
 			const stateIn = {
 				coupons: [ coupon1 ],
 			};
@@ -95,7 +95,7 @@ describe( 'reducer', () => {
 	} );
 
 	describe( '#couponsError()', () => {
-		it ( 'should set status fields and not touch coupons array', () => {
+		it( 'should set status fields and not touch coupons array', () => {
 			const stateIn = {
 				coupons: [ coupon1 ],
 			};

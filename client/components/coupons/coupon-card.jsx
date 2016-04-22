@@ -8,6 +8,17 @@ export default class CouponCard extends React.Component {
 		onEditClick: PropTypes.func,
 	}
 
+	constructor( props ) {
+		super( props );
+
+		this.onEditIconClick = this.onEditIconClick.bind( this );
+	}
+
+	onEditIconClick() {
+		const { coupon, onEditClick } = this.props;
+		onEditClick( coupon );
+	}
+
 	render() {
 		const { coupon, onEditClick } = this.props;
 		let editIcon;
@@ -16,7 +27,7 @@ export default class CouponCard extends React.Component {
 			editIcon = <Gridicon
 				className="edit-icon"
 				icon="cog"
-				onClick={ () => { onEditClick( coupon ) } } />;
+				onClick={ this.onEditIconClick } />;
 		} else {
 			editIcon = null;
 		}

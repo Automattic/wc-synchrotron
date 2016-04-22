@@ -1,4 +1,4 @@
-import calypsoBoot from '../calypso/boot';
+import '../calypso/boot';
 import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
