@@ -17,7 +17,7 @@ export default handleActions( {
 	[ ACTION_NAMES.COUPONS_SET_ERROR ]: couponsError,
 }, initialState );
 
-function couponsEdit( state, action ) {
+export function couponsEdit( state, action ) {
 	const { fieldName, fieldValue } = action.payload;
 	let { coupon } = action.payload;
 	const key = coupon.id;
@@ -32,7 +32,7 @@ function couponsEdit( state, action ) {
 	return Object.assign( {}, state, { editing } );
 }
 
-function couponsCancelEdit( state, action ) {
+export function couponsCancelEdit( state, action ) {
 	const coupon = action.payload;
 	const remaining = {};
 
@@ -44,7 +44,7 @@ function couponsCancelEdit( state, action ) {
 	return Object.assign( {}, state, { editing: remaining } );
 }
 
-function couponsFetching( state, action ) {
+export function couponsFetching( state, action ) {
 	return Object.assign( {}, state, {
 		isFetching: true,
 		isFetched: false,
@@ -52,7 +52,7 @@ function couponsFetching( state, action ) {
 	} );
 }
 
-function couponsFetched( state, action ) {
+export function couponsFetched( state, action ) {
 	return Object.assign( {}, state, {
 		isFetching: false,
 		isFetched: true,
@@ -61,7 +61,7 @@ function couponsFetched( state, action ) {
 	} );
 }
 
-function couponsError( state, action ) {
+export function couponsError( state, action ) {
 	return Object.assign( {}, state, {
 		isFetching: false,
 		isFetched: false,
