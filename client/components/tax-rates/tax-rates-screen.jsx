@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import lodash from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchTaxRates } from '../../state/tax-rates/actions';
+import { fetchTaxRates, editTaxRate } from '../../state/tax-rates/actions';
 import TaxRatesTable from './tax-rates-table';
 
 class TaxRatesScreen extends React.Component {
@@ -21,7 +21,12 @@ class TaxRatesScreen extends React.Component {
 		return (
 			<div className="wrap">
 				<h3>{ this.props.data.strings.tax_rates }</h3>
-				<TaxRatesTable taxRates={ taxRates } data={ this.props.data } />
+				<TaxRatesTable
+					taxRates={ taxRates }
+					data={ this.props.data }
+					editing={ editing }
+					onTaxRateEdit={ this.props.editTaxRate }
+					/>
 			</div>
 		);
 	}
@@ -41,7 +46,8 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
-			fetchTaxRates
+			fetchTaxRates,
+			editTaxRate
 		},
 		dispatch
 	);

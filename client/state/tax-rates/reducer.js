@@ -20,6 +20,7 @@ export default handleActions( {
 	WC_TAX_RATES_FETCHING : taxRatesFetching,
 	WC_TAX_RATES_FETCHED  : taxRatesFetched,
 	WC_TAX_RATES_SET_ERROR: taxRatesError,
+	WC_TAX_RATES_EDIT     : taxRatesEdit
 }, initialState );
 
 /**
@@ -56,4 +57,23 @@ export function taxRatesError( state, action ) {
 		isFetched : false,
 		error     : action.payload,
 	} );
+}
+
+/**
+ * Called when a tax rate is edited.
+ */
+export function taxRatesEdit( state, action ) {
+	const { fieldName, fieldValue } = action.payload;
+	let { taxRate } = action.payload;
+	const key = taxRate.id;
+
+	if ( fieldName ) {
+		taxRate = Object.assign( {}, taxRate, { [fieldName]: fieldValue } );
+	}
+
+	const editing = Object.assign( {}, state.editing, {
+		[key]: taxRate
+	} );
+
+	return Object.assign( {}, state, { editing } );
 }

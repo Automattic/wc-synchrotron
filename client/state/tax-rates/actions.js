@@ -29,3 +29,10 @@ export function fetchTaxRates( url, nonce ) {
 		)
 	];
 }
+
+/**
+ * This sets a field to value for a tax rate during editing.
+ */
+export function editTaxRate( taxRate, fieldName, fieldValue ) {
+	return createAction( 'WC_TAX_RATES_EDIT' )( { taxRate, fieldName, fieldValue } );
+}

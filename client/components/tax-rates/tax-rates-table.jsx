@@ -6,20 +6,33 @@ export default class TaxRatesTable extends React.Component {
 	propTypes: {
 		taxRates: PropTypes.array.isRequired,
 		data: PropTypes.object.isRequired,
+		onTaxRateEdit: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
-		this.onTaxRateChange = this.onTaxRateChange.bind( this );
+		this.renderTaxRate = this.renderTaxRate.bind( this );
 	}
 
-	onTaxRateChange( id, key, value ) {
-		/*var tax_rates = this.state.tax_rates;
-		var index     = _.findIndex(tax_rates, {id: id});
+	renderTaxRate( taxRate ) {
+		const { editing, onTaxRateEdit, data } = this.props;
+		let row;
 
-		tax_rates[ index ][ key ] = value;
+		if ( taxRate.id in editing ) {
+			row = <TaxRateRow
+				key={ taxRate.id }
+				data={ data }
+				taxRate={ editing[ taxRate.id ] }
+				onEdit={ onTaxRateEdit } />;
+		} else {
+			row = <TaxRateRow
+				key={ taxRate.id }
+				data={ data }
+				taxRate={ taxRate }
+				onEdit={ onTaxRateEdit } />;
+		}
 
-		this.setState({tax_rates: tax_rates});*/
+		return row;
 	}
 
 	render() {
@@ -37,7 +50,7 @@ export default class TaxRatesTable extends React.Component {
 							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.postcode_hint }</Tooltip></th>
 							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.city_hint }</Tooltip></th>
 							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.rate_hint }</Tooltip></th>
-							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.tax_name_hint }</Tooltip></th>
+							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true } position="top">{ i18n.tax_name_hint }</Tooltip></th>
 							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.priority_hint }</Tooltip></th>
 							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.compound_hint }</Tooltip></th>
 							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.shipping_hint }</Tooltip></th>
@@ -54,18 +67,7 @@ export default class TaxRatesTable extends React.Component {
 						</tr>
 					</tfoot>
 					<tbody id="rates">
-						{
-							taxRates.map( ( rowData ) => {
-								return (
-									<TaxRateRow
-										key={ rowData.id }
-										data={ data }
-										rowData={ rowData }
-										onChange={ this.onTaxRateChange }
-										/>
-								);
-							} )
-						}
+						{ taxRates.map( this.renderTaxRate ) }
 					</tbody>
 				</table>
 			</div>
