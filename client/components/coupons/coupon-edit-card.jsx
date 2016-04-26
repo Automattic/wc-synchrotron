@@ -64,16 +64,16 @@ export default class CouponEditCard extends React.Component {
 	fixedDiscountDiv( coupon, onChange ) {
 		const { currency_symbol, currency_pos_is_prefix } = screenData( 'wc_coupon_screen_data' );
 
-		let div;
+		let field;
 
 		if ( currency_pos_is_prefix ) {
-			div = <FormTextInputWithAffixes
+			field = <FormTextInputWithAffixes
 						name="amount"
 						prefix={ currency_symbol }
 						value={ coupon.amount }
 						onChange={ onChange } />;
 		} else {
-			div = <FormTextInputWithAffixes
+			field = <FormTextInputWithAffixes
 						name="amount"
 						suffix={ currency_symbol }
 						value={ coupon.amount }
@@ -85,7 +85,7 @@ export default class CouponEditCard extends React.Component {
 				<FormLabel htmlFor="amount">
 					{ __( 'Discount:' ) }
 				</FormLabel>
-				{ div }
+				{ field }
 			</div>
 		);
 	}
