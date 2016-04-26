@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import TaxRateRow from './tax-rate-row';
-import Tooltip from 'components/tooltip';
+import Helptip from 'components/helptip';
 
 export default class TaxRatesTable extends React.Component {
 	propTypes: {
@@ -45,15 +45,15 @@ export default class TaxRatesTable extends React.Component {
 					<thead>
 						<tr>
 							<th className="sort">&nbsp;</th>
-							<th width="8%"><a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank">{ i18n.country_code.replace( ' ', '\u00A0' ) }</a>&nbsp;<Tooltip isVisible={ true }>{ i18n.country_code_hint }</Tooltip></th>
-							<th width="8%">{ i18n.state_code.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.state_code_hint }</Tooltip></th>
-							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.postcode_hint }</Tooltip></th>
-							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.city_hint }</Tooltip></th>
-							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.rate_hint }</Tooltip></th>
-							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true } position="top">{ i18n.tax_name_hint }</Tooltip></th>
-							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.priority_hint }</Tooltip></th>
-							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.compound_hint }</Tooltip></th>
-							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.shipping_hint }</Tooltip></th>
+							<th width="8%"><a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank">{ i18n.country_code.replace( ' ', '\u00A0' ) }</a>&nbsp;<Helptip text={ i18n.country_code_hint } /></th>
+							<th width="8%">{ i18n.state_code.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.state_code_hint } /></th>
+							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.postcode_hint } /></th>
+							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.city_hint } /></th>
+							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.rate_hint } /></th>
+							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.tax_name_hint } /></th>
+							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.priority_hint } /></th>
+							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.compound_hint } /></th>
+							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.shipping_hint } /></th>
 						</tr>
 					</thead>
 					<tfoot>

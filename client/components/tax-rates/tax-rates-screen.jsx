@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchTaxRates, editTaxRate } from '../../state/tax-rates/actions';
 import TaxRatesTable from './tax-rates-table';
+import ReactTooltip from 'react-tooltip';
 
 class TaxRatesScreen extends React.Component {
 	constructor( props ) {
@@ -27,6 +28,7 @@ class TaxRatesScreen extends React.Component {
 					editing={ editing }
 					onTaxRateEdit={ this.props.editTaxRate }
 					/>
+				<ReactTooltip effect="solid" multiline={true} place="bottom" />
 			</div>
 		);
 	}
