@@ -37,14 +37,14 @@ export function couponsCancelEdit( state, action ) {
 	const remaining = {};
 
 	for ( let key in state.editing ) {
-		if ( key != coupon.id ) {
+		if ( key != coupon.id ) { // eslint-disable-line eqeqeq
 			remaining[key] = state.editing[key];
 		}
 	}
 	return Object.assign( {}, state, { editing: remaining } );
 }
 
-export function couponsFetching( state, action ) {
+export function couponsFetching( state ) {
 	return Object.assign( {}, state, {
 		isFetching: true,
 		isFetched: false,

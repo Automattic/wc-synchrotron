@@ -26,16 +26,15 @@ class CouponsScreen extends React.Component {
 	}
 
 	renderCouponsList( couponsState ) {
-		const { isFetching, isFetched, coupons, editing, error } = couponsState;
-		const { editCoupon, cancelCouponEdit, saveCoupon } = this.props;
+		const { isFetching, isFetched, coupons, editing } = couponsState;
 
 		if ( isFetched ) {
 			return <CouponsList
 				coupons={ coupons }
 				editing={ editing }
-				onCouponEdit={ editCoupon }
-				onCouponCancel={ cancelCouponEdit }
-				onCouponSave={ saveCoupon } />;
+				onCouponEdit={ this.props.editCoupon }
+				onCouponCancel={ this.props.cancelCouponEdit }
+				onCouponSave={ this.props.saveCoupon } />;
 		} else if ( isFetching ) {
 			return <h4>Please wait...</h4>;
 		}

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import i18n, { translate as __ } from 'lib/mixins/i18n';
+import { translate as __ } from 'lib/mixins/i18n';
 import Accordion from 'components/accordion';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
@@ -22,18 +22,20 @@ export default class CouponEditCard extends React.Component {
 		super( props );
 
 		this.couponTypes = {
-			fixed_cart: { displayName: __( "Cart Discount" ), formDiv: this.fixedDiscountDiv },
-			percent: { displayName: __( "Cart % Discount" ), formDiv: this.percentDiscountDiv },
-			fixed_product: { displayName: __( "Product Discount" ), formDiv: this.fixedDiscountDiv },
-			percent_product: { displayName: __( "Product % Discount" ), formDiv: this.percentDiscountDiv },
-			sign_up_fee: { displayName: __( "Sign Up Fee Discount" ), formDiv: this.fixedDiscountDiv },
-			sign_up_fee_percent: { displayName: __( "Sign Up Fee % Discount" ), formDiv: this.percentDiscountDiv },
-			recurring_fee: { displayName: __( "Recurring Product Discount" ), formDiv: this.fixedDiscountDiv },
-			recurring_percent: { displayName: __( "Recurring Product % Discount" ), formDiv: this.percentDiscountDiv },
+			fixed_cart: { displayName: __( 'Cart Discount' ), formDiv: this.fixedDiscountDiv },
+			percent: { displayName: __( 'Cart % Discount' ), formDiv: this.percentDiscountDiv },
+			fixed_product: { displayName: __( 'Product Discount' ), formDiv: this.fixedDiscountDiv },
+			percent_product: { displayName: __( 'Product % Discount' ), formDiv: this.percentDiscountDiv },
+			sign_up_fee: { displayName: __( 'Sign Up Fee Discount' ), formDiv: this.fixedDiscountDiv },
+			sign_up_fee_percent: { displayName: __( 'Sign Up Fee % Discount' ), formDiv: this.percentDiscountDiv },
+			recurring_fee: { displayName: __( 'Recurring Product Discount' ), formDiv: this.fixedDiscountDiv },
+			recurring_percent: { displayName: __( 'Recurring Product % Discount' ), formDiv: this.percentDiscountDiv },
 		}
 
 		this.onFieldChange = this.onFieldChange.bind( this );
 		this.onCheckboxChange = this.onCheckboxChange.bind( this );
+		this.onCancelIconClick = this.onCancelIconClick.bind( this );
+		this.onSaveIconClick = this.onSaveIconClick.bind( this );
 	}
 
 	onFieldChange( e ) {
@@ -46,6 +48,16 @@ export default class CouponEditCard extends React.Component {
 		const { coupon, onEdit } = this.props;
 
 		onEdit( coupon, e.target.name, e.target.checked );
+	}
+
+	onCancelIconClick() {
+		const { coupon, onCancelClick } = this.props;
+		onCancelClick( coupon );
+	}
+
+	onSaveIconClick() {
+		const { coupon, onSaveClick } = this.props;
+		onSaveClick( coupon );
 	}
 
 	fixedDiscountDiv( coupon, onChange ) {
@@ -80,7 +92,7 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	render() {
-		const { coupon, onCancelClick, onSaveClick } = this.props;
+		const { coupon } = this.props;
 
 		let options = [];
 		for ( let ckey in this.couponTypes ) {
@@ -144,7 +156,7 @@ export default class CouponEditCard extends React.Component {
 								onChange={ this.onFieldChange } />
 					</div>
 
-					<Accordion title={ __( "Restrictions" ) } >
+					<Accordion title={ __( 'Restrictions' ) } >
 
 						<div>
 							<FormLabel htmlFor="minimum_amount">
@@ -191,11 +203,11 @@ export default class CouponEditCard extends React.Component {
 					<Gridicon
 						className="cancel-icon"
 						icon="undo"
-						onClick={ () => { onCancelClick( coupon ); } } />
+						onClick={ this.onCancelIconClick } />
 					<Gridicon
 						className="save-icon"
 						icon="checkmark-circle"
-						onClick={ () => { onSaveClick( coupon ); } } />
+						onClick={ this.onSaveIconClick } />
 				</form>
 			</Card>
 		);
