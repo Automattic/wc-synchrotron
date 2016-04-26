@@ -140,10 +140,12 @@ class WC_Synchrotron {
 		$coupon_screen_data = apply_filters(
 			'wc_coupon_screen_data',
 			array(
-				'endpoints' => array(
-					'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
+				'endpoints'              => array(
+					'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
 				),
-				'nonce' => wp_create_nonce( 'wp_rest' )
+				'nonce'                  => wp_create_nonce( 'wp_rest' ),
+				'currency_symbol'        => html_entity_decode( get_woocommerce_currency_symbol() ),
+				'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 			)
 		);
 
@@ -154,7 +156,7 @@ class WC_Synchrotron {
 				</div>
 			</div>
 
-			<script type='application/json' id='wc_coupon_screen_data'>
+			<script type="application/json" id="wc_coupon_screen_data">
 				<?php echo json_encode( $coupon_screen_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) ?>
 			</script>
 		<?php

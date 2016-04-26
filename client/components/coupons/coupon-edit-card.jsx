@@ -9,6 +9,7 @@ import FormTextInput from 'components/forms/form-text-input';
 import FormDateInput from 'components/forms/form-date-input';
 import FormTextInputWithAffixes from 'components/forms/form-text-input-with-affixes';
 import FormSelect from 'components/forms/form-select';
+import screenData from '../../utils/screen-data';
 
 export default class CouponEditCard extends React.Component {
 	propTypes: {
@@ -61,17 +62,30 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	fixedDiscountDiv( coupon, onChange ) {
-		// TODO: Change $ with appropriate currency symbol.
+		const { currency_symbol, currency_pos_is_prefix } = screenData( 'wc_coupon_screen_data' );
+
+		let div;
+
+		if ( currency_pos_is_prefix ) {
+			div = <FormTextInputWithAffixes
+						name="amount"
+						prefix={ currency_symbol }
+						value={ coupon.amount }
+						onChange={ onChange } />;
+		} else {
+			div = <FormTextInputWithAffixes
+						name="amount"
+						suffix={ currency_symbol }
+						value={ coupon.amount }
+						onChange={ onChange } />;
+		}
+
 		return (
 			<div>
 				<FormLabel htmlFor="amount">
 					{ __( 'Discount:' ) }
 				</FormLabel>
-				<FormTextInputWithAffixes
-						name="amount"
-						prefix="$"
-						value={ coupon.amount }
-						onChange={ onChange } />
+				{ div }
 			</div>
 		);
 	}
