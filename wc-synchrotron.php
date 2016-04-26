@@ -46,7 +46,21 @@ class WC_Synchrotron {
 		if ( $this->check_dependencies() ) {
 			// Hooks and filters for WC Synchrotron should be added here.
 			add_action( 'admin_menu', array( $this, 'attach_menus' ) );
+			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
 		}
+	}
+
+	/**
+	 * Register Syncrotron screens for WooCommerce.
+	 * @param  array $ids
+	 * @return array
+	 */
+	public function register_screen_ids( $ids ) {
+		$screen_id = sanitize_title( __( 'Synchrotron', 'wc-synchrotron' ) );
+		$ids[] = 'toplevel_page_' . $screen_id;
+		$ids[] = $screen_id . '_page_wc-synchrotron-coupons';
+		$ids[] = $screen_id . '_page_wc-synchrotron-tax-rates';
+		return $ids;
 	}
 
 	/**
@@ -82,7 +96,7 @@ class WC_Synchrotron {
 	 */
 	public function attach_menus() {
 		add_menu_page(
-			__( 'WooCommerce Synchrotron', 'wc-synchrotron' ),
+			__( 'Synchrotron', 'wc-synchrotron' ),
 			__( 'Synchrotron', 'wc-synchrotron' ),
 			'manage_woocommerce',
 			'wc-synchrotron',
@@ -222,7 +236,7 @@ class WC_Synchrotron {
 			)
 		) );
 
-		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
+		echo '<div class="wrap woocommerce" id="tax_rates_screen"></div>';
 	}
 
 	/**

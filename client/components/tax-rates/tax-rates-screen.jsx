@@ -16,13 +16,12 @@ class TaxRatesScreen extends React.Component {
 	}
 
 	render() {
-
-		window.console.log( this.props );
+		const { isFetching, isFetched, taxRates, editing } = this.props.taxRatesState;
 
 		return (
 			<div className="wrap">
 				<h3>{ this.props.data.strings.tax_rates }</h3>
-				<TaxRatesTable taxRates={ this.props.taxRates } data={ this.props.data } />
+				<TaxRatesTable taxRates={ taxRates } data={ this.props.data } />
 			</div>
 		);
 	}
@@ -30,13 +29,12 @@ class TaxRatesScreen extends React.Component {
 
 TaxRatesScreen.propTypes = {
 	data: PropTypes.object.isRequired,
-	taxRates: PropTypes.object.isRequired,
+	taxRatesState: PropTypes.object.isRequired,
 };
 
 function mapStateToProps( state ) {
-	window.console.log( state );
 	return {
-		taxRates: state.taxRates
+		taxRatesState: state.taxRates
 	};
 }
 

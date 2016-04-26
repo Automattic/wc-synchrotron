@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import TaxRateRow from './tax-rate-row';
+import Tooltip from 'components/tooltip';
 
 export default class TaxRatesTable extends React.Component {
 	propTypes: {
@@ -22,8 +23,8 @@ export default class TaxRatesTable extends React.Component {
 	}
 
 	render() {
-		const { taxRates } = this.props.taxRates;
-		const { i18n } = this.props.data.strings;
+		const { taxRates, data } = this.props;
+		let i18n = data.strings;
 
 		return (
 			<div>
@@ -31,15 +32,15 @@ export default class TaxRatesTable extends React.Component {
 					<thead>
 						<tr>
 							<th className="sort">&nbsp;</th>
-							<th width="8%"><a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank">{ i18n.country_code.replace( ' ', '\u00A0' ) }</a>&nbsp;<HelpTip text={ i18n.country_code_hint } /></th>
-							<th width="8%">{ i18n.state_code.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.state_code_hint } /></th>
-							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.postcode_hint } /></th>
-							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.city_hint } /></th>
-							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.rate_hint } /></th>
-							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.tax_name_hint } /></th>
-							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.priority_hint } /></th>
-							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.compound_hint } /></th>
-							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<HelpTip text={ i18n.shipping_hint } /></th>
+							<th width="8%"><a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank">{ i18n.country_code.replace( ' ', '\u00A0' ) }</a>&nbsp;<Tooltip isVisible={ true }>{ i18n.country_code_hint }</Tooltip></th>
+							<th width="8%">{ i18n.state_code.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.state_code_hint }</Tooltip></th>
+							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.postcode_hint }</Tooltip></th>
+							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.city_hint }</Tooltip></th>
+							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.rate_hint }</Tooltip></th>
+							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.tax_name_hint }</Tooltip></th>
+							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.priority_hint }</Tooltip></th>
+							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.compound_hint }</Tooltip></th>
+							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<Tooltip isVisible={ true }>{ i18n.shipping_hint }</Tooltip></th>
 						</tr>
 					</thead>
 					<tfoot>
@@ -54,13 +55,19 @@ export default class TaxRatesTable extends React.Component {
 					</tfoot>
 					<tbody id="rates">
 						{
-							this.state.tax_rates.map( ( taxRateData ) => {
-								return ( <TaxRateRow key={ taxRateData.id } data={ taxRateData } onChange={ this.onTaxRateChange } /> );
+							taxRates.map( ( rowData ) => {
+								return (
+									<TaxRateRow
+										key={ rowData.id }
+										data={ data }
+										rowData={ rowData }
+										onChange={ this.onTaxRateChange }
+										/>
+								);
 							} )
 						}
 					</tbody>
 				</table>
-				<ReactTooltip effect="solid" multiline={true} place="bottom" />
 			</div>
 		);
 	}

@@ -4,9 +4,12 @@ export default class TaxRateRow extends React.Component {
 	onChange( id, field, value ) {
 		this.props.onChange( id, field, value );
 	}
+
 	render() {
-		let i18n = WCSTaxRatesArgs.i18n;
-		let { id, country, state, postcode, city, rate, name, priority, compound, apply_to_shipping } = this.props.data;
+		const { rowData, data } = this.props;
+		const { id, country, state, postcode, city, rate, name, priority, compound, apply_to_shipping } = rowData;
+		let i18n = data.strings;
+
 		return (
 			<tr data-tip={ i18n.tax_rate_id + ": " + id }>
 				<td className="sort"></td>
