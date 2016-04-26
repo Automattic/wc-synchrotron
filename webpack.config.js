@@ -4,7 +4,8 @@ var ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 module.exports = {
 	entry: {
-		coupons: './client/entry/coupons.jsx'
+		coupons: './client/entry/coupons.jsx',
+		tax_rates: './client/entry/tax-rates.jsx'
 	},
 	output: {
 		path: path.join( __dirname, 'dist' ),
@@ -58,4 +59,3 @@ module.exports = {
 		new ExtractTextPlugin( '[name].css' )
 	]
 };
-
