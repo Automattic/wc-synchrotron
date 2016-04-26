@@ -236,7 +236,7 @@ class WC_Synchrotron {
 			)
 		) );
 
-		echo '<div class="wrap woocommerce" id="tax_rates_screen"></div>';
+		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
 	}
 
 	/**
