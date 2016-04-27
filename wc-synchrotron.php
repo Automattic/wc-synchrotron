@@ -149,7 +149,7 @@ class WC_Synchrotron {
 	 */
 	public function display_coupons_screen() {
 		wp_enqueue_script(
-			'wc-synchrotron-coupons',
+			'wc-synchrotron-coupons-js',
 			$this->get_assets_url() . 'coupons_bundle.js',
 			array(),
 			$this->get_asset_version( 'coupons_bundle.js' ),
@@ -157,9 +157,10 @@ class WC_Synchrotron {
 		);
 
 		wp_enqueue_style(
-			'wc-synchrotron',
+			'wc-synchrotron-coupons-css',
 			$this->get_assets_url() . 'coupons.css',
-			array()
+			array(),
+			$this->get_asset_version( 'coupons.css' )
 		);
 
 		$coupon_screen_data = apply_filters(
