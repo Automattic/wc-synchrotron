@@ -12,6 +12,9 @@ module.exports = {
 		publicPath: 'wp-includes/js',
 		filename: '[name]_bundle.js'
 	},
+	devServer: {
+		outputPath: path.join( __dirname, 'dist' ) /* CopyWebpackPlugin needs this */
+	},
 	module: {
 		loaders: [
 			{

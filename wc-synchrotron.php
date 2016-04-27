@@ -34,6 +34,8 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function __construct() {
+		include_once( 'dist/synchrotron-config.php' );
+
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 	}
 
@@ -148,15 +150,15 @@ class WC_Synchrotron {
 	public function display_coupons_screen() {
 		wp_enqueue_script(
 			'wc-synchrotron-coupons',
-			plugins_url( 'dist/coupons_bundle.js', __FILE__ ),
+			$this->get_assets_url() . 'coupons_bundle.js',
 			array(),
-			WC_Synchrotron::VERSION,
+			$this->get_asset_version( 'coupons_bundle.js' ),
 			true
 		);
 
 		wp_enqueue_style(
 			'wc-synchrotron',
-			plugins_url( 'dist/coupons.css', __FILE__ ),
+			$this->get_assets_url() . 'coupons.css',
 			array()
 		);
 
@@ -239,6 +241,41 @@ class WC_Synchrotron {
 		) );
 
 		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
+	}
+
+	/**
+	 * Gets the base url for assets like .js and .css bundles
+	 *
+	 * @since 1.0
+	 */
+	public function get_assets_url() {
+		if ( null !== WC_SYNCHROTRON_ASSETS_URL ) {
+			if ( preg_match( '#^https?://#i', WC_SYNCHROTRON_ASSETS_URL ) === 1) {
+				// It's a full URL, so just return it.
+				return WC_SYNCHROTRON_ASSETS_URL;
+			} else {
+				// It's a relative url, so use plugin url as a base.
+				return plugins_url( WC_SYNCHROTRON_ASSETS_URL, __FILE__ );
+			}
+		} else {
+			// No assets url provided, so return base plugins url.
+			return plugins_url( '/', __FILE__ );
+		}
+	}
+
+	/**
+	 * Gets the asset version for enqueuing purposes.
+	 * If the config is set to bust caches, this returns a random hex string.
+	 * If not, it returns the version of the plugin.
+	 *
+	 * @since 1.0
+	 */
+	public function get_asset_version( $script_name ) {
+		if ( WC_SYNCHROTRON_BUST_ASSET_CACHE ) {
+			return bin2hex( mcrypt_create_iv( 16, MCRYPT_DEV_URANDOM ) );
+		} else {
+			return WC_Synchrotron::VERSION;
+		}
 	}
 
 	/**
