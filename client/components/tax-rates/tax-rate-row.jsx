@@ -22,7 +22,7 @@ export default class TaxRateRow extends React.Component {
 	render() {
 		const { taxRate, data } = this.props;
 		const { id, country, state, postcode, city, rate, name, priority, compound, apply_to_shipping } = taxRate;
-		let i18n = data.strings;
+		const i18n = data.strings;
 
 		return (
 			<tr data-tip={ i18n.tax_rate_id + ": " + id }>

@@ -37,7 +37,7 @@ export default class TaxRatesTable extends React.Component {
 
 	render() {
 		const { taxRates, data } = this.props;
-		let i18n = data.strings;
+		const i18n = data.strings;
 
 		return (
 			<div>
