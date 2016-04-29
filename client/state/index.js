@@ -9,7 +9,7 @@ import taxRates from './tax-rates/reducer';
 
 export const rootReducer = combineReducers( {
 	coupons,
-	taxRates
+	taxRates,
 } );
 
 const createStoreWithMiddleware = applyMiddleware(

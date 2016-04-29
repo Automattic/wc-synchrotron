@@ -35,6 +35,14 @@ export default class TaxRatesTable extends React.Component {
 		return row;
 	}
 
+	renderTableHeading( text, tooltip ) {
+		return (
+			<th>
+				{ text.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ tooltip } />
+			</th>
+		);
+	}
+
 	render() {
 		const { taxRates, i18n } = this.props;
 
@@ -44,15 +52,15 @@ export default class TaxRatesTable extends React.Component {
 					<thead>
 						<tr>
 							<th className="sort">&nbsp;</th>
-							<th width="8%"><a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank">{ i18n.country_code.replace( ' ', '\u00A0' ) }</a>&nbsp;<Helptip text={ i18n.country_code_hint } /></th>
-							<th width="8%">{ i18n.state_code.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.state_code_hint } /></th>
-							<th>{ i18n.postcode.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.postcode_hint } /></th>
-							<th>{ i18n.city.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.city_hint } /></th>
-							<th width="8%">{ i18n.rate.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.rate_hint } /></th>
-							<th width="8%">{ i18n.tax_name.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.tax_name_hint } /></th>
-							<th width="8%">{ i18n.priority.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.priority_hint } /></th>
-							<th width="8%">{ i18n.compound.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.compound_hint } /></th>
-							<th width="8%">{ i18n.shipping.replace( ' ', '\u00A0' ) }&nbsp;<Helptip text={ i18n.shipping_hint } /></th>
+							{ this.renderTableHeading( i18n.country_code, i18n.country_code_hint ) }
+							{ this.renderTableHeading( i18n.state_code, i18n.state_code_hint ) }
+							{ this.renderTableHeading( i18n.postcode, i18n.postcode_hint ) }
+							{ this.renderTableHeading( i18n.city, i18n.city_hint ) }
+							{ this.renderTableHeading( i18n.rate, i18n.rate_hint ) }
+							{ this.renderTableHeading( i18n.tax_name, i18n.tax_name_hint ) }
+							{ this.renderTableHeading( i18n.priority, i18n.priority_hint ) }
+							{ this.renderTableHeading( i18n.compound, i18n.compound_hint ) }
+							{ this.renderTableHeading( i18n.shipping, i18n.shipping_hint ) }
 						</tr>
 					</thead>
 					<tfoot>
