@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import lodash from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchTaxRates, editTaxRate } from '../../state/tax-rates/actions';
