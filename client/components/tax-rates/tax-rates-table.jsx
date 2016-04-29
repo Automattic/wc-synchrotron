@@ -4,8 +4,8 @@ import Helptip from 'components/helptip';
 
 export default class TaxRatesTable extends React.Component {
 	propTypes: {
-		taxRates: PropTypes.array.isRequired,
-		data: PropTypes.object.isRequired,
+		taxRates     : PropTypes.array.isRequired,
+		i18n         : PropTypes.object.isRequired,
 		onTaxRateEdit: PropTypes.func.isRequired,
 	}
 
@@ -15,19 +15,19 @@ export default class TaxRatesTable extends React.Component {
 	}
 
 	renderTaxRate( taxRate ) {
-		const { editing, onTaxRateEdit, data } = this.props;
+		const { editing, onTaxRateEdit, i18n } = this.props;
 		let row;
 
 		if ( taxRate.id in editing ) {
 			row = <TaxRateRow
 				key={ taxRate.id }
-				data={ data }
+				i18n={ i18n }
 				taxRate={ editing[ taxRate.id ] }
 				onEdit={ onTaxRateEdit } />;
 		} else {
 			row = <TaxRateRow
 				key={ taxRate.id }
-				data={ data }
+				i18n={ i18n }
 				taxRate={ taxRate }
 				onEdit={ onTaxRateEdit } />;
 		}
@@ -36,8 +36,7 @@ export default class TaxRatesTable extends React.Component {
 	}
 
 	render() {
-		const { taxRates, data } = this.props;
-		const i18n = data.strings;
+		const { taxRates, i18n } = this.props;
 
 		return (
 			<div>

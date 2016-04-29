@@ -205,8 +205,8 @@ class WC_Synchrotron {
 			'endpoints' => array(
 				'get_tax_rates' => esc_url_raw( rest_url( '/wc/v1/taxes' ) )
 			),
-			'nonce'     => wp_create_nonce( 'wp_rest' ),
-			'strings'   => array(
+			'nonce' => wp_create_nonce( 'wp_rest' ),
+			'i18n'  => array(
 				'tax_rates'         => __( 'Tax Rates', 'wc-synchrotron' ),
 				'country_code'      => __( 'Country Code', 'wc-synchrotron' ),
 				'state_code'        => __( 'State Code', 'wc-synchrotron' ),

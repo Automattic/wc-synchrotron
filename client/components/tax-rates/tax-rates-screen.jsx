@@ -1,18 +1,11 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchTaxRates, editTaxRate } from '../../state/tax-rates/actions';
 import TaxRatesTable from './tax-rates-table';
 import ReactTooltip from 'react-tooltip';
 
-class TaxRatesScreen extends React.Component {
-	constructor( props ) {
-		super( props );
-	}
-
-	componentDidMount() {
-		const { data } = this.props;
-		this.props.fetchTaxRates( data.endpoints.get_tax_rates, data.nonce );
+export default class TaxRatesScreen extends React.Component {
+	propTypes: {
+		taxRatesState: PropTypes.object.isRequired,
+		i18n         : PropTypes.object.isRequired,
 	}
 
 	render() {
@@ -20,38 +13,15 @@ class TaxRatesScreen extends React.Component {
 
 		return (
 			<div className="wrap">
-				<h3>{ this.props.data.strings.tax_rates }</h3>
+				<h3>{ this.props.i18n.tax_rates }</h3>
 				<TaxRatesTable
-					taxRates={ taxRates }
-					data={ this.props.data }
-					editing={ editing }
-					onTaxRateEdit={ this.props.editTaxRate }
+					taxRates      ={ taxRates }
+					i18n          ={ this.props.i18n }
+					editing       ={ editing }
+					onTaxRateEdit ={ this.props.editTaxRate }
 					/>
-				<ReactTooltip effect="solid" multiline={true} place="bottom" />
+				<ReactTooltip effect="solid" multiline={ true } place="bottom" />
 			</div>
 		);
 	}
 }
-
-TaxRatesScreen.propTypes = {
-	data: PropTypes.object.isRequired,
-	taxRatesState: PropTypes.object.isRequired,
-};
-
-function mapStateToProps( state ) {
-	return {
-		taxRatesState: state.taxRates
-	};
-}
-
-function mapDispatchToProps( dispatch ) {
-	return bindActionCreators(
-		{
-			fetchTaxRates,
-			editTaxRate
-		},
-		dispatch
-	);
-}
-
-export default connect( mapStateToProps, mapDispatchToProps )( TaxRatesScreen );

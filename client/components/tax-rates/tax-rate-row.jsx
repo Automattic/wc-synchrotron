@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 export default class TaxRateRow extends React.Component {
 	propTypes: {
-		data   : PropTypes.object.isRequired,
+		i18n   : PropTypes.object.isRequired,
 		taxRate: PropTypes.object.isRequired,
 		onEdit : PropTypes.func.isRequired,
 	}
@@ -20,9 +20,8 @@ export default class TaxRateRow extends React.Component {
 	}
 
 	render() {
-		const { taxRate, data } = this.props;
+		const { taxRate, i18n } = this.props;
 		const { id, country, state, postcode, city, rate, name, priority, compound, apply_to_shipping } = taxRate;
-		const i18n = data.strings;
 
 		return (
 			<tr data-tip={ i18n.tax_rate_id + ": " + id }>
