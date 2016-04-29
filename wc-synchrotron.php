@@ -273,7 +273,9 @@ class WC_Synchrotron {
 	 */
 	public function get_asset_version( $script_name ) {
 		if ( WC_SYNCHROTRON_BUST_ASSET_CACHE ) {
-			return bin2hex( mcrypt_create_iv( 16, MCRYPT_DEV_URANDOM ) );
+			require_once( ABSPATH . 'wp-includes/class-phpass.php' );
+			$hasher = new PasswordHash( 8, false );
+			return md5( $hasher->get_random_bytes( 16 ) );
 		} else {
 			return WC_Synchrotron::VERSION;
 		}
