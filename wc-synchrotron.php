@@ -193,20 +193,21 @@ class WC_Synchrotron {
 	 */
 	public function display_tax_rates_screen() {
 		wp_enqueue_script(
-			'wc-synchrotron-tax-rates',
-			plugins_url( 'dist/tax_rates_bundle.js', __FILE__ ),
+			'wc-synchrotron-tax-rates-js',
+			$this->get_assets_url() . 'tax_rates_bundle.js',
 			array(),
-			WC_Synchrotron::VERSION,
+			$this->get_asset_version( 'tax_rates_bundle.js' ),
 			true
 		);
 
 		wp_enqueue_style(
-			'wc-synchrotron',
-			plugins_url( 'dist/tax_rates.css', __FILE__ ),
-			array()
+			'wc-synchrotron-tax-rates-css',
+			$this->get_assets_url() . 'tax_rates.css',
+			array(),
+			$this->get_asset_version( 'tax_rates.css' )
 		);
 
-		wp_localize_script( 'wc-synchrotron-tax-rates', 'wc_tax_rates_screen_data', array(
+		wp_localize_script( 'wc-synchrotron-tax-rates-js', 'wc_tax_rates_screen_data', array(
 			'endpoints' => array(
 				'get_tax_rates' => esc_url_raw( rest_url( '/wc/v1/taxes' ) )
 			),
