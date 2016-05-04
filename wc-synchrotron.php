@@ -46,7 +46,21 @@ class WC_Synchrotron {
 		if ( $this->check_dependencies() ) {
 			// Hooks and filters for WC Synchrotron should be added here.
 			add_action( 'admin_menu', array( $this, 'attach_menus' ) );
+			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
 		}
+	}
+
+	/**
+	 * Register Syncrotron screens for WooCommerce.
+	 * @param  array $ids
+	 * @return array
+	 */
+	public function register_screen_ids( $ids ) {
+		$screen_id = sanitize_title( __( 'Synchrotron', 'wc-synchrotron' ) );
+		$ids[] = 'toplevel_page_' . $screen_id;
+		$ids[] = $screen_id . '_page_wc-synchrotron-coupons';
+		$ids[] = $screen_id . '_page_wc-synchrotron-tax-rates';
+		return $ids;
 	}
 
 	/**
@@ -82,8 +96,8 @@ class WC_Synchrotron {
 	 */
 	public function attach_menus() {
 		add_menu_page(
-			__( 'WooCommerce Synchrotron', 'wc-synchrotron' ),
-			__( 'Synchrotron Admin', 'wc-synchrotron' ),
+			__( 'Synchrotron', 'wc-synchrotron' ),
+			__( 'Synchrotron', 'wc-synchrotron' ),
 			'manage_woocommerce',
 			'wc-synchrotron',
 			array( $this, 'display_menu_screen' ),
@@ -98,6 +112,15 @@ class WC_Synchrotron {
 			'manage_woocommerce',
 			'wc-synchrotron-coupons',
 			array( $this, 'display_coupons_screen' )
+		);
+
+		add_submenu_page(
+			'wc-synchrotron',
+			__( 'Tax Rates Test', 'wc-synchrotron' ),
+			__( 'Tax Rates Test', 'wc-synchrotron' ),
+			'manage_woocommerce',
+			'wc-synchrotron-tax-rates',
+			array( $this, 'display_tax_rates_screen' )
 		);
 	}
 
@@ -140,10 +163,12 @@ class WC_Synchrotron {
 		$coupon_screen_data = apply_filters(
 			'wc_coupon_screen_data',
 			array(
-				'endpoints' => array(
-					'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
+				'endpoints'              => array(
+					'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
 				),
-				'nonce' => wp_create_nonce( 'wp_rest' )
+				'nonce'                  => wp_create_nonce( 'wp_rest' ),
+				'currency_symbol'        => html_entity_decode( get_woocommerce_currency_symbol() ),
+				'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 			)
 		);
 
@@ -154,10 +179,66 @@ class WC_Synchrotron {
 				</div>
 			</div>
 
-			<script type='application/json' id='wc_coupon_screen_data'>
+			<script type="application/json" id="wc_coupon_screen_data">
 				<?php echo json_encode( $coupon_screen_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) ?>
 			</script>
 		<?php
+	}
+
+	/**
+	 * Screen for managing tax rates.
+	 */
+	public function display_tax_rates_screen() {
+		wp_enqueue_script(
+			'wc-synchrotron-tax-rates',
+			plugins_url( 'dist/tax_rates_bundle.js', __FILE__ ),
+			array(),
+			WC_Synchrotron::VERSION,
+			true
+		);
+
+		wp_enqueue_style(
+			'wc-synchrotron',
+			plugins_url( 'dist/tax_rates.css', __FILE__ ),
+			array()
+		);
+
+		wp_localize_script( 'wc-synchrotron-tax-rates', 'wc_tax_rates_screen_data', array(
+			'endpoints' => array(
+				'get_tax_rates' => esc_url_raw( rest_url( '/wc/v1/taxes' ) )
+			),
+			'nonce' => wp_create_nonce( 'wp_rest' ),
+			'i18n'  => array(
+				'tax_rates'         => __( 'Tax Rates', 'wc-synchrotron' ),
+				'country_code'      => __( 'Country Code', 'wc-synchrotron' ),
+				'state_code'        => __( 'State Code', 'wc-synchrotron' ),
+				'postcode'          => __( 'ZIP/Postcode', 'wc-synchrotron' ),
+				'city'              => __( 'City', 'wc-synchrotron' ),
+				'rate'              => __( 'Rate %', 'wc-synchrotron' ),
+				'tax_name'          => __( 'Tax Name', 'wc-synchrotron' ),
+				'priority'          => __( 'Priority', 'wc-synchrotron' ),
+				'compound'          => __( 'Compound', 'wc-synchrotron' ),
+				'shipping'          => __( 'Shipping', 'wc-synchrotron' ),
+				'country_code_hint' => __( 'A 2 digit country code, e.g. US. Leave blank to apply to all.', 'wc-synchrotron' ),
+				'state_code_hint'   => __( 'A 2 digit state code, e.g. AL. Leave blank to apply to all.', 'wc-synchrotron' ),
+				'postcode_hint'     => __( 'Postcode for this rule. Semi-colon (;) separate multiple values. Leave blank to apply to all areas. Wildcards (*) can be used. Ranges for numeric postcodes (e.g. 12345-12350) will be expanded into individual postcodes.', 'wc-synchrotron' ),
+				'city_hint'         => __( 'Cities for this rule. Semi-colon (;) separate multiple values. Leave blank to apply to all cities.', 'wc-synchrotron' ),
+				'rate_hint'         => __( 'Enter a tax rate (percentage) to 4 decimal places.', 'wc-synchrotron' ),
+				'tax_name_hint'     => __( 'Enter a name for this tax rate.', 'wc-synchrotron' ),
+				'priority_hint'     => __( 'Choose a priority for this tax rate. Only 1 matching rate per priority will be used. To define multiple tax rates for a single area you need to specify a different priority per rate.', 'wc-synchrotron' ),
+				'compound_hint'     => __( 'Choose whether or not this is a compound rate. Compound tax rates are applied on top of other tax rates.', 'wc-synchrotron' ),
+				'shipping_hint'     => __( 'Choose whether or not this tax rate also gets applied to shipping.', 'wc-synchrotron' ),
+				'insert_row'        => __( 'Insert row', 'wc-synchrotron' ),
+				'remove_rows'       => __( 'Remove selected row(s)', 'wc-synchrotron' ),
+				'export_csv'        => __( 'Export CSV', 'wc-synchrotron' ),
+				'import_csv'        => __( 'Import CSV', 'wc-synchrotron' ),
+				'import_url'        => admin_url( 'admin.php?import=woocommerce_tax_rate_csv' ),
+				'loading'           => __( 'Loading', 'wc-synchrotron' ),
+				'tax_rate_id'       => __( 'Tax rate ID', 'wc-synchrotron' ),
+			)
+		) );
+
+		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
 	}
 
 	/**

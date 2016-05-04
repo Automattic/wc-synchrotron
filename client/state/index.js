@@ -5,9 +5,11 @@ import effects from 'redux-effects';
 import fetch from 'redux-effects-fetch';
 
 import coupons from './coupons/reducer';
+import taxRates from './tax-rates/reducer';
 
 export const rootReducer = combineReducers( {
-	coupons
+	coupons,
+	taxRates,
 } );
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -22,4 +24,3 @@ export default function configureStore( initialState ) {
 
 	return store;
 }
-
