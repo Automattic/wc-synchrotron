@@ -6,11 +6,11 @@ you're wondering what are the ground rules here? What's the process?
 ## GitHub Flow
 
 We're using the GitHub flow process here. If you're unfamiliar,
-[check it out, here.](https://guides.github.com/introduction/flow/)
+[check it out.](https://guides.github.com/introduction/flow/)
 
 ## Guidelines
 
-Here are the base guidelines you should know, as a team member:
+Here are the base guidelines you should know:
 
 ### Master Branch
 
@@ -28,8 +28,8 @@ All meaningful code should be in a Pull Request before being merged into
 master. And each Pull Request should be reviewed by at least one other
 team member before merging. This keeps the team engaged in what's going on.
 It can help catch mistakes, discrepencies or even spark some conversation
-that might not have otherwise happened. A simple "LGTM", :+1: or :shipit:
-comment suffices for approval.
+that might not have otherwise happened. A simple "LGTM", :+1:(```:+1:```)
+or :shipit:(```:shipit:```) comment suffices for approval.
 
 ### Branching
 
@@ -43,6 +43,22 @@ Current development efforts of team members should branch on the main repo
 and see what each other are working on easier. These branches can be rebased
 if needed, but communication to the rest of the team may be necessary to
 ensure you don't mess up someone's local copy.
+
+### Commits
+
+Individual commits in each branch should be small and purposeful:
+
+ * Single purpose
+ * Atomic as possible
+ * Small in size (<500 lines)
+ * Have a descriptive commit title and message.
+
+Single purpose commits can include adding a skeleton for feature, or
+WIP commits that don't break anything else. Code changes can include a couple
+minor spelling/grammar/style fixes as long as they are few.  A single purpose
+commit could also be widespread code style fixes. Special attention should be
+given to moving files or directories. These should be in their own commit with
+no other meaningful changes to preserve diffs.
 
 ### Coding Standards
 
