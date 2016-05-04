@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'No direct access.' );
  *  - If it doesn't, use as a relative URL starting from plugin base URL.
  *  - If null, use plugin base URL.
  */
-define( 'WC_SYNCHROTRON_ASSETS_URL', 'http://localhost:8090/dist/' );
+define( 'WC_SYNCHROTRON_ASSETS_URL', '//localhost:8090/dist/' );
 
 /**
  * Randomizes the url for each asset so they can't be cached.

@@ -252,7 +252,7 @@ class WC_Synchrotron {
 	 */
 	public function get_assets_url() {
 		if ( null !== WC_SYNCHROTRON_ASSETS_URL ) {
-			if ( preg_match( '#^https?://#i', WC_SYNCHROTRON_ASSETS_URL ) === 1) {
+			if ( strstr( WC_SYNCHROTRON_ASSETS_URL, '//' ) ) {
 				// It's a full URL, so just return it.
 				return WC_SYNCHROTRON_ASSETS_URL;
 			} else {
