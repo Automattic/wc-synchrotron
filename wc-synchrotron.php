@@ -58,8 +58,8 @@ class WC_Synchrotron {
 	public function register_screen_ids( $ids ) {
 		$screen_id = sanitize_title( __( 'Synchrotron', 'wc-synchrotron' ) );
 		$ids[] = 'toplevel_page_' . $screen_id;
-		$ids[] = $screen_id . '_page_wc-synchrotron-coupons';
-		$ids[] = $screen_id . '_page_wc-synchrotron-tax-rates';
+		//$ids[] = $screen_id . '_page_wc-synchrotron-coupons';
+		//$ids[] = $screen_id . '_page_wc-synchrotron-tax-rates';
 		return $ids;
 	}
 
@@ -205,7 +205,7 @@ class WC_Synchrotron {
 
 		wp_localize_script( 'wc-synchrotron-tax-rates', 'wc_tax_rates_screen_data', array(
 			'endpoints' => array(
-				'get_tax_rates' => esc_url_raw( rest_url( '/wc/v1/taxes' ) )
+				'taxes' => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
 			),
 			'nonce' => wp_create_nonce( 'wp_rest' ),
 			'i18n'  => array(
@@ -235,6 +235,7 @@ class WC_Synchrotron {
 				'import_url'        => admin_url( 'admin.php?import=woocommerce_tax_rate_csv' ),
 				'loading'           => __( 'Loading', 'wc-synchrotron' ),
 				'tax_rate_id'       => __( 'Tax rate ID', 'wc-synchrotron' ),
+				'save_changes'      => __( 'Save changes', 'wc-synchrotron' ),
 			)
 		) );
 

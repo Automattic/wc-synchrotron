@@ -12,13 +12,14 @@ export default class TaxRatesScreen extends React.Component {
 		const { isFetching, isFetched, taxRates, editing } = this.props.taxRatesState;
 
 		return (
-			<div className="wrap">
-				<h3>{ this.props.i18n.tax_rates }</h3>
+			<div>
+				<h1 className="page-title">{ this.props.i18n.tax_rates }</h1>
 				<TaxRatesTable
 					taxRates      ={ taxRates }
 					i18n          ={ this.props.i18n }
 					editing       ={ editing }
-					onTaxRateEdit ={ this.props.editTaxRate }
+					onTaxRateEdit ={ this.props.onTaxRateEdit }
+					onSave        = {this.props.onSave}
 					/>
 				<ReactTooltip effect="solid" multiline={ true } place="bottom" />
 			</div>
