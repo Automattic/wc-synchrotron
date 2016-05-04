@@ -4,13 +4,18 @@ var ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 module.exports = {
 	entry: {
+		devServer: 'webpack-dev-server/client?http://0.0.0.0:8090',
+		devServerOnly: 'webpack/hot/only-dev-server',
 		coupons: './client/entry/coupons.jsx',
 		tax_rates: './client/entry/tax-rates.jsx'
 	},
 	output: {
 		path: path.join( __dirname, 'dist' ),
-		publicPath: 'wp-includes/js',
+		publicPath: '/dist/',
 		filename: '[name]_bundle.js'
+	},
+	devServer: {
+		outputPath: path.join( __dirname, 'dist' ) /* CopyWebpackPlugin needs this */
 	},
 	module: {
 		loaders: [
@@ -20,7 +25,7 @@ module.exports = {
 					path.resolve( __dirname, 'client' ),
 					path.resolve( __dirname, 'node_modules', 'wp-calypso', 'client' ),
 				],
-				loader: 'babel'
+				loaders: [ 'react-hot', 'babel' ]
 			},
 			{
 				test: /\.json$/,

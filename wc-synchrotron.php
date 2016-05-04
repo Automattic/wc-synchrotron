@@ -34,6 +34,8 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function __construct() {
+		include_once( 'dist/synchrotron-config.php' );
+
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 	}
 
@@ -147,17 +149,18 @@ class WC_Synchrotron {
 	 */
 	public function display_coupons_screen() {
 		wp_enqueue_script(
-			'wc-synchrotron-coupons',
-			plugins_url( 'dist/coupons_bundle.js', __FILE__ ),
+			'wc-synchrotron-coupons-js',
+			$this->get_assets_url() . 'coupons_bundle.js',
 			array(),
-			WC_Synchrotron::VERSION,
+			$this->get_asset_version( 'coupons_bundle.js' ),
 			true
 		);
 
 		wp_enqueue_style(
-			'wc-synchrotron',
-			plugins_url( 'dist/coupons.css', __FILE__ ),
-			array()
+			'wc-synchrotron-coupons-css',
+			$this->get_assets_url() . 'coupons.css',
+			array(),
+			$this->get_asset_version( 'coupons.css' )
 		);
 
 		$coupon_screen_data = apply_filters(
@@ -190,20 +193,21 @@ class WC_Synchrotron {
 	 */
 	public function display_tax_rates_screen() {
 		wp_enqueue_script(
-			'wc-synchrotron-tax-rates',
-			plugins_url( 'dist/tax_rates_bundle.js', __FILE__ ),
+			'wc-synchrotron-tax-rates-js',
+			$this->get_assets_url() . 'tax_rates_bundle.js',
 			array(),
-			WC_Synchrotron::VERSION,
+			$this->get_asset_version( 'tax_rates_bundle.js' ),
 			true
 		);
 
 		wp_enqueue_style(
-			'wc-synchrotron',
-			plugins_url( 'dist/tax_rates.css', __FILE__ ),
-			array()
+			'wc-synchrotron-tax-rates-css',
+			$this->get_assets_url() . 'tax_rates.css',
+			array(),
+			$this->get_asset_version( 'tax_rates.css' )
 		);
 
-		wp_localize_script( 'wc-synchrotron-tax-rates', 'wc_tax_rates_screen_data', array(
+		wp_localize_script( 'wc-synchrotron-tax-rates-js', 'wc_tax_rates_screen_data', array(
 			'endpoints' => array(
 				'get_tax_rates' => esc_url_raw( rest_url( '/wc/v1/taxes' ) )
 			),
@@ -239,6 +243,43 @@ class WC_Synchrotron {
 		) );
 
 		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
+	}
+
+	/**
+	 * Gets the base url for assets like .js and .css bundles
+	 *
+	 * @since 1.0
+	 */
+	public function get_assets_url() {
+		if ( null !== WC_SYNCHROTRON_ASSETS_URL ) {
+			if ( strstr( WC_SYNCHROTRON_ASSETS_URL, '//' ) ) {
+				// It's a full URL, so just return it.
+				return WC_SYNCHROTRON_ASSETS_URL;
+			} else {
+				// It's a relative url, so use plugin url as a base.
+				return plugins_url( WC_SYNCHROTRON_ASSETS_URL, __FILE__ );
+			}
+		} else {
+			// No assets url provided, so return base plugins url.
+			return plugins_url( '/', __FILE__ );
+		}
+	}
+
+	/**
+	 * Gets the asset version for enqueuing purposes.
+	 * If the config is set to bust caches, this returns a random hex string.
+	 * If not, it returns the version of the plugin.
+	 *
+	 * @since 1.0
+	 */
+	public function get_asset_version( $script_name ) {
+		if ( WC_SYNCHROTRON_BUST_ASSET_CACHE ) {
+			require_once( ABSPATH . 'wp-includes/class-phpass.php' );
+			$hasher = new PasswordHash( 8, false );
+			return md5( $hasher->get_random_bytes( 16 ) );
+		} else {
+			return WC_Synchrotron::VERSION;
+		}
 	}
 
 	/**
