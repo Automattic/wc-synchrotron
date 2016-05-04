@@ -103,7 +103,7 @@ class WC_Synchrotron {
 			'manage_woocommerce',
 			'wc-synchrotron',
 			array( $this, 'display_menu_screen' ),
-			null,
+			'dashicons-marker',
 			56
 		);
 
