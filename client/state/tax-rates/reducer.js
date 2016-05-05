@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import _find from 'lodash/find';
 
 /**
  * Inital state before the user does anything with the data.
@@ -99,7 +100,7 @@ export function taxRatesUpdated( state, action ) {
 
 	state.taxRates.filter( ( item ) => {
 		if ( item.id in state.editing ) {
-			newTaxRates.push( state.editing[ item.id ] );
+			newTaxRates.push( _find( action.payload, { 'id': item.id } ) || state.editing[ item.id ] );
 		} else {
 			newTaxRates.push( item );
 		}
