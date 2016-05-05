@@ -39,7 +39,7 @@ function mapDispatchToProps( dispatch ) {
 		{
 			fetchTaxRates,
 			editTaxRate,
-			updateTaxRates
+			updateTaxRates,
 		},
 		dispatch
 	);
