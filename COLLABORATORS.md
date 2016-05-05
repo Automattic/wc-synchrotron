@@ -31,6 +31,21 @@ It can help catch mistakes, discrepencies or even spark some conversation
 that might not have otherwise happened. A simple "LGTM", :+1:(```:+1:```)
 or :shipit:(```:shipit:```) comment suffices for approval.
 
+Pull Requests can have [Status] labels which denote the current state they
+are in. This helps the PR get the attention it needs through the process.
+
+ * [Status] Needs Review
+   - Put this on your PR when you're ready for others to review it.
+   - Remove it when review is not desired.
+ * [Status] In Progress
+   - Put this on when you're working on the PR and others will wait to review further.
+   - Remove it when you're done with your work.
+ * [Status] Needs Author Reply
+   - Put this on if you've reviewed a PR and feel your comments need answering before it's merged.
+   - Remove it when you're the author and you've replied to the comments.
+ * [Status] Ready to Merge
+   - Put this on if you've reviewed a PR and given approval and you feel it's, well, ready to merge.
+
 ### Branching
 
 In almost all cases, branches should try to be:
