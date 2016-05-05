@@ -55,41 +55,17 @@ export function editTaxRate( taxRate, fieldName, fieldValue ) {
  * @param  object rates to store
  * @return array
  */
-export function updateTaxRates( rates ) {
-
-	window.console.log(rates);
-
-	return fetchTaxRates();
-/*
-
-
-	$fields = array(
-				'tax_rate_country',
-				'tax_rate_state',
-				'tax_rate',
-				'tax_rate_name',
-				'tax_rate_priority',
-				'tax_rate_compound',
-				'tax_rate_shipping',
-				'tax_rate_order',
-				'tax_rate_class'
-			);
-
-*/
-
+export function updateTaxRates( taxRates ) {
 	return [
 		taxRatesUpdating(),
 		bind(
 			fetch(
-				data.endpoints.taxes + '/',
+				data.endpoints.taxes + '/update_items',
 				{
 					method: 'POST',
 					credentials: 'same-origin',
 					headers: getRequestHeaders(),
-					body: JSON.stringify( {
-						firstParam: 'yourValue',
-						secondParam: 'yourOtherValue',
-					} ),
+					body: JSON.stringify( taxRates ),
 				}
 			),
 			( { value } ) => taxRatesUpdated( value ),

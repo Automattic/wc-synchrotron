@@ -20,7 +20,7 @@ class TaxRatesScreenContainer extends React.Component {
 	}
 
 	onSave() {
-		this.props.updateTaxRates( this.props.taxRatesState.taxRates );
+		this.props.updateTaxRates( this.props.taxRatesState.editing );
 	}
 
 	render() {
