@@ -95,20 +95,20 @@ export function taxRatesUpdating( state ) {
  * After update, clears editing and sets the state correctly.
  */
 export function taxRatesUpdated( state, action ) {
-	let newtaxRates = [];
+	let newTaxRates = [];
 
 	state.taxRates.filter( ( item ) => {
 		if ( item.id in state.editing ) {
-			newtaxRates.push( state.editing[ item.id ] );
+			newTaxRates.push( state.editing[ item.id ] );
 		} else {
-			newtaxRates.push( item );
+			newTaxRates.push( item );
 		}
 	} );
 
 	return Object.assign( {}, state, {
 		isUpdating: false,
 		error     : null,
-		taxRates  : newtaxRates,
+		taxRates  : newTaxRates,
 		editing   : [],
 	} );
 }
