@@ -23,6 +23,8 @@ const data = wc_tax_rates_screen_data;
 function getRequestHeaders() {
 	let headers = new Headers();
 	headers.set( 'x-wp-nonce', data.nonce );
+	headers.set( 'Accept', 'application/json' );
+	headers.set( 'Content-Type', 'application/json' );
 	return headers;
 }
 
