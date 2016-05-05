@@ -6,6 +6,9 @@ export default class TaxRatesScreen extends React.Component {
 	propTypes: {
 		taxRatesState: PropTypes.object.isRequired,
 		i18n         : PropTypes.object.isRequired,
+		editing      : PropTypes.object.isRequired,
+		onTaxRateEdit: PropTypes.func.isRequired,
+		onSave       : PropTypes.func.isRequired,
 	}
 
 	render() {
