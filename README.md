@@ -6,8 +6,8 @@ Starting with the Admin console, Synchrotron uses the latest in web technology
 to increase performance and ease of use for WooCommerce store owners.
 
 To get involved, check out the
-[Contributing Guide](https://github.com/Automattic/wc-synchrotron/blob/master/CONTRIBUTING.md)!
+[Contributing Guide](CONTRIBUTING.md)!
 
 If you're a new collaborator on this project, you'll want to go over the
-[Collaborator Guidelines](https://github.com/Automattic/wc-synchrotron/blob/master/COLLABORATORS.md)
+[Collaborator Guidelines](COLLABORATORS.md)
 

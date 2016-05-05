@@ -37,7 +37,7 @@ If you're ready to get started trying out Synchrotron, visit the
 ## Working in the Code
 
 If you're wanting to start working with the code, make sure to read the
-[Collaborator Guidelines](https://github.com/Automattic/wc-synchrotron/blob/master/COLLABORATORS.md)
+[Collaborator Guidelines](COLLABORATORS.md)
 before you start, so you can make sure your PR fits our standards before you
 submit it!
 
