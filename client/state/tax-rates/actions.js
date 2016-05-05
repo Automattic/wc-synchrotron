@@ -1,6 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { createAction } from 'redux-actions';
+import screenData from '../../utils/screen-data';
 
 /**
  * These are the actions we are defining.
@@ -14,7 +15,7 @@ const taxRatesUpdated  = createAction( 'WC_TAX_RATES_UPDATED' );
 /**
  * Get data from WordPress which contains endpoint information.
  */
-const data = wc_tax_rates_screen_data;
+const data = screenData( 'wc_tax_rates_screen_data' );
 
 /**
  * Get headers for API calls.
