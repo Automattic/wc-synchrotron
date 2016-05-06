@@ -163,17 +163,14 @@ class WC_Synchrotron {
 			$this->get_asset_version( 'coupons.css' )
 		);
 
-		$coupon_screen_data = apply_filters(
-			'wc_coupon_screen_data',
-			array(
-				'endpoints'              => array(
-					'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
-				),
-				'nonce'                  => wp_create_nonce( 'wp_rest' ),
-				'currency_symbol'        => html_entity_decode( get_woocommerce_currency_symbol() ),
-				'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
-			)
-		);
+		wp_localize_script( 'wc-synchrotron-coupons-js', 'wc_coupons_screen_data', array(
+			'endpoints'              => array(
+				'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
+			),
+			'nonce'                  => wp_create_nonce( 'wp_rest' ),
+			'currency_symbol'        => html_entity_decode( get_woocommerce_currency_symbol() ),
+			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
+		) );
 
 		?>
 			<div class="wrap">

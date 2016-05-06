@@ -8,7 +8,7 @@ import '../../assets/stylesheets/style.scss';
 import configureStore from '../state';
 import screenData from '../utils/screen-data';
 
-const data = screenData( 'wc_coupon_screen_data' );
+const data = screenData( 'wc_coupons_screen_data' );
 const store = configureStore();
 
 const rootComponent =
