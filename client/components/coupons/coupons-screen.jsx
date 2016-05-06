@@ -7,10 +7,9 @@ import CouponsList from './coupons-list';
 class CouponsScreen extends React.Component {
 	constructor( props ) {
 		super( props );
-		this.onClick = this.onClick.bind( this );
 	}
 
-	onClick() {
+	componentDidMount() {
 		const { data } = this.props;
 
 		this.props.fetchCoupons( data.endpoints.get_coupons, data.nonce );
@@ -19,7 +18,6 @@ class CouponsScreen extends React.Component {
 	render() {
 		return (
 			<div className="wrap">
-				<button onClick={ this.onClick }>Click me</button>
 				{ this.renderCouponsList( this.props.coupons ) }
 			</div>
 		);
@@ -35,8 +33,6 @@ class CouponsScreen extends React.Component {
 				onCouponEdit={ this.props.editCoupon }
 				onCouponCancel={ this.props.cancelCouponEdit }
 				onCouponSave={ this.props.saveCoupon } />;
-		} else if ( isFetching ) {
-			return <h4>Please wait...</h4>;
 		}
 	}
 }
