@@ -178,10 +178,6 @@ class WC_Synchrotron {
 				<div id="coupons_screen" class="wc-synchrotron">
 				</div>
 			</div>
-
-			<script type="application/json" id="wc_coupon_screen_data">
-				<?php echo json_encode( $coupon_screen_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) ?>
-			</script>
 		<?php
 	}
 
