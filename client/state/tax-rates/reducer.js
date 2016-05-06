@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import _find from 'lodash/find';
+import _find from 'lodash.find';
 
 /**
  * Inital state before the user does anything with the data.
