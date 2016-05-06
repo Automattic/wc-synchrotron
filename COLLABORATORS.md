@@ -48,10 +48,10 @@ are in. This helps the PR get the attention it needs through the process.
 
 ### Branching
 
-In almost all cases, branches should try to be:
+In almost all cases, branches (and subsequently, Pull Requests) should try to be:
 
  * Short-lived, chronologically (a few weeks, at most)
- * Relatively small number of commits (<10 preferably)
+ * Small in size (<500 lines)
 
 Current development efforts of team members should branch on the main repo
 (instead of personal forks of the repo). This allows us to work together
@@ -65,7 +65,6 @@ Individual commits in each branch should be small and purposeful:
 
  * Single purpose
  * Atomic as possible
- * Small in size (<500 lines)
  * Have a descriptive commit title and message.
 
 Single purpose commits can include adding a skeleton for feature, or
