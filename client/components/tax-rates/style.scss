@@ -1,0 +1,113 @@
+.wc_tax_rates {
+	width: 100%;
+	border: 1px solid #C8D7E1;
+	border-bottom-width: 2px;
+	margin: 0 0 20px;
+
+	th {
+		padding: 10px 0;
+	}
+
+	tfoot {
+		th {
+			padding: 10px;
+		}
+	}
+
+	td {
+		padding: 0;
+		border-right: 1px solid #C8D7E1;
+		border-bottom: 1px solid #C8D7E1;
+		border-top: 0;
+		background: #fff;
+
+		input[type="text"],
+		input[type="number"] {
+			width: 100%;
+			padding: 5px 7px;
+			margin: 0;
+			border: 0;
+			height: auto;
+			background: transparent none;
+		}
+
+		&.compound,
+		&.apply_to_shipping {
+			padding: 5px 7px;
+			vertical-align: middle;
+
+			input {
+				width: auto;
+				padding: 0;
+			}
+		}
+	}
+
+	td:last-child {
+		border-right: 0;
+	}
+
+	tr.current td {
+		background-color: #fefbcc;
+	}
+
+	.item_cost,
+	.cost {
+		text-align: right;
+
+		input {
+			text-align: right;
+		}
+	}
+
+	th.sort {
+		width: 17px;
+		padding: 0 4px;
+	}
+
+	td.sort {
+		padding: 0 4px;
+		cursor: move;
+		background: #C8D7E1;
+		text-align: center;
+		vertical-align: middle;
+
+		&:before {
+			content: "\f333";
+			font-family: 'Dashicons';
+			text-align: center;
+			line-height: 1;
+			color: #999;
+			display: block;
+			width: 17px;
+			float: left;
+			height: 100%;
+		}
+
+		&:hover {
+			&:before {
+				color: #333;
+			}
+		}
+	}
+
+	.button {
+		float: left;
+		margin-right: 5px;
+	}
+
+	.export,
+	.import {
+		float: right;
+		margin-right: 0;
+		margin-left: 5px;
+	}
+
+	tr {
+		&:last-child {
+			td {
+				border-bottom: 0;
+			}
+		}
+	}
+}

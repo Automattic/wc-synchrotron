@@ -2,14 +2,20 @@ import debug from 'debug';
 
 const error = debug( 'synchrotron:error' );
 
-export default function screenData( elementName ) {
-	const element = document.getElementById( elementName );
+export default function screenData( id ) {
 	let data = null;
 
-	if ( element ) {
-		data = JSON.parse( element.textContent );
+	if ( typeof window[ id ] === 'object' ) {
+		data = window[ id ];
 	} else {
-		error( 'Failed to find Screen Data HTML Element: "' + elementName + '"' );
+		const element = document.getElementById( id );
+		let data = null;
+
+		if ( element ) {
+			data = JSON.parse( element.textContent );
+		} else {
+			error( 'Failed to find Screen Data HTML Element: "' + id + '"' );
+		}
 	}
 
 	return data;

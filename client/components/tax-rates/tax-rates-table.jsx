@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react';
 import TaxRateRow from './tax-rate-row';
 import Helptip from 'components/helptip';
+import Button from 'components/button';
 
 export default class TaxRatesTable extends React.Component {
 	propTypes: {
 		taxRates     : PropTypes.array.isRequired,
 		i18n         : PropTypes.object.isRequired,
 		onTaxRateEdit: PropTypes.func.isRequired,
+		onSave       : PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
@@ -44,7 +46,7 @@ export default class TaxRatesTable extends React.Component {
 	}
 
 	render() {
-		const { taxRates, i18n } = this.props;
+		const { taxRates, i18n, onSave } = this.props;
 
 		return (
 			<div>
@@ -77,6 +79,8 @@ export default class TaxRatesTable extends React.Component {
 						{ taxRates.map( this.renderTaxRate ) }
 					</tbody>
 				</table>
+
+				<Button primary disabled={ false } onClick={ onSave } >{ i18n.save_changes }</Button>
 			</div>
 		);
 	}

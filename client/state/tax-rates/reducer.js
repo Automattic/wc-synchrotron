@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import _find from 'lodash/find';
 
 /**
  * Inital state before the user does anything with the data.
@@ -7,6 +8,7 @@ import { handleActions } from 'redux-actions';
 export const initialState = {
 	isFetching: false,
 	isFetched : false,
+	isUpdating: false,
 	error     : null,
 	taxRates  : [],
 	editing   : {},
@@ -17,10 +19,12 @@ export const initialState = {
  * Action name => Callback
  */
 export default handleActions( {
-	WC_TAX_RATES_FETCHING : taxRatesFetching,
-	WC_TAX_RATES_FETCHED  : taxRatesFetched,
+	WC_TAX_RATES_FETCHING: taxRatesFetching,
+	WC_TAX_RATES_FETCHED: taxRatesFetched,
 	WC_TAX_RATES_SET_ERROR: taxRatesError,
-	WC_TAX_RATES_EDIT     : taxRatesEdit
+	WC_TAX_RATES_EDIT: taxRatesEdit,
+	WC_TAX_RATES_UPDATING: taxRatesUpdating,
+	WC_TAX_RATES_UPDATED: taxRatesUpdated,
 }, initialState );
 
 /**
@@ -76,4 +80,36 @@ export function taxRatesEdit( state, action ) {
 	} );
 
 	return Object.assign( {}, state, { editing } );
+}
+
+/**
+ * When begining to update rates, sets state object to reflect this.
+ */
+export function taxRatesUpdating( state ) {
+	return Object.assign( {}, state, {
+		isUpdating: true,
+		error     : null,
+	} );
+}
+
+/**
+ * After update, clears editing and sets the state correctly.
+ */
+export function taxRatesUpdated( state, action ) {
+	let newTaxRates = [];
+
+	state.taxRates.filter( ( item ) => {
+		if ( item.id in state.editing ) {
+			newTaxRates.push( _find( action.payload, { 'id': item.id } ) || state.editing[ item.id ] );
+		} else {
+			newTaxRates.push( item );
+		}
+	} );
+
+	return Object.assign( {}, state, {
+		isUpdating: false,
+		error     : null,
+		taxRates  : newTaxRates,
+		editing   : [],
+	} );
 }

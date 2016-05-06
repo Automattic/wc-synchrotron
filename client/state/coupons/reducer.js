@@ -68,4 +68,3 @@ export function couponsError( state, action ) {
 		error: action.payload,
 	} );
 }
-
