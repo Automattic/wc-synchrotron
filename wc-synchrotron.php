@@ -27,6 +27,7 @@ class WC_Synchrotron {
 
 	const VERSION = '1.0.0';
 	const WC_MIN_VERSION = '2.5';
+	const TEXTDOMAIN = 'woocommerce';
 
 	/**
 	 * Hook into plugins_loaded, which is when all plugins will be available.
@@ -59,51 +60,64 @@ class WC_Synchrotron {
 			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 			add_action( 'init', array( $this, 'maybe_generate_translation_files' ) );
-
-			//add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 10, 2 );
-
-
-
-			//var_dump(wp_get_installed_translations('plugins'));
 		}
-	}
-
-	function upgrader_process_complete( $arg1, $arg2 ) {
-		@error_log( print_r( $arg1, true ) );
-		@error_log( print_r( $arg2, true ) );
 	}
 
 	/**
 	 * Does PO to JSON conversion when needed for translations.
 	 */
-	function maybe_generate_translation_files() {
-		$textdomain       = 'woocommerce';
-		$locale           = get_locale();
-		$lang_dir         = trailingslashit( WP_LANG_DIR ) . 'plugins/';
-		$po_file          = $lang_dir . $textdomain . '-' . $locale . '.po';
-		$json_file        = $lang_dir . $textdomain . '-' . $locale . '.json';
-		$translations     = wp_get_installed_translations( 'plugins' );
-		$translation_info = isset( $translations[ $textdomain ][ $locale ] ) ? $translations[ $textdomain ][ $locale ] : false;
+	public function maybe_generate_translation_files() {
+		$po_file   = $this->get_language_file_path();
+		$json_file = $this->get_language_file_path( 'json' );
 
-		if ( $translation_info && file_exists( $po_file ) ) {
-			$revision = $translation_info['PO-Revision-Date'];
+		// We can only do conversion if the PO file exists.
+		if ( file_exists( $po_file ) ) {
+			$translation_info = wp_get_pomo_file_data( $po_file );
+			$revision         = strtotime( $translation_info['PO-Revision-Date'] );
 
-			// Include POMO library
-			include_once ABSPATH . WPINC . '/pomo/po.php';
+			/**
+			 * There are 2 case where we'd want to do a conversion;
+			 *  - if the JSON file does not exist
+			 *  - if the JSON file is out of date
+			 */
+			if ( ! file_exists( $json_file ) || $revision > get_option( 'synchrotron_revision_' . get_locale(), 0 ) ) {
+				// Parse PO file
+				$po_data = $this->parse_po_file( $po_file );
 
-			// Import the target PO file and get entries
-			$po = new PO();
-			$po->import_from_file( $po_file );
+				// Convert entries to JSON
+				$json    = $this->po2json( $po_data['headers'], $po_data['entries'], WC_Synchrotron::TEXTDOMAIN );
 
-			// Convert entries to JSON
-			$json = $this->po2json( $po->headers, $po->entries, $textdomain );
+				// Write to file
+				$this->create_json_file( $json, $json_file );
 
-			// Write to file
-			if ( $file_handle = @fopen( $json_file, 'w' ) ) {
-				fwrite( $file_handle, $json );
-				fclose( $file_handle );
+				// Record the revsion and locale
+				update_option( 'synchrotron_revision_' . get_locale(), $revision );
 			}
 		}
+	}
+
+	/**
+	 * Gets a language file path.
+	 * @param  string $type Filetype
+	 * @return string
+	 */
+	protected function get_language_file_path( $type = 'po' ) {
+		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . get_locale() . '.' . $type;
+	}
+
+	/**
+	 * Parse a po file and get headers and entries.
+	 * @param  string $po_file Path to po file
+	 * @return array
+	 */
+	protected function parse_po_file( $po_file ) {
+		include_once ABSPATH . WPINC . '/pomo/po.php';
+		$po = new PO();
+		$po->import_from_file( $po_file );
+		return array(
+			'headers' => $po->headers,
+			'entries' => $po->entries,
+		);
 	}
 
 	/**
@@ -148,6 +162,18 @@ class WC_Synchrotron {
 		}
 
 		return json_encode( $data );
+	}
+
+	/**
+	 * Create JSON file.
+	 * @param  string $json JSON data to write
+	 * @param  string $file File path to write to.
+	 */
+	protected function create_json_file( $json, $file ) {
+		if ( $file_handle = @fopen( $json_file, 'w' ) ) {
+			fwrite( $file_handle, $json );
+			fclose( $file_handle );
+		}
 	}
 
 	/**
