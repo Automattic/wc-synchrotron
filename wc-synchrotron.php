@@ -59,7 +59,7 @@ class WC_Synchrotron {
 			add_action( 'admin_menu', array( $this, 'attach_menus' ) );
 			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
-			add_action( 'init', array( $this, 'maybe_generate_translation_files' ) );
+			add_action( 'admin_init', array( $this, 'maybe_generate_translation_files' ) );
 		}
 	}
 
