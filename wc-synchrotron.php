@@ -25,9 +25,9 @@ defined( 'ABSPATH' ) or die( 'No direct access.' );
  */
 class WC_Synchrotron {
 
-	const VERSION = '1.0.0';
+	const VERSION        = '1.0.0';
 	const WC_MIN_VERSION = '2.5';
-	const TEXTDOMAIN = 'woocommerce';
+	const TEXTDOMAIN     = 'woocommerce';
 
 	/**
 	 * Hook into plugins_loaded, which is when all plugins will be available.
@@ -37,8 +37,8 @@ class WC_Synchrotron {
 	public function __construct() {
 		include_once( 'dist/synchrotron-config.php' );
 
-
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		add_action( 'wc_synchrotron_generate_translation_files', array( $this, 'generate_translation_files' ) );
 	}
 
 	/**
@@ -64,16 +64,17 @@ class WC_Synchrotron {
 	}
 
 	/**
-	 * Does PO to JSON conversion when needed for translations.
+	 * Queues PO to JSON conversion when needed.
 	 */
 	public function maybe_generate_translation_files() {
-		$po_file   = $this->get_language_file_path();
-		$json_file = $this->get_language_file_path( 'json' );
+		$next_event = wp_next_scheduled( 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
+		$po_file    = $this->get_language_file_path( get_locale() );
 
-		// We can only do conversion if the PO file exists.
-		if ( file_exists( $po_file ) ) {
+		// We can only do conversion if the PO file exists and we don't want to queue this up twice.
+		if ( file_exists( $po_file ) && ( ! $next_event || $next_event < time() ) ) {
 			$translation_info = wp_get_pomo_file_data( $po_file );
 			$revision         = strtotime( $translation_info['PO-Revision-Date'] );
+			$json_file        = $this->get_language_file_path( get_locale(), 'json' );
 
 			/**
 			 * There are 2 case where we'd want to do a conversion;
@@ -81,28 +82,43 @@ class WC_Synchrotron {
 			 *  - if the JSON file is out of date
 			 */
 			if ( ! file_exists( $json_file ) || $revision > get_option( 'synchrotron_revision_' . get_locale(), 0 ) ) {
-				// Parse PO file
-				$po_data = $this->parse_po_file( $po_file );
-
-				// Convert entries to JSON
-				$json    = $this->po2json( $po_data['headers'], $po_data['entries'], WC_Synchrotron::TEXTDOMAIN );
-
-				// Write to file
-				$this->create_json_file( $json, $json_file );
-
-				// Record the revsion and locale
-				update_option( 'synchrotron_revision_' . get_locale(), $revision );
+				wp_schedule_single_event( time() + 10, 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
 			}
 		}
 	}
 
 	/**
+	 * Generates the translation files for a locale.
+	 * @param  string $locale
+	 */
+	public function generate_translation_files( $locale ) {
+		$po_file          = $this->get_language_file_path( $locale );
+		$json_file        = $this->get_language_file_path( $locale, 'json' );
+		$translation_info = wp_get_pomo_file_data( $po_file );
+		$revision         = strtotime( $translation_info['PO-Revision-Date'] );
+
+		// Parse PO file
+		$po_data   = $this->parse_po_file( $po_file );
+
+		// Convert entries to JSON
+		$json      = $this->po2json( $po_data['headers'], $po_data['entries'], WC_Synchrotron::TEXTDOMAIN );
+
+		// Write to file
+		$this->create_json_file( $json, $json_file );
+
+		// Record the revsion and locale
+		update_option( 'synchrotron_revision_' . $locale, $revision );
+		wp_clear_scheduled_hook( 'wc_synchrotron_generate_translation_files', array( $locale ) );
+	}
+
+	/**
 	 * Gets a language file path.
+	 * @param  string $locale
 	 * @param  string $type Filetype
 	 * @return string
 	 */
-	protected function get_language_file_path( $type = 'po' ) {
-		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . get_locale() . '.' . $type;
+	protected function get_language_file_path( $locale, $type = 'po' ) {
+		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.' . $type;
 	}
 
 	/**
@@ -170,7 +186,7 @@ class WC_Synchrotron {
 	 * @param  string $file File path to write to.
 	 */
 	protected function create_json_file( $json, $file ) {
-		if ( $file_handle = @fopen( $json_file, 'w' ) ) {
+		if ( $file_handle = @fopen( $file, 'w' ) ) {
 			fwrite( $file_handle, $json );
 			fclose( $file_handle );
 		}
