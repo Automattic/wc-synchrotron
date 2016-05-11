@@ -22,5 +22,3 @@ define( 'WC_SYNCHROTRON_ASSETS_URL', '/dist/' );
  * This is very useful for development.
  */
 define( 'WC_SYNCHROTRON_BUST_ASSET_CACHE', true );
-
-?>

@@ -23,4 +23,3 @@ define( 'WC_SYNCHROTRON_ASSETS_URL', '//localhost:8090/dist/' );
  */
 define( 'WC_SYNCHROTRON_BUST_ASSET_CACHE', true );
 
-?>
