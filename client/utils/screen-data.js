@@ -8,14 +8,7 @@ export default function screenData( id ) {
 	if ( typeof window[ id ] === 'object' ) {
 		data = window[ id ];
 	} else {
-		const element = document.getElementById( id );
-		let data = null;
-
-		if ( element ) {
-			data = JSON.parse( element.textContent );
-		} else {
-			error( 'Failed to find Screen Data HTML Element: "' + id + '"' );
-		}
+		error( 'Failed to find Screen Data Element: "' + id + '"' );
 	}
 
 	return data;
