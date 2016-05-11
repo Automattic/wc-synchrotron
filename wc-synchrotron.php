@@ -168,7 +168,7 @@ class WC_Synchrotron {
 				'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
 			),
 			'nonce'                  => wp_create_nonce( 'wp_rest' ),
-			'currency_symbol'        => html_entity_decode( get_woocommerce_currency_symbol() ),
+			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 		) );
 
