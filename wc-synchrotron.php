@@ -91,7 +91,8 @@ class WC_Synchrotron {
 	 * Generates the translation files for a locale.
 	 * @param  string $locale
 	 */
-	public function generate_translation_files( $locale ) {
+	public function generate_translation_files( $locale = '' ) {
+		$locale           = $locale ? $locale : get_locale();
 		$po_file          = $this->get_language_file_path( $locale );
 		$json_file        = $this->get_language_file_path( $locale, 'json' );
 		$translation_info = wp_get_pomo_file_data( $po_file );
@@ -166,9 +167,13 @@ class WC_Synchrotron {
 			$entry = array();
 
 			if ( $translation->is_plural ) {
-				$entry[0] = $translation->translations[1];
-				$entry[1] = $translation->translations[0];
-				$entry[2] = $translation->translations[1];
+				if ( 2 == sizeof( $translation->translations ) ) {
+					$entry[0] = $translation->translations[1];
+					$entry[1] = $translation->translations[0];
+					$entry[2] = $translation->translations[1];
+				} else {
+					$entry    = $translation->translations;
+				}
 			} else {
 				$entry[0] = null;
 				$entry[1] = $translation->translations[0];
