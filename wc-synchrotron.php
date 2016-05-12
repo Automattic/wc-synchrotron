@@ -27,7 +27,7 @@ class WC_Synchrotron {
 
 	const VERSION        = '1.0.0';
 	const WC_MIN_VERSION = '2.5';
-	const TEXTDOMAIN     = 'woocommerce';
+	const TEXTDOMAIN     = 'wc-synchrotron';
 
 	/**
 	 * Hook into plugins_loaded, which is when all plugins will be available.
