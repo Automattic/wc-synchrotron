@@ -25,7 +25,7 @@
     "start-https": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.hot.js --hot --inline --watch --content-base dist --port 8090 --https",
     "test": "npm run build-dev && npm run test-client",
     "test-client": "NODE_ENV=test NODE_PATH=test:client TEST_ROOT=client node test/runner.babel.js",
-    "build-dev": "npm run clean && npm run calypso-regenerate-client-dev && npm run build-client-dev && npm run build-strings",
+    "build-dev": "npm run clean && npm run calypso-regenerate-client-dev && npm run build-client-dev",
     "build-client-dev": "node_modules/webpack/bin/webpack.js -d --progress --colors --config webpack.config.dev.js",
     "build-strings": "npm run build-coupons-strings && npm run build-tax-rates-strings && npm run makepot",
     "build-coupons-strings": "node_modules/wp-calypso/server/i18n/bin/i18n-cli.js dist/coupons-strings.php coupons_i18n_strings dist/coupons_bundle.js",
