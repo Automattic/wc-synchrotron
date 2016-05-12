@@ -107,7 +107,7 @@ class WC_Synchrotron {
 		// Write to file
 		$this->create_json_file( $json, $json_file );
 
-		// Record the revsion and locale
+		// Record the revision and locale
 		update_option( 'synchrotron_revision_' . $locale, $revision );
 		wp_clear_scheduled_hook( 'wc_synchrotron_generate_translation_files', array( $locale ) );
 	}
