@@ -167,7 +167,7 @@ class WC_Synchrotron {
 			$entry = array();
 
 			if ( $translation->is_plural ) {
-				if ( 2 == sizeof( $translation->translations ) ) {
+				if ( 2 === sizeof( $translation->translations ) ) {
 					$entry[0] = $translation->translations[1];
 					$entry[1] = $translation->translations[0];
 					$entry[2] = $translation->translations[1];
