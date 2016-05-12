@@ -25,8 +25,9 @@ defined( 'ABSPATH' ) or die( 'No direct access.' );
  */
 class WC_Synchrotron {
 
-	const VERSION = '1.0.0';
+	const VERSION        = '1.0.0';
 	const WC_MIN_VERSION = '2.5';
+	const TEXTDOMAIN     = 'woocommerce';
 
 	/**
 	 * Hook into plugins_loaded, which is when all plugins will be available.
@@ -37,6 +38,14 @@ class WC_Synchrotron {
 		include_once( 'dist/synchrotron-config.php' );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		add_action( 'wc_synchrotron_generate_translation_files', array( $this, 'generate_translation_files' ) );
+	}
+
+	/**
+	 * Localisation
+	 */
+	public function load_plugin_textdomain() {
+		load_plugin_textdomain( 'wc-synchrotron', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) . 'languages/' );
 	}
 
 	/**
@@ -49,6 +58,142 @@ class WC_Synchrotron {
 			// Hooks and filters for WC Synchrotron should be added here.
 			add_action( 'admin_menu', array( $this, 'attach_menus' ) );
 			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
+			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+			add_action( 'admin_init', array( $this, 'maybe_generate_translation_files' ) );
+		}
+	}
+
+	/**
+	 * Queues PO to JSON conversion when needed.
+	 */
+	public function maybe_generate_translation_files() {
+		$next_event = wp_next_scheduled( 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
+		$po_file    = $this->get_language_file_path( get_locale() );
+
+		// We can only do conversion if the PO file exists and we don't want to queue this up twice.
+		if ( file_exists( $po_file ) && ( ! $next_event || $next_event < time() ) ) {
+			$translation_info = wp_get_pomo_file_data( $po_file );
+			$revision         = strtotime( $translation_info['PO-Revision-Date'] );
+			$json_file        = $this->get_language_file_path( get_locale(), 'json' );
+
+			/**
+			 * There are 2 case where we'd want to do a conversion;
+			 *  - if the JSON file does not exist
+			 *  - if the JSON file is out of date
+			 */
+			if ( ! file_exists( $json_file ) || $revision > get_option( 'synchrotron_revision_' . get_locale(), 0 ) ) {
+				wp_schedule_single_event( time() + 10, 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
+			}
+		}
+	}
+
+	/**
+	 * Generates the translation files for a locale.
+	 * @param  string $locale
+	 */
+	public function generate_translation_files( $locale = '' ) {
+		$locale           = $locale ? $locale : get_locale();
+		$po_file          = $this->get_language_file_path( $locale );
+		$json_file        = $this->get_language_file_path( $locale, 'json' );
+		$translation_info = wp_get_pomo_file_data( $po_file );
+		$revision         = strtotime( $translation_info['PO-Revision-Date'] );
+
+		// Parse PO file
+		$po_data   = $this->parse_po_file( $po_file );
+
+		// Convert entries to JSON
+		$json      = $this->po2json( $po_data['headers'], $po_data['entries'], WC_Synchrotron::TEXTDOMAIN );
+
+		// Write to file
+		$this->create_json_file( $json, $json_file );
+
+		// Record the revision and locale
+		update_option( 'synchrotron_revision_' . $locale, $revision );
+		wp_clear_scheduled_hook( 'wc_synchrotron_generate_translation_files', array( $locale ) );
+	}
+
+	/**
+	 * Gets a language file path.
+	 * @param  string $locale
+	 * @param  string $type Filetype
+	 * @return string
+	 */
+	protected function get_language_file_path( $locale, $type = 'po' ) {
+		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.' . $type;
+	}
+
+	/**
+	 * Parse a po file and get headers and entries.
+	 * @param  string $po_file Path to po file
+	 * @return array
+	 */
+	protected function parse_po_file( $po_file ) {
+		include_once ABSPATH . WPINC . '/pomo/po.php';
+		$po = new PO();
+		$po->import_from_file( $po_file );
+		return array(
+			'headers' => $po->headers,
+			'entries' => $po->entries,
+		);
+	}
+
+	/**
+	 * Converts PO file entries to Jed compatible JSON.
+	 *
+	 * Based on https://github.com/neam/php-po2json/blob/develop/Po2Json.php but
+	 * adapted to work with entries from WP POMO class.
+	 *
+	 * @param array  $headers Array of headers from a PO file
+	 * @param array  $translations Array of strings from a PO file
+	 * @param string $textdomain Textdomain. Default ''
+	 * @return string JSON
+	 */
+	protected function po2json( $headers, $translations, $textdomain = '' ) {
+		$data = array(
+			"domain"      => $textdomain,
+			"locale_data" => array(
+				$textdomain => array(
+					'' => array(
+						"domain"       => $textdomain,
+						"plural_forms" => isset( $headers['Plural-Forms'] ) ? $headers['Plural-Forms'] : null,
+					)
+				),
+			),
+		);
+
+		// Loop over parsed translations. Each translation will be of type
+		// Translation_Entry. $translation_key contains a key, with context.
+		foreach ( $translations as $translation_key => $translation ) {
+			$entry = array();
+
+			if ( $translation->is_plural ) {
+				if ( 2 === sizeof( $translation->translations ) ) {
+					$entry[0] = $translation->translations[1];
+					$entry[1] = $translation->translations[0];
+					$entry[2] = $translation->translations[1];
+				} else {
+					$entry    = $translation->translations;
+				}
+			} else {
+				$entry[0] = null;
+				$entry[1] = $translation->translations[0];
+			}
+
+			$data['locale_data'][ $textdomain ][ $translation_key ] = $entry;
+		}
+
+		return json_encode( $data );
+	}
+
+	/**
+	 * Create JSON file.
+	 * @param  string $json JSON data to write
+	 * @param  string $file File path to write to.
+	 */
+	protected function create_json_file( $json, $file ) {
+		if ( $file_handle = @fopen( $file, 'w' ) ) {
+			fwrite( $file_handle, $json );
+			fclose( $file_handle );
 		}
 	}
 
