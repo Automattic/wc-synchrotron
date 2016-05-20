@@ -62,7 +62,7 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	fixedDiscountDiv( coupon, onChange ) {
-		const { currency_symbol, currency_pos_is_prefix } = screenData( 'wc_coupon_screen_data' );
+		const { currency_symbol, currency_pos_is_prefix } = screenData( 'wc_synchrotron_data' );
 
 		let field;
 
@@ -148,7 +148,7 @@ export default class CouponEditCard extends React.Component {
 						</FormSelect>
 					</div>
 
-					{ this.couponTypes[coupon.discount_type].formDiv( coupon, this.onFieldChange ) }
+					{ this.couponTypes[ coupon.discount_type ].formDiv( coupon, this.onFieldChange ) }
 
 					<div>
 						<FormLabel htmlFor="free_shipping">
@@ -227,4 +227,3 @@ export default class CouponEditCard extends React.Component {
 		);
 	}
 }
-

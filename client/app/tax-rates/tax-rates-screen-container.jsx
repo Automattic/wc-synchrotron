@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchTaxRates, editTaxRate, updateTaxRates } from '../../state/tax-rates/actions';
 import TaxRatesScreen from './tax-rates-screen';
+import screenData from '../../utils/screen-data';
+
+const data = screenData( 'wc_synchrotron_data' );
 
 class TaxRatesScreenContainer extends React.Component {
 	constructor( props ) {
@@ -11,7 +14,6 @@ class TaxRatesScreenContainer extends React.Component {
 	}
 
 	propTypes: {
-		data         : PropTypes.object.isRequired,
 		taxRatesState: PropTypes.object.isRequired,
 	}
 
@@ -24,7 +26,7 @@ class TaxRatesScreenContainer extends React.Component {
 	}
 
 	render() {
-		return <TaxRatesScreen taxRatesState={ this.props.taxRatesState } i18n={ this.props.data.i18n } onTaxRateEdit={ this.props.editTaxRate } onSave={ this.onSave } />;
+		return <TaxRatesScreen taxRatesState={ this.props.taxRatesState } i18n={ data.i18n } onTaxRateEdit={ this.props.editTaxRate } onSave={ this.onSave } />;
 	}
 }
 

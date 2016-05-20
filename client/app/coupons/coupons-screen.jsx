@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCoupons, editCoupon, cancelCouponEdit } from '../../state/coupons/actions';
 import CouponsList from './coupons-list';
+import screenData from '../../utils/screen-data';
+
+const data = screenData( 'wc_synchrotron_data' );
 
 class CouponsScreen extends React.Component {
 	constructor( props ) {
@@ -10,8 +13,6 @@ class CouponsScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		const { data } = this.props;
-
 		this.props.fetchCoupons( data.endpoints.get_coupons, data.nonce );
 	}
 
@@ -38,7 +39,6 @@ class CouponsScreen extends React.Component {
 }
 
 CouponsScreen.propTypes = {
-	data: PropTypes.object.isRequired,
 	coupons: PropTypes.object.isRequired,
 };
 
@@ -62,4 +62,3 @@ function mapDispatchToProps( dispatch ) {
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( CouponsScreen );
-

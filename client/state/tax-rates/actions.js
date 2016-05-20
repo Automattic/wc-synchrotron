@@ -15,7 +15,7 @@ const taxRatesUpdated  = createAction( 'WC_TAX_RATES_UPDATED' );
 /**
  * Get data from WordPress which contains endpoint information.
  */
-const data = screenData( 'wc_tax_rates_screen_data' );
+const data = screenData( 'wc_synchrotron_data' );
 
 /**
  * Get headers for API calls.

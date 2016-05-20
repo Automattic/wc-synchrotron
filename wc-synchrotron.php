@@ -265,70 +265,12 @@ class WC_Synchrotron {
 			$this->get_asset_version(),
 			true
 		);
-		echo '<div id="wc-synchrotron"></div>';
-	}
-
-	/**
-	 * Display screen for coupons.
-	 *
-	 * @since 1.0
-	 */
-	public function display_coupons_screen() {
-		wp_enqueue_script(
-			'wc-synchrotron-coupons-js',
-			$this->get_assets_url() . 'coupons_bundle.js',
-			array(),
-			$this->get_asset_version( 'coupons_bundle.js' ),
-			true
-		);
-
-		wp_enqueue_style(
-			'wc-synchrotron-coupons-css',
-			$this->get_assets_url() . 'coupons.css',
-			array(),
-			$this->get_asset_version( 'coupons.css' )
-		);
-
-		wp_localize_script( 'wc-synchrotron-coupons-js', 'wc_coupons_screen_data', array(
-			'endpoints'              => array(
-				'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
-			),
-			'nonce'                  => wp_create_nonce( 'wp_rest' ),
+		wp_localize_script( 'wc-synchrotron-js', 'wc_synchrotron_data', array(
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
-		) );
-
-		?>
-			<div class="wrap">
-			<h1><?php _e( 'Coupons', 'wc-synchrotron' ) ?></h1>
-				<div id="coupons_screen" class="wc-synchrotron">
-				</div>
-			</div>
-		<?php
-	}
-
-	/**
-	 * Screen for managing tax rates.
-	 */
-	public function display_tax_rates_screen() {
-		wp_enqueue_script(
-			'wc-synchrotron-tax-rates-js',
-			$this->get_assets_url() . 'tax_rates_bundle.js',
-			array(),
-			$this->get_asset_version( 'tax_rates_bundle.js' ),
-			true
-		);
-
-		wp_enqueue_style(
-			'wc-synchrotron-tax-rates-css',
-			$this->get_assets_url() . 'tax_rates.css',
-			array(),
-			$this->get_asset_version( 'tax_rates.css' )
-		);
-
-		wp_localize_script( 'wc-synchrotron-tax-rates-js', 'wc_tax_rates_screen_data', array(
 			'endpoints' => array(
-				'taxes' => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
+				'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) ),
+				'taxes'       => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
 			),
 			'nonce' => wp_create_nonce( 'wp_rest' ),
 			'i18n'  => array(
@@ -361,8 +303,7 @@ class WC_Synchrotron {
 				'save_changes'      => __( 'Save changes', 'wc-synchrotron' ),
 			)
 		) );
-
-		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
+		echo '<div id="wc-synchrotron"></div>';
 	}
 
 	/**

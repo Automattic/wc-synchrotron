@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, browserHistory } from 'react-router'
+import { Link } from 'react-router'
 
 export default function App( { children } ) {
   return (
@@ -13,9 +13,6 @@ export default function App( { children } ) {
 			{' '}
 			<Link to="/taxes">Taxes</Link>
 		</header>
-		<div>
-			<button onClick={() => browserHistory.push('/coupons')}>Go to /coupons</button>
-		</div>
 		<div>
 			{children}
 		</div>
