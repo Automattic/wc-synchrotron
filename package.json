@@ -49,6 +49,7 @@
     "react": "0.14.3",
     "react-dom": "0.14.3",
     "react-redux": "4.0.1",
+    "react-router-redux": "^4.0.4",
     "react-tap-event-plugin": "^0.2.1",
     "react-tooltip": "^1.1.4",
     "redux": "3.0.4",
