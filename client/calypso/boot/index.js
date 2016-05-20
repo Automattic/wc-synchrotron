@@ -12,11 +12,7 @@ export default function boot() {
 
 	bootDebug( 'Starting Calypso Support' );
 
-	// Initialize i18n
-	if ( window.i18nLocaleStrings ) {
-		i18nLocaleStringsObject = JSON.parse( window.i18nLocaleStrings );
-	}
-	i18n.initialize( i18nLocaleStringsObject );
+	i18n.initialize( window.i18nLocaleStrings );
 
 	ReactInjection.Class.injectMixin( i18n.mixin );
 

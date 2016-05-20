@@ -74,14 +74,14 @@ class WC_Synchrotron {
 		if ( file_exists( $po_file ) && ( ! $next_event || $next_event < time() ) ) {
 			$translation_info = wp_get_pomo_file_data( $po_file );
 			$revision         = strtotime( $translation_info['PO-Revision-Date'] );
-			$json_file        = $this->get_language_file_path( get_locale(), 'json' );
+			$js_file        = $this->get_language_file_path( get_locale(), 'js' );
 
 			/**
 			 * There are 2 case where we'd want to do a conversion;
 			 *  - if the JSON file does not exist
 			 *  - if the JSON file is out of date
 			 */
-			if ( ! file_exists( $json_file ) || $revision > get_option( 'synchrotron_revision_' . get_locale(), 0 ) ) {
+			if ( ! file_exists( $js_file ) || $revision > get_option( 'synchrotron_revision_' . get_locale(), 0 ) ) {
 				wp_schedule_single_event( time() + 10, 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
 			}
 		}
@@ -94,7 +94,7 @@ class WC_Synchrotron {
 	public function generate_translation_files( $locale = '' ) {
 		$locale           = $locale ? $locale : get_locale();
 		$po_file          = $this->get_language_file_path( $locale );
-		$json_file        = $this->get_language_file_path( $locale, 'json' );
+		$js_file          = $this->get_language_file_path( $locale, 'js' );
 		$translation_info = wp_get_pomo_file_data( $po_file );
 		$revision         = strtotime( $translation_info['PO-Revision-Date'] );
 
@@ -105,7 +105,7 @@ class WC_Synchrotron {
 		$json      = $this->po2json( $po_data['headers'], $po_data['entries'], WC_Synchrotron::TEXTDOMAIN );
 
 		// Write to file
-		$this->create_json_file( $json, $json_file );
+		$this->create_js_language_file( $json, $js_file );
 
 		// Record the revision and locale
 		update_option( 'synchrotron_revision_' . $locale, $revision );
@@ -120,6 +120,18 @@ class WC_Synchrotron {
 	 */
 	protected function get_language_file_path( $locale, $type = 'po' ) {
 		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.' . $type;
+	}
+
+	/**
+	 * Gets a language js url.
+	 *
+	 * @param string $locale The locale of the languages js file desired.
+	 * @since 1.0
+	 */
+	public function get_languages_js_url( $locale ) {
+		$base_url = content_url( 'languages/plugins/' );
+		$file = WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.js';
+		return $base_url . $file;
 	}
 
 	/**
@@ -149,17 +161,14 @@ class WC_Synchrotron {
 	 * @return string JSON
 	 */
 	protected function po2json( $headers, $translations, $textdomain = '' ) {
+		// Copy the headers into the '' element, and add the localeSlug.
 		$data = array(
-			"domain"      => $textdomain,
-			"locale_data" => array(
-				$textdomain => array(
-					'' => array(
-						"domain"       => $textdomain,
-						"plural_forms" => isset( $headers['Plural-Forms'] ) ? $headers['Plural-Forms'] : null,
-					)
-				),
-			),
+			'' => $headers
 		);
+
+		$language = $data['']['Language'];
+		$localeSlug = substr( $language, 0, strpos( $language, '_' ) );
+		$data['']['localeSlug'] = $localeSlug;
 
 		// Loop over parsed translations. Each translation will be of type
 		// Translation_Entry. $translation_key contains a key, with context.
@@ -174,26 +183,63 @@ class WC_Synchrotron {
 				} else {
 					$entry    = $translation->translations;
 				}
-			} else {
+			} else if ( $translation->translations ) {
 				$entry[0] = null;
 				$entry[1] = $translation->translations[0];
+			} else {
+				$entry = null;
 			}
 
-			$data['locale_data'][ $textdomain ][ $translation_key ] = $entry;
+			$data[ $translation_key ] = $entry;
 		}
 
 		return json_encode( $data );
 	}
 
 	/**
-	 * Create JSON file.
+	 * Create JSON JavaScript Language file.
 	 * @param  string $json JSON data to write
 	 * @param  string $file File path to write to.
 	 */
-	protected function create_json_file( $json, $file ) {
+	protected function create_js_language_file( $json, $file ) {
 		if ( $file_handle = @fopen( $file, 'w' ) ) {
+			fwrite( $file_handle, 'var i18nLocaleStrings = ' );
 			fwrite( $file_handle, $json );
+			fwrite( $file_handle, ';' );
 			fclose( $file_handle );
+		}
+	}
+
+	/**
+	 * Reads a JS language file.
+	 * @param  string $file File path to read.
+	 * @return JSON data.
+	 */
+	protected function read_js_language_file( $file ) {
+		if ( file_exists( $file ) && $file_handle = fopen( $file, 'r' ) ) {
+			$json = fread( $file_handle, filesize( $file ) );
+			return $json;
+		}
+	}
+
+
+	/**
+	 * Adds Jed-compatible JSON translations to the given script.
+	 * @param  string $script_handle The handle of the script.
+	 * @param  string $name The name of the JavaScript variable for the translations.
+	 * @param  string $local The locale of the translations to add.
+	 */
+	protected function add_translations( $script_handle, $locale ) {
+		$version = get_option( 'synchrotron_revision_' . $locale );
+		if ( $version ) {
+
+			wp_enqueue_script(
+				$script_handle,
+				$this->get_languages_js_url( $locale ),
+				array(),
+				$version,
+				true
+			);
 		}
 	}
 
@@ -296,7 +342,7 @@ class WC_Synchrotron {
 		wp_enqueue_script(
 			'wc-synchrotron-coupons-js',
 			$this->get_assets_url() . 'coupons_bundle.js',
-			array(),
+			array( 'wc-synchrotron-coupons-i18n-js' ),
 			$this->get_asset_version( 'coupons_bundle.js' ),
 			true
 		);
@@ -316,6 +362,8 @@ class WC_Synchrotron {
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 		) );
+
+		$this->add_translations( 'wc-synchrotron-coupons-i18n-js', get_locale() );
 
 		?>
 			<div class="wrap">
