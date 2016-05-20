@@ -19,6 +19,7 @@ class CouponsScreen extends React.Component {
 	render() {
 		return (
 			<div className="wrap">
+				<h1 className="page-title">Coupons</h1>
 				{ this.renderCouponsList( this.props.coupons ) }
 			</div>
 		);
