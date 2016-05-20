@@ -183,7 +183,7 @@ class WC_Synchrotron {
 				} else {
 					$entry    = $translation->translations;
 				}
-			} else if ( $translation->translations ) {
+			} elseif ( $translation->translations ) {
 				$entry[0] = null;
 				$entry[1] = $translation->translations[0];
 			} else {
@@ -231,7 +231,8 @@ class WC_Synchrotron {
 	 */
 	protected function add_translations( $script_handle, $locale ) {
 		$version = get_option( 'synchrotron_revision_' . $locale );
-		if ( $version ) {
+		$js_file = $this->get_language_file_path( $locale, 'js' );
+		if ( $version && file_exists( $js_file ) ) {
 
 			wp_enqueue_script(
 				$script_handle,
@@ -339,10 +340,12 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function display_coupons_screen() {
+		$this->add_translations( 'wc-synchrotron-coupons-i18n-js', get_locale() );
+
 		wp_enqueue_script(
 			'wc-synchrotron-coupons-js',
 			$this->get_assets_url() . 'coupons_bundle.js',
-			array( 'wc-synchrotron-coupons-i18n-js' ),
+			array(),
 			$this->get_asset_version( 'coupons_bundle.js' ),
 			true
 		);
@@ -362,8 +365,6 @@ class WC_Synchrotron {
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 		) );
-
-		$this->add_translations( 'wc-synchrotron-coupons-i18n-js', get_locale() );
 
 		?>
 			<div class="wrap">
