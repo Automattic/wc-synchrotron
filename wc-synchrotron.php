@@ -265,6 +265,12 @@ class WC_Synchrotron {
 			$this->get_asset_version(),
 			true
 		);
+		wp_enqueue_style(
+			'wc-synchrotron-css',
+			$this->get_assets_url() . 'synchrotron.css',
+			array(),
+			$this->get_asset_version()
+		);
 		wp_localize_script( 'wc-synchrotron-js', 'wc_synchrotron_data', array(
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
