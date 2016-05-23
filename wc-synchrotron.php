@@ -294,109 +294,38 @@ class WC_Synchrotron {
 			__( 'Synchrotron', 'wc-synchrotron' ),
 			'manage_woocommerce',
 			'wc-synchrotron',
-			array( $this, 'display_menu_screen' ),
+			array( $this, 'output' ),
 			'dashicons-marker',
 			56
 		);
-
-		add_submenu_page(
-			'wc-synchrotron',
-			__( 'WooCommerce Coupons', 'wc-synchrotron' ),
-			__( 'Coupons', 'wc-synchrotron' ),
-			'manage_woocommerce',
-			'wc-synchrotron-coupons',
-			array( $this, 'display_coupons_screen' )
-		);
-
-		add_submenu_page(
-			'wc-synchrotron',
-			__( 'Tax Rates Test', 'wc-synchrotron' ),
-			__( 'Tax Rates Test', 'wc-synchrotron' ),
-			'manage_woocommerce',
-			'wc-synchrotron-tax-rates',
-			array( $this, 'display_tax_rates_screen' )
-		);
 	}
 
 	/**
-	 * Display screen for main Synchrotron menu.
-	 *
+	 * Outputs the main s9n screen and enqueues scripts.
 	 * @since 1.0
 	 */
-	public function display_menu_screen() {
-		?>
-			<div class="wrap">
-				<h1><?php _e( 'WooCommerce Synchrotron Admin', 'wc-synchrotron' ) ?></h1>
-				<p>
-					(Placeholder: Synchrotron Main Screen)
-				</p>
-			</div>
-		<?php
-	}
-
-	/**
-	 * Display screen for coupons.
-	 *
-	 * @since 1.0
-	 */
-	public function display_coupons_screen() {
+	public function output() {
 		$this->add_translations( 'wc-synchrotron-coupons-i18n-js', get_locale() );
 
 		wp_enqueue_script(
-			'wc-synchrotron-coupons-js',
-			$this->get_assets_url() . 'coupons_bundle.js',
+			'wc-synchrotron-js',
+			$this->get_assets_url() . 'synchrotron_bundle.js',
 			array(),
-			$this->get_asset_version( 'coupons_bundle.js' ),
+			$this->get_asset_version(),
 			true
 		);
-
 		wp_enqueue_style(
-			'wc-synchrotron-coupons-css',
-			$this->get_assets_url() . 'coupons.css',
+			'wc-synchrotron-css',
+			$this->get_assets_url() . 'synchrotron.css',
 			array(),
-			$this->get_asset_version( 'coupons.css' )
+			$this->get_asset_version()
 		);
-
-		wp_localize_script( 'wc-synchrotron-coupons-js', 'wc_coupons_screen_data', array(
-			'endpoints'              => array(
-				'get_coupons'   => esc_url_raw( rest_url( '/wc/v1/coupons' ) )
-			),
-			'nonce'                  => wp_create_nonce( 'wp_rest' ),
+		wp_localize_script( 'wc-synchrotron-js', 'wc_synchrotron_data', array(
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
-		) );
-
-		?>
-			<div class="wrap">
-			<h1><?php _e( 'Coupons', 'wc-synchrotron' ) ?></h1>
-				<div id="coupons_screen" class="wc-synchrotron">
-				</div>
-			</div>
-		<?php
-	}
-
-	/**
-	 * Screen for managing tax rates.
-	 */
-	public function display_tax_rates_screen() {
-		wp_enqueue_script(
-			'wc-synchrotron-tax-rates-js',
-			$this->get_assets_url() . 'tax_rates_bundle.js',
-			array(),
-			$this->get_asset_version( 'tax_rates_bundle.js' ),
-			true
-		);
-
-		wp_enqueue_style(
-			'wc-synchrotron-tax-rates-css',
-			$this->get_assets_url() . 'tax_rates.css',
-			array(),
-			$this->get_asset_version( 'tax_rates.css' )
-		);
-
-		wp_localize_script( 'wc-synchrotron-tax-rates-js', 'wc_tax_rates_screen_data', array(
 			'endpoints' => array(
-				'taxes' => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
+				'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) ),
+				'taxes'       => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
 			),
 			'nonce' => wp_create_nonce( 'wp_rest' ),
 			'i18n'  => array(
@@ -429,8 +358,7 @@ class WC_Synchrotron {
 				'save_changes'      => __( 'Save changes', 'wc-synchrotron' ),
 			)
 		) );
-
-		echo '<div class="wrap woocommerce wc-synchrotron" id="tax_rates_screen"></div>';
+		echo '<div id="wc-synchrotron"></div>';
 	}
 
 	/**
@@ -457,10 +385,9 @@ class WC_Synchrotron {
 	 * Gets the asset version for enqueuing purposes.
 	 * If the config is set to bust caches, this returns a random hex string.
 	 * If not, it returns the version of the plugin.
-	 *
 	 * @since 1.0
 	 */
-	public function get_asset_version( $script_name ) {
+	public function get_asset_version() {
 		if ( WC_SYNCHROTRON_BUST_ASSET_CACHE ) {
 			require_once( ABSPATH . 'wp-includes/class-phpass.php' );
 			$hasher = new PasswordHash( 8, false );

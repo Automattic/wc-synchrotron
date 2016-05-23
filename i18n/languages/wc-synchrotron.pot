@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Synchrotron 1.0.0-dev\n"
 "Report-Msgid-Bugs-To: https://github.com/automattic/wc-synchrotron/issues\n"
-"POT-Creation-Date: 2016-05-11 19:02:27+00:00\n"
+"POT-Creation-Date: 2016-05-20 14:30:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,115 +13,115 @@ msgstr ""
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: dist/coupons-strings.php:4
+#: dist/synchrotron-strings.php:4
 msgid "Cart Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:5
+#: dist/synchrotron-strings.php:5
 msgid "Cart % Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:6
+#: dist/synchrotron-strings.php:6
 msgid "Product Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:7
+#: dist/synchrotron-strings.php:7
 msgid "Product % Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:8
+#: dist/synchrotron-strings.php:8
 msgid "Sign Up Fee Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:9
+#: dist/synchrotron-strings.php:9
 msgid "Sign Up Fee % Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:10
+#: dist/synchrotron-strings.php:10
 msgid "Recurring Product Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:11
+#: dist/synchrotron-strings.php:11
 msgid "Recurring Product % Discount"
 msgstr ""
 
-#: dist/coupons-strings.php:12 dist/coupons-strings.php:13
+#: dist/synchrotron-strings.php:12 dist/synchrotron-strings.php:13
 msgid "Discount:"
 msgstr ""
 
-#: dist/coupons-strings.php:14
+#: dist/synchrotron-strings.php:14
 msgid "Coupon Code:"
 msgstr ""
 
-#: dist/coupons-strings.php:15
+#: dist/synchrotron-strings.php:15
 msgid "Description:"
 msgstr ""
 
-#: dist/coupons-strings.php:16
+#: dist/synchrotron-strings.php:16
 msgid "Type:"
 msgstr ""
 
-#: dist/coupons-strings.php:17
+#: dist/synchrotron-strings.php:17
 msgid "Free Shipping?"
 msgstr ""
 
-#: dist/coupons-strings.php:18
+#: dist/synchrotron-strings.php:18
 msgid "Expiration Date:"
 msgstr ""
 
-#: dist/coupons-strings.php:19
+#: dist/synchrotron-strings.php:19
 msgid "Restrictions"
 msgstr ""
 
-#: dist/coupons-strings.php:20
+#: dist/synchrotron-strings.php:20
 msgid "Minimum Cart:"
 msgstr ""
 
-#: dist/coupons-strings.php:21
+#: dist/synchrotron-strings.php:21
 msgid "Maximum Cart:"
 msgstr ""
 
-#: dist/coupons-strings.php:22
+#: dist/synchrotron-strings.php:22
 msgid "Individual Use Only?"
 msgstr ""
 
-#: dist/coupons-strings.php:23
+#: dist/synchrotron-strings.php:23
 msgid "Exclude Sale Items?"
 msgstr ""
 
-#: dist/coupons-strings.php:27 dist/tax-rates-strings.php:7
+#: dist/synchrotron-strings.php:27
 msgid "a few seconds"
 msgstr ""
 
-#: dist/coupons-strings.php:28 dist/tax-rates-strings.php:8
+#: dist/synchrotron-strings.php:28
 msgid "a minute"
 msgstr ""
 
-#: dist/coupons-strings.php:29 dist/tax-rates-strings.php:9
+#: dist/synchrotron-strings.php:29
 msgid "%d minutes"
 msgstr ""
 
-#: dist/coupons-strings.php:30 dist/tax-rates-strings.php:10
+#: dist/synchrotron-strings.php:30
 msgid "%d hours"
 msgstr ""
 
-#: dist/coupons-strings.php:31 dist/tax-rates-strings.php:11
+#: dist/synchrotron-strings.php:31
 msgid "%d days"
 msgstr ""
 
-#: dist/coupons-strings.php:32 dist/tax-rates-strings.php:12
+#: dist/synchrotron-strings.php:32
 msgid "a month"
 msgstr ""
 
-#: dist/coupons-strings.php:33 dist/tax-rates-strings.php:13
+#: dist/synchrotron-strings.php:33
 msgid "%d months"
 msgstr ""
 
-#: dist/coupons-strings.php:34 dist/tax-rates-strings.php:14
+#: dist/synchrotron-strings.php:34
 msgid "a year"
 msgstr ""
 
-#: dist/coupons-strings.php:35 dist/tax-rates-strings.php:15
+#: dist/synchrotron-strings.php:35
 msgid "%d years"
 msgstr ""
 
@@ -145,12 +145,12 @@ msgstr ""
 msgid "http://woothemes.com"
 msgstr ""
 
-#: dist/coupons-strings.php:26 dist/tax-rates-strings.php:6
+#: dist/synchrotron-strings.php:26
 msgctxt "future time"
 msgid "in %s"
 msgstr ""
 
-#: dist/coupons-strings.php:40 dist/tax-rates-strings.php:20
+#: dist/synchrotron-strings.php:40
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -159,7 +159,7 @@ msgctxt "momentjs format string (for LT)"
 msgid "HH:mm"
 msgstr ""
 
-#: dist/coupons-strings.php:42 dist/tax-rates-strings.php:22
+#: dist/synchrotron-strings.php:42
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -168,7 +168,7 @@ msgctxt "momentjs format string (for L)"
 msgid "DD/MM/YYYY"
 msgstr ""
 
-#: dist/coupons-strings.php:44 dist/tax-rates-strings.php:24
+#: dist/synchrotron-strings.php:44
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -177,7 +177,7 @@ msgctxt "momentjs format string (for LL)"
 msgid "D MMMM YYYY"
 msgstr ""
 
-#: dist/coupons-strings.php:46 dist/tax-rates-strings.php:26
+#: dist/synchrotron-strings.php:46
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -186,7 +186,7 @@ msgctxt "momentjs format string (for LLL)"
 msgid "D MMMM YYYY LT"
 msgstr ""
 
-#: dist/coupons-strings.php:48 dist/tax-rates-strings.php:28
+#: dist/synchrotron-strings.php:48
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -195,7 +195,7 @@ msgctxt "momentjs format string (for LLLL)"
 msgid "dddd, D MMMM YYYY LT"
 msgstr ""
 
-#: dist/coupons-strings.php:50 dist/tax-rates-strings.php:30
+#: dist/synchrotron-strings.php:50
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -204,7 +204,7 @@ msgctxt "momentjs format string (for MMM D)"
 msgid "MMM D"
 msgstr ""
 
-#: dist/coupons-strings.php:53 dist/tax-rates-strings.php:33
+#: dist/synchrotron-strings.php:53
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -213,7 +213,7 @@ msgctxt "momentjs format string (sameDay)"
 msgid "[Today at] LT"
 msgstr ""
 
-#: dist/coupons-strings.php:55 dist/tax-rates-strings.php:35
+#: dist/synchrotron-strings.php:55
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -222,7 +222,7 @@ msgctxt "momentjs format string (nextDay)"
 msgid "[Tomorrow at] LT"
 msgstr ""
 
-#: dist/coupons-strings.php:57 dist/tax-rates-strings.php:37
+#: dist/synchrotron-strings.php:57
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -231,7 +231,7 @@ msgctxt "momentjs format string (nextWeek)"
 msgid "dddd [at] LT"
 msgstr ""
 
-#: dist/coupons-strings.php:59 dist/tax-rates-strings.php:39
+#: dist/synchrotron-strings.php:59
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -240,7 +240,7 @@ msgctxt "momentjs format string (lastDay)"
 msgid "[Yesterday at] LT"
 msgstr ""
 
-#: dist/coupons-strings.php:61 dist/tax-rates-strings.php:41
+#: dist/synchrotron-strings.php:61
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -249,7 +249,7 @@ msgctxt "momentjs format string (lastWeek)"
 msgid "[Last] dddd [at] LT"
 msgstr ""
 
-#: dist/coupons-strings.php:63 dist/tax-rates-strings.php:43
+#: dist/synchrotron-strings.php:63
 #. translators: Moment.js formatting string, see
 #. http:momentjs.com/docs/#/displaying/format/ and
 #. https:github.com/moment/moment/blob/develop/locale/en-gb.js, surround
@@ -258,7 +258,7 @@ msgctxt "momentjs format string (sameElse)"
 msgid "L"
 msgstr ""
 
-#: dist/coupons-strings.php:66 dist/tax-rates-strings.php:46
+#: dist/synchrotron-strings.php:66
 #. translators: Number representing the first day of the week, 0=Sunday,
 #. 1=Monday, etc. Should match typical region formats for the most prominent
 #. region where the language is spoken.
@@ -266,7 +266,7 @@ msgctxt "momentjs setting"
 msgid "num_first_day_of_week"
 msgstr ""
 
-#: dist/coupons-strings.php:68 dist/tax-rates-strings.php:48
+#: dist/synchrotron-strings.php:68
 #. translators: The week that contains Jan (X) is the first week of the year,
 #. e.g., `4` means Jan 4. Different regions start counting weeks with different
 #. rules, check Wikipedia to be sure.
