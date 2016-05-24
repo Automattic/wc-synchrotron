@@ -1,26 +1,24 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { createAction } from 'redux-actions';
+import { registerActionTypes, createActions } from '../actions-registry';
 
-// TODO: Make action names better prefixed, maybe some helper code to do this?
-export const ACTION_NAMES = {
-	COUPONS_EDIT: 'COUPONS_EDIT',
-	COUPONS_CANCEL_EDIT: 'COUPONS_CANCEL_EDIT',
-	COUPONS_FETCHING: 'COUPONS_FETCHING',
-	COUPONS_FETCHED: 'COUPONS_FETCHED',
-	COUPONS_SET_ERROR: 'COUPONS_SET_ERROR'
-};
+const registered = registerActionTypes( 'COUPONS', [
+	'EDIT',
+	'CANCEL_EDIT',
+	'FETCHING',
+	'FETCHED',
+	'SET_ERROR',
+] );
 
-const couponsFetching = createAction( ACTION_NAMES.COUPONS_FETCHING );
-const couponsFetched = createAction( ACTION_NAMES.COUPONS_FETCHED );
-const setError = createAction( ACTION_NAMES.COUPONS_SET_ERROR );
+export const TYPES = registered.types;
+const ACTIONS = registered.actions;
 
 export function editCoupon( coupon, fieldName, fieldValue ) {
-	return createAction( ACTION_NAMES.COUPONS_EDIT )( { coupon, fieldName, fieldValue } );
+	return ACTIONS.EDIT( { coupon, fieldName, fieldValue } );
 }
 
 export function cancelCouponEdit( coupon ) {
-	return createAction( ACTION_NAMES.COUPONS_CANCEL_EDIT )( coupon );
+	return ACTIONS.CANCEL_EDIT( coupon );
 }
 
 export function fetchCoupons( url, nonce ) {
@@ -28,11 +26,11 @@ export function fetchCoupons( url, nonce ) {
 	headers.set( 'x-wp-nonce', nonce );
 
 	return [
-		couponsFetching(),
+		ACTIONS.FETCHING(),
 		bind(
 			fetch( url, { method: 'GET', credentials: 'same-origin', headers } ),
-			( { value } ) => couponsFetched( value ),
-			( { value } ) => setError( value )
+			( { value } ) => ACTIONS.FETCHED( value ),
+			( { value } ) => ACTIONS.SET_ERROR( value ),
 		)
 	];
 }
