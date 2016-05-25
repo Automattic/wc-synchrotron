@@ -129,7 +129,9 @@ class WC_Synchrotron {
 	 * @since 1.0
 	 */
 	public function get_languages_js_url( $locale ) {
-		$base_url = content_url( 'languages/plugins/' );
+		// Calculate the language URL based off of WP_LANG_DIR
+		// Note: It would be nice if WordPress had a "languages_url()" function like "content_url()"
+		$base_url = str_replace( get_home_path(), trailingslashit( site_url() ), WP_LANG_DIR . '/plugins/' );
 		$file = WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.js';
 		return $base_url . $file;
 	}
