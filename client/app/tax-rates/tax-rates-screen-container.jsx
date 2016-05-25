@@ -18,11 +18,11 @@ class TaxRatesScreenContainer extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchTaxRates();
+		this.props.fetchTaxRates( data.endpoints.taxes, data.nonce );
 	}
 
 	onSave() {
-		this.props.updateTaxRates( this.props.taxRatesState.editing );
+		this.props.updateTaxRates( this.props.taxRatesState.editing, data.endpoints.taxes + '/update_items', data.nonce );
 	}
 
 	render() {
