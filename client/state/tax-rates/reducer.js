@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import { TYPES } from './actions';
 import _find from 'lodash.find';
 
 /**
@@ -19,12 +20,12 @@ export const initialState = {
  * Action name => Callback
  */
 export default handleActions( {
-	WC_TAX_RATES_FETCHING: taxRatesFetching,
-	WC_TAX_RATES_FETCHED: taxRatesFetched,
-	WC_TAX_RATES_SET_ERROR: taxRatesError,
-	WC_TAX_RATES_EDIT: taxRatesEdit,
-	WC_TAX_RATES_UPDATING: taxRatesUpdating,
-	WC_TAX_RATES_UPDATED: taxRatesUpdated,
+	[ TYPES.FETCHING ]: taxRatesFetching,
+	[ TYPES.FETCHED ]: taxRatesFetched,
+	[ TYPES.SET_ERROR ]: taxRatesError,
+	[ TYPES.EDIT ]: taxRatesEdit,
+	[ TYPES.UPDATING ]: taxRatesUpdating,
+	[ TYPES.UPDATED ]: taxRatesUpdated,
 }, initialState );
 
 /**

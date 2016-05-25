@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { ACTION_NAMES } from './actions';
+import { TYPES } from './actions';
 
 export const initialState = {
 	isFetching: false,
@@ -10,11 +10,11 @@ export const initialState = {
 };
 
 export default handleActions( {
-	[ ACTION_NAMES.COUPONS_EDIT ]: couponsEdit,
-	[ ACTION_NAMES.COUPONS_CANCEL_EDIT ]: couponsCancelEdit,
-	[ ACTION_NAMES.COUPONS_FETCHING ]: couponsFetching,
-	[ ACTION_NAMES.COUPONS_FETCHED ]: couponsFetched,
-	[ ACTION_NAMES.COUPONS_SET_ERROR ]: couponsError,
+	[ TYPES.EDIT ]: couponsEdit,
+	[ TYPES.CANCEL_EDIT ]: couponsCancelEdit,
+	[ TYPES.FETCHING ]: couponsFetching,
+	[ TYPES.FETCHED ]: couponsFetched,
+	[ TYPES.SET_ERROR ]: couponsError,
 }, initialState );
 
 export function couponsEdit( state, action ) {
