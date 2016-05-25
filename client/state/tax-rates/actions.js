@@ -1,16 +1,19 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { createAction } from 'redux-actions';
 import screenData from '../../utils/screen-data';
+import { registerActionTypes } from '../actions-registry';
 
-/**
- * These are the actions we are defining.
- */
-const taxRatesFetching = createAction( 'WC_TAX_RATES_FETCHING' );
-const taxRatesFetched  = createAction( 'WC_TAX_RATES_FETCHED' );
-const taxRatesError    = createAction( 'WC_TAX_RATES_SET_ERROR' );
-const taxRatesUpdating = createAction( 'WC_TAX_RATES_UPDATING' );
-const taxRatesUpdated  = createAction( 'WC_TAX_RATES_UPDATED' );
+const registered = registerActionTypes( 'WC_TAX_RATES', [
+	'FETCHING',
+	'FETCHED',
+	'EDIT',
+	'SET_ERROR',
+	'UPDATING',
+	'UPDATED',
+] );
+
+export const TYPES = registered.types;
+const ACTIONS = registered.actions;
 
 /**
  * Get data from WordPress which contains endpoint information.
@@ -31,16 +34,16 @@ function getRequestHeaders() {
 
 /**
  * Function which fetches tax rates from the server/API.
- * Bound to taxRatesFetching action.
+ * Bound to fetching action.
  * @return array
  */
 export function fetchTaxRates() {
 	return [
-		taxRatesFetching(),
+		ACTIONS.FETCHING(),
 		bind(
 			fetch( data.endpoints.taxes, { method: 'GET', credentials: 'same-origin', headers: getRequestHeaders() } ),
-			( { value } ) => taxRatesFetched( value ),
-			( { value } ) => taxRatesError( value )
+			( { value } ) => ACTIONS.FETCHED( value ),
+			( { value } ) => ACTIONS.SET_ERROR( value )
 		)
 	];
 }
@@ -49,18 +52,18 @@ export function fetchTaxRates() {
  * This sets a field to value for a tax rate during editing.
  */
 export function editTaxRate( taxRate, fieldName, fieldValue ) {
-	return createAction( 'WC_TAX_RATES_EDIT' )( { taxRate, fieldName, fieldValue } );
+	return ACTIONS.EDIT( { taxRate, fieldName, fieldValue } );
 }
 
 /**
  * Function which stores tax rates to the server/API.
- * Bound to taxRatesUpdating action.
+ * Bound to updating action.
  * @param  object rates to store
  * @return array
  */
 export function updateTaxRates( taxRates ) {
 	return [
-		taxRatesUpdating(),
+		ACTIONS.UPDATING(),
 		bind(
 			fetch(
 				data.endpoints.taxes + '/update_items',
@@ -71,8 +74,8 @@ export function updateTaxRates( taxRates ) {
 					body: JSON.stringify( taxRates ),
 				}
 			),
-			( { value } ) => taxRatesUpdated( value ),
-			( { value } ) => taxRatesError( value )
+			( { value } ) => ACTIONS.UPDATED( value ),
+			( { value } ) => ACTIONS.SET_ERROR( value )
 		)
 	];
 }

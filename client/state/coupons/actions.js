@@ -1,8 +1,8 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { registerActionTypes, createActions } from '../actions-registry';
+import { registerActionTypes } from '../actions-registry';
 
-const registered = registerActionTypes( 'COUPONS', [
+const registered = registerActionTypes( 'WC_COUPONS', [
 	'EDIT',
 	'CANCEL_EDIT',
 	'FETCHING',
