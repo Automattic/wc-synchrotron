@@ -6,6 +6,7 @@
 // stylesheet order does not matter.
 // ==========================================================================
 
+@import 'main';
 @import 'components/accordion/style';
 @import 'components/card/style';
 @import 'components/forms/form-label/style';
@@ -15,3 +16,4 @@
 @import 'components/gridicon/style';
 @import 'components/tooltip/style';
 @import 'components/button/style';
+@import '../../client/calypso/layout/sidebar/style';
