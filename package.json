@@ -75,6 +75,7 @@
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "glob": "^7.0.3",
+    "gridicons": "github:automattic/gridicons",
     "grunt": "^1.0.1",
     "grunt-wp-i18n": "^0.5.4",
     "mocha": "^2.3.4",
