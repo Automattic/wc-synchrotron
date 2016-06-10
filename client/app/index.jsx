@@ -4,8 +4,8 @@ import Nav from './nav';
 export default function App( { children } ) {
   return (
 	<div className="frame" >
-		<Nav />
-		<div id="screen" className="wc-admin-screen">
+		<Nav className='navigation' />
+		<div className="screen">
 			{ children }
 		</div>
 	</div>
