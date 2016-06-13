@@ -35,21 +35,17 @@ export default class Nav extends React.Component {
 							<li> { this.renderLink( '/display', 'computer', __( 'Display' ) ) } </li>
 							<li> { this.renderLink( '/emails', 'mail', __( 'Emails' ) ) } </li>
 						</ul>
-						<hr />
-						<ul>
+						<ul className="checkout-gateways">
 							<li> { this.renderLink( '/checkout', 'cart', __( 'Checkout' ) ) } </li>
 							<li> { this.renderLink( '/gateways', 'credit-card', __( 'Payment Gateways' ) ) } </li>
 						</ul>
-						<hr />
-						<ul>
+						<ul className="tax">
 							<li> { this.renderLink( '/taxes', 'money', __( 'Tax' ) ) } </li>
 						</ul>
-						<hr />
-						<ul>
+						<ul className="shipping">
 							<li> { this.renderLink( '/shipping', 'shipping', __( 'Shipping' ) ) } </li>
 						</ul>
-						<hr />
-						<ul>
+						<ul className="integrations">
 							<li> { this.renderLink( '/integrations', 'grid', __( 'Integrations' ) ) } </li>
 						</ul>
 					</SidebarMenu>
@@ -69,4 +65,3 @@ export default class Nav extends React.Component {
 		);
 	}
 }
-

@@ -70,6 +70,14 @@
 	display: flex;
 }
 
+// Sidebar group no headings
+.checkout-gateways,
+.tax,
+.shipping,
+.integrations {
+	border-top: 1px solid lighten( $gray, 20% );
+}
+
 // Menu Links
 .sidebar__menu {
 	display: block;
