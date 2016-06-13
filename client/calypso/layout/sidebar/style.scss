@@ -81,7 +81,6 @@
 // Menu Links
 .sidebar__menu {
 	display: block;
-
 	@include breakpoint( "<660px" ) {
 		margin-top: 24px;
 	}
@@ -131,14 +130,15 @@
 	}
 
 	a {
-		font-size: 13px;
-		position: relative;
-		padding: 10px 16px 7px 55px;
+		padding: 14px 16px 12px 55px;
 		color: $gray-dark;
+		font-size: 13px;
+		text-decoration: none;
 		box-sizing: border-box;
 		white-space: nowrap;
 		overflow: hidden;
 		display: flex;
+		flex: 1 0 auto;
 
 		&:focus {
 			outline: none;
