@@ -87,6 +87,6 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
-    "wp-calypso": "github:automattic/wp-calypso"
+    "wp-calypso": "github:automattic/wp-calypso#a55b4744c8f4f8f05606cd2ccc1a00adde65bc46"
   }
 }
