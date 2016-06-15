@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { translate as __ } from 'lib/mixins/i18n';
 import TitleBar from '../title-bar';
 import AddCoupon from './add-coupon';
+import Sections from './sections';
 
 export default class ScreenHeader extends React.Component {
 	propTypes: {
@@ -18,6 +19,7 @@ export default class ScreenHeader extends React.Component {
 				<TitleBar title={ __( 'Coupons' ) } tagLine={ this.renderTagLine() }>
 					<AddCoupon onAddCoupon={ this.props.onAddCoupon } />
 				</TitleBar>
+				<Sections/>
 			</div>
 		);
 	}
