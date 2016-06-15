@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCoupons, editCoupon, cancelCouponEdit } from '../../state/coupons/actions';
+import ScreenHeader from './screen-header';
 import CouponsList from './coupons-list';
 import screenData from '../../utils/screen-data';
 
@@ -18,8 +19,9 @@ class CouponsScreen extends React.Component {
 
 	render() {
 		return (
-			<div className="wrap">
-				<h1 className="page-title">Coupons</h1>
+			<div>
+				<ScreenHeader onAddCoupon={ null }>
+				</ScreenHeader>
 				{ this.renderCouponsList( this.props.coupons ) }
 			</div>
 		);
