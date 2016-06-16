@@ -19,9 +19,10 @@
 defined( 'ABSPATH' ) or die( 'No direct access.' );
 
 // If the i18n directory and url aren't defined by config, use the default.
-if ( ! defined( 'WC_SYNCHROTRON_I18N_DIR' ) ||
-	 ! defined( 'WC_SYNCHROTRON_I18N_URL' ) ) {
+if ( ! defined( 'WC_SYNCHROTRON_I18N_DIR' ) ) {
 	define( 'WC_SYNCHROTRON_I18N_DIR', WP_CONTENT_DIR . '/synchrotron-i18n' );
+}
+if ( ! defined( 'WC_SYNCHROTRON_I18N_URL' ) ) {
 	define( 'WC_SYNCHROTRON_I18N_URL', WP_CONTENT_URL . '/synchrotron-i18n' );
 }
 
@@ -30,7 +31,9 @@ if ( ! defined( 'WC_SYNCHROTRON_I18N_DIR' ) ||
  */
 function create_i18n_dir() {
 	if ( ! file_exists( WC_SYNCHROTRON_I18N_DIR ) ) {
-		mkdir( WC_SYNCHROTRON_I18N_DIR, 0660 );
+		wp_mkdir_p( WC_SYNCHROTRON_I18N_DIR, 0660 );
+	} else if ( ! is_dir( WC_SYNCHROTRON_I18N_DIR ) ) {
+		error_log( 'Expected ' . WC_SYNCHROTRON_I18N_DIR . ' to be a directory.' );
 	}
 }
 
@@ -42,7 +45,7 @@ function create_i18n_dir() {
  * fail silently and will have to be removed manually, if so desired.
  */
 function remove_i18n_dir() {
-	if ( file_exists( WC_SYNCHROTRON_I18N_DIR ) ) {
+	if ( is_dir( WC_SYNCHROTRON_I18N_DIR ) ) {
 		// Delete the i18n files.
 		$file_mask = WC_Synchrotron::TEXTDOMAIN . '-*.js';
 		$files = glob( trailingslashit( WC_SYNCHROTRON_I18N_DIR ) . $file_mask );
