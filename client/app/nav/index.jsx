@@ -1,17 +1,23 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 import Gridicon from 'gridicons/react/gridicon';
 import Sidebar from 'layout/sidebar';
 import SidebarMenu from 'layout/sidebar/menu';
 import SidebarHeading from 'layout/sidebar/heading';
 
-export default class Nav extends React.Component {
+class Nav extends React.Component {
+	propTypes: {
+		translate: PropTypes.func.isRequired
+	}
+
 	constructor( props ) {
 		super( props );
 	}
 
 	render() {
+		const __ = this.props.translate;
+
 		return (
 			<div id="navigation" className="wc-admin-navigation">
 				<Sidebar>
@@ -65,3 +71,6 @@ export default class Nav extends React.Component {
 		);
 	}
 }
+
+export default localize( Nav );
+

@@ -40,7 +40,5 @@ into a .js file that contains the translations.
 
 When a user accesses a Synchrotron page, the correct .js translation file is enqueued on the page, versioned by its
 translation timestamp. This allows browsers to cache the translation file, but busts the cache when a translation is
-updated. From here, the client initializes the [Calypso i18n mixin](https://github.com/Automattic/wp-calypso/tree/master/client/lib/mixins/i18n)
-with the JSON translation data. Note that Synchrotron does not use the i18n mixin as a mixin, rather, it simply
-imports it and uses it directly (since the current locale is a global state at this time). For convenience, it also
-aliases the i18n.translate() function to __() for familiarity.
+updated. From here, the client initializes the [Calypso i18n module](https://www.npmjs.com/package/i18n-calypso)
+with the JSON translation data. Synchrotron uses the 'localize' Higher Order Component approach to using the i18n-calypso package.

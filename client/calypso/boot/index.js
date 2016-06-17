@@ -1,7 +1,7 @@
 import debug from 'debug';
 import ReactInjection from 'react/lib/ReactInjection';
 import classes from 'component-classes';
-import i18n from 'lib/mixins/i18n';
+import i18n from 'i18n-calypso';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import touchDetect from 'lib/touch-detect';
 
@@ -12,7 +12,7 @@ export default function boot() {
 
 	bootDebug( 'Starting Calypso Support' );
 
-	i18n.initialize( window.i18nLocaleStrings );
+	i18n.setLocale( window.i18nLocaleStrings );
 
 	ReactInjection.Class.injectMixin( i18n.mixin );
 

@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 import SectionNav from 'components/section-nav';
 import NavTabs from 'components/section-nav/tabs';
 import NavItem from 'components/section-nav/item';
 import Gridicon from 'gridicons/react/gridicon';
 
-export default class Sections extends React.Component {
+class Sections extends React.Component {
 	propTypes: {
+		translate: PropTypes.func.isRequired
 	}
 
 	constructor( props ) {
@@ -14,6 +15,8 @@ export default class Sections extends React.Component {
 	}
 
 	render() {
+		const __ = this.props.translate;
+
 		return (
 			<SectionNav>
 				<NavTabs>
@@ -26,4 +29,6 @@ export default class Sections extends React.Component {
 		);
 	}
 }
+
+export default localize( Sections );
 

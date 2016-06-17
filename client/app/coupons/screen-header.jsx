@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 import TitleBar from '../title-bar';
 import AddCoupon from './add-coupon';
 import Sections from './sections';
 
-export default class ScreenHeader extends React.Component {
+class ScreenHeader extends React.Component {
 	propTypes: {
+		translate: PropTypes.func.isRequired,
 		onAddCoupon: PropTypes.func.isRequired
 	}
 
@@ -14,6 +15,8 @@ export default class ScreenHeader extends React.Component {
 	}
 
 	render() {
+		const __ = this.props.translate;
+
 		return (
 			<div className="screen-header">
 				<TitleBar title={ __( 'Coupons' ) } tagLine={ this.renderTagLine() }>
@@ -25,6 +28,8 @@ export default class ScreenHeader extends React.Component {
 	}
 
 	renderTagLine() {
+		const __ = this.props.translate;
+
 		return (
 			<span>
 				{ __( 'A great way to offer discounts and rewards to your customers, and can help promote sales across your shop.' ) }
@@ -34,4 +39,6 @@ export default class ScreenHeader extends React.Component {
 		);
 	}
 }
+
+export default localize( ScreenHeader );
 

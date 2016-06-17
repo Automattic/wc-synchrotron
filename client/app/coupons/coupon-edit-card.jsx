@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 import Accordion from 'components/accordion';
 import Card from 'components/card';
 import Gridicon from 'components/gridicon';
@@ -11,8 +11,9 @@ import FormTextInputWithAffixes from 'components/forms/form-text-input-with-affi
 import FormSelect from 'components/forms/form-select';
 import screenData from '../../utils/screen-data';
 
-export default class CouponEditCard extends React.Component {
+class CouponEditCard extends React.Component {
 	propTypes: {
+		translate: PropTypes.func.isRequired,
 		coupon: PropTypes.object.isRequired,
 		onEdit: PropTypes.func.isRequired,
 		onCancelClick: PropTypes.func.isRequired,
@@ -21,6 +22,11 @@ export default class CouponEditCard extends React.Component {
 
 	constructor( props ) {
 		super( props );
+
+		const __ = props.translate;
+
+		this.fixedDiscountDiv = this.fixedDiscountDiv.bind( this );
+		this.percentDiscountDiv = this.percentDiscountDiv.bind( this );
 
 		this.couponTypes = {
 			fixed_cart: { displayName: __( 'Cart Discount' ), formDiv: this.fixedDiscountDiv },
@@ -62,6 +68,7 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	fixedDiscountDiv( coupon, onChange ) {
+		const __ = this.props.translate;
 		const { currency_symbol, currency_pos_is_prefix } = screenData( 'wc_synchrotron_data' );
 
 		let field;
@@ -91,6 +98,8 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	percentDiscountDiv( coupon, onChange ) {
+		const __ = this.props.translate;
+
 		return (
 			<div>
 				<FormLabel htmlFor="amount">
@@ -106,6 +115,7 @@ export default class CouponEditCard extends React.Component {
 	}
 
 	render() {
+		const __ = this.props.translate;
 		const { coupon } = this.props;
 
 		let options = [];
@@ -227,3 +237,5 @@ export default class CouponEditCard extends React.Component {
 		);
 	}
 }
+
+export default localize( CouponEditCard );

@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 
-export default class TopMenu extends React.Component {
+class TopMenu extends React.Component {
 	propTypes: {
+		translate: PropTypes.func.isRequired,
 		coupons: PropTypes.object
 	}
 
@@ -11,6 +12,8 @@ export default class TopMenu extends React.Component {
 	}
 
 	render() {
+		const __ = this.props.translate;
+
 		return (
 			<div className="top-menu">
 				<ul>
@@ -23,4 +26,6 @@ export default class TopMenu extends React.Component {
 		);
 	}
 }
+
+export default localize( TopMenu );
 
