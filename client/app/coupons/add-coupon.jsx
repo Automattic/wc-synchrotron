@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
-import { translate as __ } from 'lib/mixins/i18n';
+import { localize } from 'i18n-calypso';
 import Button from 'components/button';
 
-export default class AddCoupon extends React.Component {
+class AddCoupon extends React.Component {
 	propTypes: {
+		translate: PropTypes.func.isRequired,
 		onAddCoupon: PropTypes.func.isRequired
 	}
 
@@ -12,6 +13,7 @@ export default class AddCoupon extends React.Component {
 	}
 
 	render() {
+		const __ = this.props.translate;
 		let { onAddCoupon } = this.props;
 
 		return (
@@ -21,4 +23,6 @@ export default class AddCoupon extends React.Component {
 		);
 	}
 }
+
+export default localize( AddCoupon );
 
