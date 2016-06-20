@@ -18,6 +18,49 @@
  */
 defined( 'ABSPATH' ) or die( 'No direct access.' );
 
+// If the i18n directory and url aren't defined by config, use the default.
+if ( ! defined( 'WC_SYNCHROTRON_I18N_DIR' ) ) {
+	define( 'WC_SYNCHROTRON_I18N_DIR', WP_CONTENT_DIR . '/synchrotron-i18n' );
+}
+if ( ! defined( 'WC_SYNCHROTRON_I18N_URL' ) ) {
+	define( 'WC_SYNCHROTRON_I18N_URL', WP_CONTENT_URL . '/synchrotron-i18n' );
+}
+
+/**
+ * Create the i18n js dir on activation.
+ */
+function create_i18n_dir() {
+	if ( ! file_exists( WC_SYNCHROTRON_I18N_DIR ) ) {
+		wp_mkdir_p( WC_SYNCHROTRON_I18N_DIR, 0660 );
+	} else if ( ! is_dir( WC_SYNCHROTRON_I18N_DIR ) ) {
+		error_log( 'Expected ' . WC_SYNCHROTRON_I18N_DIR . ' to be a directory.' );
+	}
+}
+
+/**
+ * Clean out and remove the i18n js dir on deactivation.
+ *
+ * Note: If files other than i18n js files have been placed
+ * in this directory, the removal of the directory will
+ * fail silently and will have to be removed manually, if so desired.
+ */
+function remove_i18n_dir() {
+	if ( is_dir( WC_SYNCHROTRON_I18N_DIR ) ) {
+		// Delete the i18n files.
+		$file_mask = WC_Synchrotron::TEXTDOMAIN . '-*.js';
+		$files = glob( trailingslashit( WC_SYNCHROTRON_I18N_DIR ) . $file_mask );
+		foreach ( $files as $file ) {
+			unlink( $file );
+		}
+
+		// Remove the directory.
+		rmdir( WC_SYNCHROTRON_I18N_DIR );
+	}
+}
+
+register_activation_hook( __FILE__, 'create_i18n_dir' );
+register_deactivation_hook( __FILE__, 'remove_i18n_dir' );
+
 /**
  * Main class.
  *
@@ -68,13 +111,13 @@ class WC_Synchrotron {
 	 */
 	public function maybe_generate_translation_files() {
 		$next_event = wp_next_scheduled( 'wc_synchrotron_generate_translation_files', array( get_locale() ) );
-		$po_file    = $this->get_language_file_path( get_locale() );
+		$po_file    = $this->get_po_file_path( get_locale() );
 
 		// We can only do conversion if the PO file exists and we don't want to queue this up twice.
 		if ( file_exists( $po_file ) && ( ! $next_event || $next_event < time() ) ) {
 			$translation_info = wp_get_pomo_file_data( $po_file );
 			$revision         = strtotime( $translation_info['PO-Revision-Date'] );
-			$js_file        = $this->get_language_file_path( get_locale(), 'js' );
+			$js_file        = $this->get_i18n_js_file_path( get_locale() );
 
 			/**
 			 * There are 2 case where we'd want to do a conversion;
@@ -93,8 +136,8 @@ class WC_Synchrotron {
 	 */
 	public function generate_translation_files( $locale = '' ) {
 		$locale           = $locale ? $locale : get_locale();
-		$po_file          = $this->get_language_file_path( $locale );
-		$js_file          = $this->get_language_file_path( $locale, 'js' );
+		$po_file          = $this->get_po_file_path( $locale );
+		$js_file          = $this->get_i18n_js_file_path( $locale );
 		$translation_info = wp_get_pomo_file_data( $po_file );
 		$revision         = strtotime( $translation_info['PO-Revision-Date'] );
 
@@ -113,25 +156,37 @@ class WC_Synchrotron {
 	}
 
 	/**
-	 * Gets a language file path.
-	 * @param  string $locale
-	 * @param  string $type Filetype
+	 * Gets a .po file path.
+	 * @param string $locale
 	 * @return string
 	 */
-	protected function get_language_file_path( $locale, $type = 'po' ) {
-		return trailingslashit( WP_LANG_DIR ) . 'plugins/' . WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.' . $type;
+	protected function get_po_file_path( $locale ) {
+		$base_dir = trailingslashit( WP_LANG_DIR ) . 'plugins';
+		$file = WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.po';
+		return trailingslashit( $base_dir ) . $file;
 	}
 
 	/**
-	 * Gets a language js url.
-	 *
-	 * @param string $locale The locale of the languages js file desired.
-	 * @since 1.0
+	 * Gets an i18n js file path.
+	 * @param  string $locale
+	 * @return string
 	 */
-	public function get_languages_js_url( $locale ) {
-		$base_url = content_url( 'languages/plugins/' );
+	protected function get_i18n_js_file_path( $locale ) {
+		$base_dir = WC_SYNCHROTRON_I18N_DIR;
 		$file = WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.js';
-		return $base_url . $file;
+		return trailingslashit( $base_dir ) . $file;
+	}
+
+	/**
+	 * Gets an i18n js url.
+	 *
+	 * @param string $locale The locale of the i18n js file desired.
+	 * @return string
+	 */
+	public function get_i18n_js_url( $locale ) {
+		$base_url = WC_SYNCHROTRON_I18N_URL;
+		$file = WC_Synchrotron::TEXTDOMAIN . '-' . $locale . '.js';
+		return trailingslashit( $base_url ) . $file;
 	}
 
 	/**
@@ -231,12 +286,12 @@ class WC_Synchrotron {
 	 */
 	protected function add_translations( $script_handle, $locale ) {
 		$version = get_option( 'synchrotron_revision_' . $locale );
-		$js_file = $this->get_language_file_path( $locale, 'js' );
+		$js_file = $this->get_i18n_js_file_path( $locale );
 		if ( $version && file_exists( $js_file ) ) {
 
 			wp_enqueue_script(
 				$script_handle,
-				$this->get_languages_js_url( $locale ),
+				$this->get_i18n_js_url( $locale ),
 				array(),
 				$version,
 				true
