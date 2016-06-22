@@ -55,6 +55,10 @@ class Nav extends React.Component {
 							<li> { this.renderLink( '/integrations', 'grid', __( 'Integrations' ) ) } </li>
 						</ul>
 					</SidebarMenu>
+
+					{ /* TODO: Remove this after wp-calypso issue #6194 is fixed. */ }
+					{ /* https://github.com/Automattic/wp-calypso/issues/6194 */ }
+					<span />
 				</Sidebar>
 			</div>
 		);
