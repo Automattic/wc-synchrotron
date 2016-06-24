@@ -11,6 +11,14 @@
 	display: none; //TODO hide this another way
 }
 
+.admin-notice-list-hide {
+	display: none; // TODO: maybe animate this?
+}
+
+.admin-notice-list-show {
+	display: block;
+}
+
 #wc-synchrotron {
 	// Shared
 	@import 'shared/reset'; // css reset before the rest of the styles are defined

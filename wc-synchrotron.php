@@ -114,7 +114,7 @@ class WC_Synchrotron {
 	public function before_notices() {
 		echo '<div id="admin-notices">';
 		echo '</div>';
-		echo '<div id="admin-notice-list" style="display: none">';
+		echo '<div id="admin-notice-list" class="admin-notice-list-hide">';
 	}
 
 	/**

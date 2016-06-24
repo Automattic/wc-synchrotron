@@ -47,9 +47,9 @@ class AdminNotices extends React.Component {
 	setHidden( hidden ) {
 
 		if ( hidden ) {
-			this.state.noticeList.setAttribute( 'style', 'display:none;' );
+			this.state.noticeList.className = 'admin-notice-list-hide';
 		} else {
-			this.state.noticeList.setAttribute( 'style', '' );
+			this.state.noticeList.className = 'admin-notice-list-show';
 		}
 
 		this.setState( Object.assign( {}, { hidden } ) );
