@@ -53,8 +53,12 @@
 	@import 'synchrotron-components';
 
 	// TODO: Figure out how to get this from the calypso css.
+
 	a.notice__action {
 		color: white;
+		background: $blue-dark;
+	}
+	.wordpress-notices {
+		margin-bottom: 0;
 	}
 }
-
