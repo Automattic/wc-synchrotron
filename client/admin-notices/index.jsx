@@ -11,15 +11,29 @@ class AdminNotices extends React.Component {
 		this.viewClicked = this.viewClicked.bind( this );
 
 		this.state = {
-			content: '',
+			noticeList: null,
+			count: 0,
 			hidden: true
 		};
 	}
 
 	componentWillMount() {
 		const noticeList = document.getElementById( 'admin-notice-list' );
+		let count = 0;
 
-		this.setState( Object.assign( {}, { noticeList } ) );
+		count += this.countElements( noticeList, 'updated' );
+		count += this.countElements( noticeList, 'update-nag' );
+		count += this.countElements( noticeList, 'notice-error' );
+		count += this.countElements( noticeList, 'notice-warning' );
+		count += this.countElements( noticeList, 'notice-success' );
+		count += this.countElements( noticeList, 'notice-info' );
+
+		this.setState( Object.assign( {}, { noticeList, count } ) );
+	}
+
+	countElements( list, className ) {
+		const elements = list.getElementsByClassName( className );
+		return elements.length;
 	}
 
 	viewClicked( evt ) {
@@ -43,23 +57,30 @@ class AdminNotices extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { hidden } = this.state;
+		const { count, hidden } = this.state;
 
-		return (
-			<div>
-				<Notice
-					status="is-info"
-					icon="notice"
-					showDismiss={ false }
-					text={ __( 'There are WordPress notices need your attention' ) }
-					className="wordpress-notices"
-				>
-					<NoticeAction href="#" external={ false } onClick={ this.viewClicked }>
-						{ hidden ? __( 'View' ) : __( 'Hide' ) }
-					</NoticeAction>
-				</Notice>
-			</div>
-		);
+		if ( count > 0 ) {
+			return (
+				<div>
+					<Notice
+						status="is-info"
+						icon="notice"
+						showDismiss={ false }
+						text={ __(
+							'There is a WordPress notice which needs your attention',
+							'There are %(count)d WordPress notices which need your attention',
+							{ count, args: { count } } ) }
+						className="wordpress-notices"
+					>
+						<NoticeAction href="#" external={ false } onClick={ this.viewClicked }>
+							{ hidden ? __( 'View' ) : __( 'Hide' ) }
+						</NoticeAction>
+					</Notice>
+				</div>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 
