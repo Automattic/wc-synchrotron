@@ -9,6 +9,7 @@ import createHistory from 'history/lib/createHashHistory';
 import configureStore from 'state';
 import '../assets/stylesheets/style.scss';
 import { routes } from './routes';
+import AdminNotices from './admin-notices';
 
 // This differs from the examples for react-router-redux but allows us to set a
 // basename since we're inside WordPress.
@@ -21,5 +22,7 @@ const rootComponent  =
 	<Provider store={ store }>
 		<Router history={ history }>{ routes }</Router>
 	</Provider>;
+
+ReactDOM.render( <AdminNotices />, document.getElementById( 'admin-notices' ) );
 
 ReactDOM.render( rootComponent, document.getElementById( 'wc-synchrotron' ) );
