@@ -51,7 +51,8 @@ class AdminNotices extends React.Component {
 					status="is-info"
 					icon="notice"
 					showDismiss={ false }
-					text={ __( 'WordPress notices need your attention' ) }
+					text={ __( 'There are WordPress notices need your attention' ) }
+					className="wordpress-notices"
 				>
 					<NoticeAction href="#" external={ false } onClick={ this.viewClicked }>
 						{ hidden ? __( 'View' ) : __( 'Hide' ) }
@@ -63,4 +64,3 @@ class AdminNotices extends React.Component {
 }
 
 export default localize( AdminNotices );
-
