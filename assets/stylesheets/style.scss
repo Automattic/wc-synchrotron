@@ -1,3 +1,16 @@
+// Outside the frame
+#wpcontent {
+	padding-left: 0;
+}
+
+#wpbody-content {
+	padding-bottom: 0;
+}
+
+#wpfooter {
+	display: none; //TODO hide this another way
+}
+
 #wc-synchrotron {
 	// Shared
 	@import 'shared/reset'; // css reset before the rest of the styles are defined
@@ -53,8 +66,12 @@
 	@import 'synchrotron-components';
 
 	// TODO: Figure out how to get this from the calypso css.
+
 	a.notice__action {
 		color: white;
+		background: $blue-dark;
+	}
+	.wordpress-notices {
+		margin-bottom: 0;
 	}
 }
-
