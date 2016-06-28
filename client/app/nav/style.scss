@@ -13,6 +13,15 @@
 		padding-top: 16px;
 		margin-top: 16px;
 	}
+
+	.gridicons-stats,
+	.gridicons-product,
+	.gridicons-tag,
+	.gridicons-email,
+	.gridicons-cart,
+	.gridicons-plugins {
+		@include offset-adjust;
+	}
 }
 
 .sidebar__heading {
