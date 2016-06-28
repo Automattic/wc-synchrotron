@@ -1,2 +1,45 @@
-.navigation {
+.sidebar {
+	background: $lighter_gray;
+	border-right: 0;
+	padding: 24px;
+	box-sizing: border-box;
+
+	// Sidebar group no headings
+	ul.checkout-gateways,
+	ul.tax,
+	ul.shipping,
+	ul.integrations {
+		border-top: 1px solid $light_gray;
+		padding-top: 16px;
+		margin-top: 16px;
+	}
+}
+
+.sidebar__heading {
+	color: $dark_gray;
+	margin-left: 0;
+	font-weight: 700;
+	margin-top: 32px;
+	margin-left: 0;
+}
+
+.sidebar__menu {
+	a {
+		color: $gray;
+		padding-left: 26px;
+
+		&:first-child {
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	.gridicon {
+		fill: $purple;
+		left: 0;
+		top: 13px;
+		height: 20px;
+		width: 20px;
+	}
 }
