@@ -112,7 +112,7 @@ class WC_Synchrotron {
 	 * Adds the open tag for a notices container div.
 	 */
 	public function before_notices() {
-		echo '<div id="admin-notices">';
+		echo '<div id="wc-admin-notices">';
 		echo '</div>';
 		echo '<div id="admin-notice-list" class="admin-notice-list-hide">';
 	}

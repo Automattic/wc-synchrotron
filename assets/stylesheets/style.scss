@@ -17,6 +17,7 @@
 
 .admin-notice-list-show {
 	display: block;
+	padding: 20px 0px;
 }
 
 #wc-synchrotron {
@@ -55,7 +56,7 @@
 }
 
 // TODO: Cut this down to only what is needed for the notice component.
-#admin-notices {
+#wc-admin-notices {
 	// Shared
 	@import 'shared/reset'; // css reset before the rest of the styles are defined
 	@import 'shared/functions'; // functions that we've used from Compass, ported over

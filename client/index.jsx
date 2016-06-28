@@ -23,6 +23,6 @@ const rootComponent  =
 		<Router history={ history }>{ routes }</Router>
 	</Provider>;
 
-ReactDOM.render( <AdminNotices />, document.getElementById( 'admin-notices' ) );
+ReactDOM.render( <AdminNotices />, document.getElementById( 'wc-admin-notices' ) );
 
 ReactDOM.render( rootComponent, document.getElementById( 'wc-synchrotron' ) );
