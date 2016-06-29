@@ -1,3 +1,25 @@
+// Outside the frame
+#wpcontent {
+	padding-left: 0;
+}
+
+#wpbody-content {
+	padding-bottom: 0;
+}
+
+#wpfooter {
+	display: none; //TODO hide this another way
+}
+
+.admin-notice-list-hide {
+	display: none; // TODO: maybe animate this?
+}
+
+.admin-notice-list-show {
+	display: block;
+	padding: 20px 0px;
+}
+
 #wc-synchrotron {
 	// Shared
 	@import 'shared/reset'; // css reset before the rest of the styles are defined
@@ -30,5 +52,35 @@
 	h1 {
 		font-size: 1.5em;
 		margin: 0 0 1em 0;
+	}
+}
+
+// TODO: Cut this down to only what is needed for the notice component.
+#wc-admin-notices {
+	// Shared
+	@import 'shared/reset'; // css reset before the rest of the styles are defined
+	@import 'shared/functions'; // functions that we've used from Compass, ported over
+	@import 'shared/functions/functions'; // sass functions for z-index, etc.
+	@import 'shared/colors'; // import all of our wpcom colors
+	@import 'shared/utilities'; // Helper classes
+	@import 'shared/typography'; // all the typographic rules, variables, etc.
+	@import 'shared/mixins/mixins'; // sass mixins for gradients, bordius radii, etc.
+	@import 'shared/extends'; // sass extends for commonly used styles
+	@import 'shared/animation'; // all UI animation
+	@import 'shared/forms'; // form styling
+	@import 'shared/dropdowns'; // dropdown styling
+
+	// Components
+	@import 'calypso-components';
+	@import 'synchrotron-components';
+
+	// TODO: Figure out how to get this from the calypso css.
+
+	a.notice__action {
+		color: white;
+		background: $blue-dark;
+	}
+	.wordpress-notices {
+		margin-bottom: 0;
 	}
 }

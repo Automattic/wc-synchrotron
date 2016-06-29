@@ -103,7 +103,25 @@ class WC_Synchrotron {
 			add_filter( 'woocommerce_screen_ids', array( $this, 'register_screen_ids' ) );
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 			add_action( 'admin_init', array( $this, 'maybe_generate_translation_files' ) );
+			add_action( 'admin_notices', array( $this, 'before_notices' ), 0 );
+			add_action( 'admin_notices', array( $this, 'after_notices' ), PHP_INT_MAX );
 		}
+	}
+
+	/**
+	 * Adds the open tag for a notices container div.
+	 */
+	public function before_notices() {
+		echo '<div id="wc-admin-notices">';
+		echo '</div>';
+		echo '<div id="admin-notice-list" class="admin-notice-list-hide">';
+	}
+
+	/**
+	 * Adds the close tag for a notices container div.
+	 */
+	public function after_notices() {
+		echo '</div>';
 	}
 
 	/**
