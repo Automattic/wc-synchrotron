@@ -1,7 +1,6 @@
 .sidebar {
 	background: $lighter_gray;
 	border-right: 0;
-	padding: 24px;
 	box-sizing: border-box;
 
 	// Sidebar group no headings
@@ -26,16 +25,14 @@
 
 .sidebar__heading {
 	color: $dark_gray;
-	margin-left: 0;
 	font-weight: 700;
 	margin-top: 32px;
-	margin-left: 0;
 }
 
 .sidebar__menu {
 	a {
 		color: $gray;
-		padding-left: 26px;
+		padding-left: 45px;
 
 		&:first-child {
 			&:after {
@@ -46,7 +43,7 @@
 
 	.gridicon {
 		fill: $purple;
-		left: 0;
+		left: 16px;
 		top: 13px;
 		height: 20px;
 		width: 20px;

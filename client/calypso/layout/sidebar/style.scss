@@ -271,7 +271,7 @@ a.sidebar__button {
 		background-color: $gray-light;
 
 		a {
-			color: $blue-medium;
+			color: $gray-dark;
 
 			&:first-child:after {
 				background: linear-gradient(
@@ -287,7 +287,7 @@ a.sidebar__button {
 		}
 
 		.gridicon {
-			fill: $blue-medium;
+			fill: $gray-dark;
 		}
 	}
 
