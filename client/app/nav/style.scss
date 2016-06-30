@@ -49,3 +49,17 @@
 		width: 20px;
 	}
 }
+
+// Menu Hover
+.notouch & .sidebar__menu li:hover {
+	&:not(.selected) {
+		a {
+			color: #fff;
+			background-color: $purple;
+		}
+
+		.gridicon {
+			fill: #fff;
+		}
+	}
+}
