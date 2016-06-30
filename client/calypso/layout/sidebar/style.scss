@@ -266,7 +266,7 @@ a.sidebar__button {
 
 
 // Menu Hover
-.notouch .sidebar__menu li:hover {
+.notouch & .sidebar__menu li:hover {
 	&:not(.selected) {
 		background-color: $gray-light;
 
