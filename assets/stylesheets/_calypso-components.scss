@@ -18,4 +18,5 @@
 @import 'components/tooltip/style';
 @import 'components/button/style';
 @import 'components/section-nav/style';
-@import '../../client/calypso/layout/sidebar/style';
+@import 'layout/sidebar/style';
+@import '../../client/calypso/layout/sidebar/override';
