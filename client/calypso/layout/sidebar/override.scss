@@ -1,0 +1,14 @@
+.sidebar {
+	position: relative;
+	top: 0px;
+}
+
+// Sidebar group no headings
+// TODO: Move this to client/app
+.checkout-gateways,
+.tax,
+.shipping,
+.integrations {
+	border-top: 1px solid lighten( $gray, 20% );
+}
+
