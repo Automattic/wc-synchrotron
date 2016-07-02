@@ -1,0 +1,17 @@
+.title-bar {
+	display: flex;
+	flex-direction: row;
+	padding: 25px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #cccccc;
+	background-color: #ffffff;
+
+	.title-bar__title {
+		flex: 1;
+	}
+
+	.title-bar__sidebar {
+	}
+}
+
