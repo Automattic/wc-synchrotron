@@ -1,4 +1,8 @@
 .sidebar {
+	a {
+		text-decoration: none;
+		border-radius: 2px;
+	}
 
 	// Sidebar group no headings
 	ul.checkout-gateways,
