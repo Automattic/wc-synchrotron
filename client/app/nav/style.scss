@@ -1,7 +1,4 @@
 .sidebar {
-	background: $lighter_gray;
-	border-right: 0;
-	box-sizing: border-box;
 
 	// Sidebar group no headings
 	ul.checkout-gateways,
@@ -20,46 +17,5 @@
 	.gridicons-cart,
 	.gridicons-plugins {
 		@include offset-adjust;
-	}
-}
-
-.sidebar__heading {
-	color: $dark_gray;
-	font-weight: 700;
-	margin-top: 32px;
-}
-
-.sidebar__menu {
-	a {
-		color: $gray;
-		padding-left: 45px;
-
-		&:first-child {
-			&:after {
-				display: none;
-			}
-		}
-	}
-
-	.gridicon {
-		fill: $purple;
-		left: 16px;
-		top: 13px;
-		height: 20px;
-		width: 20px;
-	}
-}
-
-// Menu Hover
-.notouch & .sidebar__menu li:hover {
-	&:not(.selected) {
-		a {
-			color: #fff;
-			background-color: $purple;
-		}
-
-		.gridicon {
-			fill: #fff;
-		}
 	}
 }
