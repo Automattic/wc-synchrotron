@@ -52,7 +52,7 @@ class Nav extends React.Component {
 							<li> { this.renderLink( '/shipping', 'shipping', __( 'Shipping' ) ) } </li>
 						</ul>
 						<ul className="integrations">
-							<li> { this.renderLink( '/integrations', 'grid', __( 'Integrations' ) ) } </li>
+							<li> { this.renderLink( '/integrations', 'plugins', __( 'Integrations' ) ) } </li>
 						</ul>
 					</SidebarMenu>
 
