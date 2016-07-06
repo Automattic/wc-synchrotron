@@ -45,12 +45,7 @@
 .notouch & .sidebar__menu li:hover {
 	&:not(.selected) {
 		a {
-			color: #fff;
-			background-color: $purple;
-		}
-
-		.gridicon {
-			fill: #fff;
+			background-color: darken($lighter_gray,5%);
 		}
 	}
 }
