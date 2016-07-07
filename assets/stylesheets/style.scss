@@ -38,6 +38,16 @@
 	@import 'calypso-components';
 	@import 'synchrotron-components';
 
+	// Reset wp-admin styles
+	a {
+		transition: none;
+		
+		&:active,
+		&:focus {
+			box-shadow: none;
+		}
+	}
+
 	// General styles
 	.button {
 		height: auto;

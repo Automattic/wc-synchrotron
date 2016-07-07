@@ -1,14 +1,51 @@
 .sidebar {
+	background: $lighter_gray;
+	border-right: 0;
+	box-sizing: border-box;
 	position: relative;
 	top: 0px;
+	padding: 14px 24px;
 }
 
-// Sidebar group no headings
-// TODO: Move this to client/app
-.checkout-gateways,
-.tax,
-.shipping,
-.integrations {
-	border-top: 1px solid lighten( $gray, 20% );
+
+.sidebar__heading {
+	color: $dark_gray;
+	font-weight: 700;
+	margin-top: 32px;
+	margin-left: 0;
+	margin-right: 0;
 }
 
+.sidebar__menu {
+	a {
+		color: $gray;
+		padding-left: 37px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-left: -10px;
+		margin-right: -10px;
+
+		&:first-child {
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	.gridicon {
+		fill: $purple;
+		left: 9px;
+		top: 9px;
+		height: 20px;
+		width: 20px;
+	}
+}
+
+// Menu Hover
+.notouch & .sidebar__menu li:hover {
+	&:not(.selected) {
+		a {
+			background-color: darken( $lighter-gray, 5% );
+		}
+	}
+}
