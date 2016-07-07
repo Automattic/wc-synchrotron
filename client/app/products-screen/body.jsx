@@ -16,7 +16,7 @@ export default class ProductsBody extends React.Component {
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		return (
-			<div className="products__screen-body">
+			<div className="products-screen__body">
 				<SearchCard onSearch={ onSearch } />
 				<ListTable products={ products } />
 			</div>
