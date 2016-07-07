@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react';
+import ListHeader from './list-header';
+import ListRow from './list-row';
 import Card from 'components/card';
 
 export default class ListTable extends React.Component {
@@ -12,8 +14,13 @@ export default class ListTable extends React.Component {
 
 	render() {
 		return (
-			<Card>
-				<span>List table!</span>
+			<Card className="products-screen__list-table" >
+				<ul className="products-screen__list" >
+					<ListHeader />
+					<ListRow />
+					<ListRow />
+					<ListRow />
+				</ul>
 			</Card>
 		);
 	}

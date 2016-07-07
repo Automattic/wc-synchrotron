@@ -11,3 +11,27 @@
 		margin-bottom: 1px;
 	}
 }
+
+.products-screen__list-table {
+	padding: 0;
+}
+
+.products-screen__list {
+	margin: 0;
+	list-style: none;
+}
+
+.products-screen__list-header {
+	padding: 25px;
+	border-bottom: 1px solid lighten( $gray, 10% );
+}
+
+.products-screen__list-row {
+	padding: 25px;
+	border-bottom: 1px solid lighten( $gray, 20% );
+}
+
+.products-screen__list-cell {
+	vertical-align: middle;
+}
+
