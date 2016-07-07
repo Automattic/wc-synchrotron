@@ -3,6 +3,7 @@ import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TitleBar from '../../components/title-bar';
+import ListTable from './list-table';
 import Button from 'components/button';
 
 class ProductsScreen extends React.Component {
@@ -18,6 +19,7 @@ class ProductsScreen extends React.Component {
 		const __ = this.props.translate;
 		const onEdit = null; // TODO: hook up to bound action creator
 		const onAdd = null; // TODO: hook up to bound action creator
+		const { products } = this.props;
 
 		return (
 			<div className="products__screen">
@@ -27,6 +29,7 @@ class ProductsScreen extends React.Component {
 						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
 					</TitleBar>
 				</div>
+				<ListTable products={ products } />
 			</div>
 		);
 	}
