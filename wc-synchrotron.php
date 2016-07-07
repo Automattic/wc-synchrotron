@@ -120,7 +120,7 @@ class WC_Synchrotron {
 	 */
 	public function after_notices() {
 		echo '</div>';
-		echo '<div id="wc-admin-notices">';
+		echo '<div id="wc-admin-notices" class="uses-s9n-styles">';
 		echo '</div>';
 	}
 
@@ -431,7 +431,7 @@ class WC_Synchrotron {
 				'save_changes'      => __( 'Save changes', 'wc-synchrotron' ),
 			)
 		) );
-		echo '<div id="wc-synchrotron"></div>';
+		echo '<div id="wc-synchrotron" class="uses-s9n-styles"></div>';
 	}
 
 	/**
