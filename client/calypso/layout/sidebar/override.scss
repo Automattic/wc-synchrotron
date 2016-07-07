@@ -45,7 +45,7 @@
 .notouch & .sidebar__menu li:hover {
 	&:not(.selected) {
 		a {
-			background-color: darken($lighter_gray,5%);
+			background-color: darken( $lighter-gray, 5% );
 		}
 	}
 }
