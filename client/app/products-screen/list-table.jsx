@@ -12,7 +12,7 @@ export default class ListTable extends React.Component {
 
 	render() {
 		return (
-			<Card className="products__list-table">
+			<Card>
 				<span>List table!</span>
 			</Card>
 		);

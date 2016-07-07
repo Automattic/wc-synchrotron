@@ -3,7 +3,7 @@ import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TitleBar from '../../components/title-bar';
-import ListTable from './list-table';
+import ProductsBody from './body';
 import Button from 'components/button';
 
 class ProductsScreen extends React.Component {
@@ -29,7 +29,7 @@ class ProductsScreen extends React.Component {
 						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
 					</TitleBar>
 				</div>
-				<ListTable products={ products } />
+				<ProductsBody products={ products } />
 			</div>
 		);
 	}
