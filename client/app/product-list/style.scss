@@ -1,10 +1,10 @@
-.products-screen {
+.product-list {
 }
 
-.products-screen__header {
+.product-list__header {
 }
 
-.products-screen__body {
+.product-list__body {
 	margin-top: 25px;
 
 	.search-card {
@@ -12,26 +12,26 @@
 	}
 }
 
-.products-screen__list-table {
+.product-list__list-table {
 	padding: 0;
 }
 
-.products-screen__list {
+.product-list__list {
 	margin: 0;
 	list-style: none;
 }
 
-.products-screen__list-header {
+.product-list__list-header {
 	padding: 25px;
 	border-bottom: 1px solid lighten( $gray, 10% );
 }
 
-.products-screen__list-row {
+.product-list__list-row {
 	padding: 25px;
 	border-bottom: 1px solid lighten( $gray, 20% );
 }
 
-.products-screen__list-cell {
+.product-list__list-cell {
 	vertical-align: middle;
 }
 

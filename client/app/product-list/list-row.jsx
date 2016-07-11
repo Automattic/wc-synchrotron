@@ -11,8 +11,8 @@ export default class ListRow extends React.Component {
 
 	render() {
 		return (
-			<li className="products-screen__list-row">
-				<span className="products-screen__list-cell"> row </span>
+			<li className="product-list__list-row">
+				<span className="product-list__list-cell"> row </span>
 			</li>
 		);
 	}

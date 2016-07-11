@@ -11,8 +11,8 @@ export default class ListHeader extends React.Component {
 
 	render() {
 		return (
-			<li className="products-screen__list-header">
-				<span className="products-screen__list-cell"> header </span>
+			<li className="product-list__list-header">
+				<span className="product-list__list-cell"> header </span>
 			</li>
 		);
 	}

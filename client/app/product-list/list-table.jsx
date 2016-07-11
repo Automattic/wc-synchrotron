@@ -14,8 +14,8 @@ export default class ListTable extends React.Component {
 
 	render() {
 		return (
-			<Card className="products-screen__list-table" >
-				<ul className="products-screen__list" >
+			<Card className="product-list__list-table" >
+				<ul className="product-list__list" >
 					<ListHeader />
 					<ListRow />
 					<ListRow />

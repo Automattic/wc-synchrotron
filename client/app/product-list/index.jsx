@@ -22,8 +22,8 @@ class ProductsScreen extends React.Component {
 		const { products } = this.props;
 
 		return (
-			<div className="products-screen">
-				<div className="products-screen__header">
+			<div className="product-list">
+				<div className="product-list__header">
 					<TitleBar icon="product" title={ __( 'Products' ) }>
 						<Button onClick={ onEdit } >{ __( 'Edit products' ) }</Button>
 						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
