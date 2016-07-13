@@ -10,10 +10,16 @@ export default class ListHeader extends React.Component {
 	}
 
 	render() {
+		const { columns } = this.props;
+
 		return (
 			<li className="product-list__list-header">
-				<span className="product-list__list-cell"> header </span>
+				{ columns.map( this.renderTitle ) }
 			</li>
 		);
+	}
+
+	renderTitle( col ) {
+		return <span className="product-list__list-cell" key={ col.title }> { col.title } </span>;
 	}
 }

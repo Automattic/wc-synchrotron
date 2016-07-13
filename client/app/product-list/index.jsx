@@ -6,7 +6,7 @@ import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
 
-class ProductsScreen extends React.Component {
+class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired
 	}
@@ -52,4 +52,4 @@ function mapDispatchToProps( dispatch ) {
 	);
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( localize( ProductsScreen ) );
+export default connect( mapStateToProps, mapDispatchToProps )( localize( ProductList ) );

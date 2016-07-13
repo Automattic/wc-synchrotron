@@ -1,26 +1,38 @@
 import React, { PropTypes } from 'react';
+import { localize } from 'i18n-calypso';
 import SearchCard from 'components/search-card';
 import ListTable from './list-table';
 
-export default class ProductsBody extends React.Component {
+class Body extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired
 	}
 
 	constructor( props ) {
 		super( props );
+
+		const __ = this.props.translate;
+
+		this.columns = [
+			{ title: __( 'Name' ), func: ( product ) => { return product.name; } },
+			{ title: __( 'Price' ), func: ( product ) => { return product.regular_price; } },
+			{ title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } }
+		];
 	}
 
 	render() {
+		const __ = this.props.translate;
 		const { products } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		return (
 			<div className="product-list__body">
 				<SearchCard onSearch={ onSearch } />
-				<ListTable products={ products } />
+				<ListTable products={ products } columns={ this.columns } />
 			</div>
 		);
 	}
 }
+
+export default localize( Body );
 
