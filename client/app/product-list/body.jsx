@@ -14,9 +14,9 @@ class Body extends React.Component {
 		const __ = this.props.translate;
 
 		this.columns = [
-			{ title: __( 'Name' ), func: ( product ) => { return product.name; } },
-			{ title: __( 'Price' ), func: ( product ) => { return product.regular_price; } },
-			{ title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } }
+			{ key: 'name', title: __( 'Name' ), func: ( product ) => { return product.name; } },
+			{ key: 'price', title: __( 'Price' ), func: ( product ) => { return product.regular_price; } },
+			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } }
 		];
 	}
 
