@@ -2,9 +2,14 @@ import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { fetchProducts } from '../../state/products/actions';
 import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
+import screenData from '../../utils/screen-data';
+
+// TODO: Do this in a more universal way.
+const data = screenData( 'wc_synchrotron_data' );
 
 class ProductList extends React.Component {
 	propTypes: {
@@ -13,6 +18,10 @@ class ProductList extends React.Component {
 
 	constructor( props ) {
 		super( props );
+	}
+
+	componentDidMount() {
+		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
 
 	render() {
@@ -29,7 +38,7 @@ class ProductList extends React.Component {
 						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
 					</TitleBar>
 				</div>
-				<ProductsBody products={ products } />
+				<ProductsBody products={ products.products } />
 			</div>
 		);
 	}
@@ -39,14 +48,14 @@ function mapStateToProps( state ) {
 	const { products } = state;
 
 	return {
-		// TODO: Add products to state.
+		products
 	};
 }
 
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
-			// TODO: Add actions
+			fetchProducts,
 		},
 		dispatch
 	);

@@ -398,6 +398,7 @@ class WC_Synchrotron {
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
 			'endpoints' => array(
 				'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) ),
+				'products'    => esc_url_raw( rest_url( '/wc/v1/products' ) ),
 				'taxes'       => esc_url_raw( rest_url( '/wc/v1/taxes' ) ),
 			),
 			'nonce' => wp_create_nonce( 'wp_rest' ),

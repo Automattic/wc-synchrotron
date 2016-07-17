@@ -6,10 +6,12 @@ import fetch from 'redux-effects-fetch';
 import { routerReducer } from 'react-router-redux';
 
 import coupons from './coupons/reducer';
+import products from './products/reducer';
 import taxRates from './tax-rates/reducer';
 
 export const rootReducer = combineReducers( {
 	coupons,
+	products,
 	taxRates,
 	routing: routerReducer,
 } );

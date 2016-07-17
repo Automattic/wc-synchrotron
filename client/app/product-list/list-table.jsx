@@ -14,18 +14,24 @@ export default class ListTable extends React.Component {
 	}
 
 	render() {
-		const { columns } = this.props;
+		const { columns, products } = this.props;
 
 		return (
 			<Card className="product-list__list-table" >
 				<ul className="product-list__list" >
 					<ListHeader columns={ columns } />
-					<ListRow columns={ columns } data={ { name: 'Product 1', regular_price: 1.99, stock_quantity: 1 } } />
-					<ListRow columns={ columns } data={ { name: 'Product 2', regular_price: 2.99, stock_quantity: 20 } } />
-					<ListRow columns={ columns } data={ { name: 'Product 3', regular_price: 3.99, stock_quantity: 300 } } />
+					{
+						products.map( ( data ) => {
+							return this.renderRow( data, columns );
+						} )
+					}
 				</ul>
 			</Card>
 		);
+	}
+
+	renderRow( data, columns ) {
+		return <ListRow columns={ columns } data={ data } />;
 	}
 }
 
