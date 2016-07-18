@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import ListHeader from './list-header';
 import ListRow from './list-row';
 import Card from 'components/card';
+import classNames from 'classnames';
 
 export default class ListTable extends React.Component {
 	propTypes: {
@@ -15,10 +16,11 @@ export default class ListTable extends React.Component {
 
 	render() {
 		const { columns, products } = this.props;
+		const classes = classNames( 'product-list__list-table', 'product-list__list-table-columns-' + columns.length );
 
 		return (
-			<Card className="product-list__list-table" >
-				<ul className="product-list__list" >
+			<Card className={ classes }>
+				<ul className="product-list__list">
 					<ListHeader columns={ columns } />
 					{
 						products.map( ( data ) => {

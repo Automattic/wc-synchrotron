@@ -14,7 +14,7 @@ export default class ListHeader extends React.Component {
 		const { columns } = this.props;
 
 		return (
-			<li className="product-list__list-header">
+			<li className="product-list__list-row product-list__list-row-header">
 				{ columns.map( this.renderTitle ) }
 			</li>
 		);
