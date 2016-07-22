@@ -18,6 +18,140 @@
 }
 
 // Outside the frame
+
+// TODO: Remove this hack. It's just to get it working with the current Calypso
+// code. After the following issues get fixed, this will probably be able
+// to be removed.
+// https://github.com/Automattic/wp-calypso/issues/5101
+// https://github.com/Automattic/wp-calypso/issues/4072
+$white:         #FFFFFF;
+$gray:          #6C696A;
+$gray-dark:     #3A373A;
+$blue-medium:   #96588A;
+$alert-red:     #FF0000;
+$alert-yellow:  #FFFF00;
+$alert-green:   #0000FF;
+
+.tip.uses-s9n-styles {
+	position: absolute;
+	padding: 10px;
+	z-index: z-index( 'root', '.tip' );
+	/* default offset for edge-cases: https://github.com/component/tip/pull/12 */
+	top: 0;
+	left: 0 #{"/*rtl:ignore*/")};
+	right: auto #{"/*rtl:ignore*/"};
+
+	.tip-inner {
+		background-color: $white;
+		border: 1px solid lighten( $gray, 20% );
+		border-radius: 4px;
+		box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.1 ),
+			0 0 56px rgba( 0, 0, 0, 0.075 );
+		text-align: center;
+	}
+
+	.tip-arrow {
+		border: 10px dashed lighten( $gray, 20% );
+		height: 0;
+		line-height: 0;
+		position: absolute;
+		width: 0;
+		z-index: z-index( '.tip', '.tip .tip-arrow' );
+	}
+
+	&.fade {
+		transition: opacity 100ms;
+	}
+
+	@mixin tip-arrow( $side ) {
+		$cross-side: "PLACEHOLDER";
+		$opposite-side: "PLACEHOLDER";
+		$cross-opposite-side: "PLACEHOLDER";
+
+		@if $side == "top" {
+			$opposite-side: "bottom";
+			$cross-side: "left";
+			$cross-opposite-side: "right";
+		} @else if $side == "bottom" {
+			$opposite-side: "top";
+			$cross-side: "left";
+			$cross-opposite-side: "right";
+		} @else if $side == "left" {
+			$opposite-side: "right";
+			$cross-side: "top";
+			$cross-opposite-side: "bottom";
+		} @else if $side == "right" {
+			$opposite-side: "left";
+			$cross-side: "top";
+			$cross-opposite-side: "bottom";
+		}
+
+		&.tip-#{$side} .tip-arrow,
+		&.tip-#{$side}-#{$cross-side} .tip-arrow,
+		&.tip-#{$side}-#{$cross-opposite-side} .tip-arrow {
+			@mixin shared-between-base-and-before {
+				#{$cross-side}: 50% #{"/*rtl:ignore*/"};
+				margin-#{$cross-side}: -10px#{"/*rtl:ignore*/"};
+				border-#{$side}-style: solid#{"/*rtl:ignore*/"};
+				border-#{$opposite-side}: none#{"/*rtl:ignore*/"};
+				border-#{$cross-side}-color: transparent#{"/*rtl:ignore*/"};
+				border-#{$cross-opposite-side}-color: transparent#{"/*rtl:ignore*/"};
+			}
+
+			#{$opposite-side}: 0 #{"/*rtl:ignore*/"};
+			@include shared-between-base-and-before;
+
+			&::before {
+				#{$opposite-side}: 2px #{"/*rtl:ignore*/"};
+				border: 10px solid $white;
+				content: " ";
+				position: absolute;
+				@include shared-between-base-and-before;
+			}
+		}
+	}
+
+	@include tip-arrow( "top" );
+	@include tip-arrow( "bottom" );
+	@include tip-arrow( "left" );
+	@include tip-arrow( "right" );
+
+	&.tip-top-left,
+	&.tip-bottom-left,
+	&.tip-top-right,
+	&.tip-bottom-right {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	&.tip-top-left .tip-arrow,
+	&.tip-bottom-left .tip-arrow {
+		left: auto #{"/*rtl:ignore*/"};
+		right: 5px #{"/*rtl:ignore*/"};
+	}
+
+	&.tip-top-right .tip-arrow,
+	&.tip-bottom-right .tip-arrow {
+		left: 15px #{"/*rtl:ignore*/"};
+	}
+
+	&.tip-top-left .tip-inner,
+	&.tip-bottom-left .tip-inner {
+		position: relative;
+		left: 10px #{"/*rtl:ignore*/"};
+	}
+
+	&.tip-top-right .tip-inner,
+	&.tip-bottom-right .tip-inner {
+		position: relative;
+		left: -10px #{"/*rtl:ignore*/"};
+	}
+
+	&.is-dialog-visible {
+		z-index: z-index( 'root', 'popover.is-dialog-visible' ); /* Above .dialog */
+	}
+}
+
 #wpcontent {
 	padding-left: 0;
 }

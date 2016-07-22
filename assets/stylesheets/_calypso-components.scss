@@ -22,5 +22,14 @@
 @import 'components/search/style';
 @import 'components/search-card/style';
 @import 'components/section-nav/style';
+@import 'components/tooltip/style';
 @import 'layout/sidebar/style';
 @import '../../client/calypso/layout/sidebar/override';
+
+// TODO: Remove these defaults when they're no longer needed.
+//       They were put in place because of an "Undefined Variable" error
+//       that the sass-loader was giving us on build.
+$opposite-side: "PLACEHOLDER";
+$cross-side: "PLACEHOLDER";
+$cross-opposite-side: "PLACEHOLDER";
+@import 'components/popover/style';

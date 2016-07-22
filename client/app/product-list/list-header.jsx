@@ -17,7 +17,8 @@ export default class ListHeader extends React.Component {
 
 	renderTitle( col ) {
 		const classes = 'product-list__list-cell product-list__list-cell-' + col.key;
+		const title = ( 'function' === typeof col.title ? col.title() : col.title );
 
-		return <span className={ classes } key={ col.key }>{ col.title }</span>;
+		return <span className={ classes } key={ col.key }>{ title }</span>;
 	}
 }

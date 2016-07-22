@@ -5,6 +5,7 @@ import { registerActionTypes } from '../actions-registry';
 const registered = registerActionTypes( 'WC_PRODUCTS', [
 	'FETCHING',
 	'FETCHED',
+	'SET_DISPLAY_OPTION',
 	'SET_ERROR',
 ] );
 
@@ -20,8 +21,12 @@ export function fetchProducts( url, nonce ) {
 		bind(
 			fetch( url, { method: 'GET', credentials: 'same-origin', headers } ),
 			( { value } ) => ACTIONS.FETCHED( value ),
-			( { value } ) => ACTINOS.SET_ERROR( value )
+			( { value } ) => ACTIONS.SET_ERROR( value )
 		)
 	];
+}
+
+export function setDisplayOption( option, value ) {
+	return ACTIONS.SET_DISPLAY_OPTION( { option, value } );
 }
 
