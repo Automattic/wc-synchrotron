@@ -52,7 +52,7 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: [ '', '.js', '.jsx', '.scss', '.html' ],
+		extensions: [ '', '.js', '.jsx', '.json', '.scss', '.html' ],
 		modulesDirectories: [ 'node_modules' ],
 		root: [
 			path.join( __dirname, 'client' ),
@@ -62,5 +62,8 @@ module.exports = {
 	plugins: [
 		new webpack.NoErrorsPlugin(),
 		new ExtractTextPlugin( '[name].css' )
-	]
+	],
+	node: {
+		fs: 'empty'
+	},
 };
