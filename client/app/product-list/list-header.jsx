@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 export default class ListHeader extends React.Component {
 	propTypes: {
-		columns: PropTypes.array.isRequired
+		columns: PropTypes.array.isRequired,
 	}
 
 	constructor( props ) {

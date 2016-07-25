@@ -5,7 +5,7 @@ import ListTable from './list-table';
 
 class Body extends React.Component {
 	propTypes: {
-		products: PropTypes.object.isRequired
+		products: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
@@ -16,7 +16,7 @@ class Body extends React.Component {
 		this.columns = [
 			{ key: 'name', title: __( 'Name' ), func: ( product ) => { return product.name; } },
 			{ key: 'price', title: __( 'Price' ), func: ( product ) => { return product.regular_price; } },
-			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } }
+			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } },
 		];
 	}
 

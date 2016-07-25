@@ -13,7 +13,7 @@ const data = screenData( 'wc_synchrotron_data' );
 
 class ProductList extends React.Component {
 	propTypes: {
-		products: PropTypes.object.isRequired
+		products: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {

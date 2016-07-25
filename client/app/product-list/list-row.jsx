@@ -4,7 +4,7 @@ import classNames from 'classnames';
 export default class ListRow extends React.Component {
 	propTypes: {
 		columns: PropTypes.array.isRequired,
-		data: PropTypes.object.isRequired
+		data: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
