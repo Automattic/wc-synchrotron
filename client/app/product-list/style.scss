@@ -5,7 +5,7 @@
 }
 
 .product-list__body {
-	margin-top: 25px;
+	margin-top: 24px;
 
 	.search-card {
 		margin-bottom: 1px;
@@ -24,13 +24,13 @@
 .product-list__list-row {
 	display: flex;
 	width: 100%;
-	padding: 25px;
-	border-bottom: 1px solid lighten( $gray, 30% );
+	padding: 24px;
+	border-bottom: 1px solid $light-gray;
 	box-sizing: border-box;
 }
 
 .product-list__list-row-header {
-	border-bottom-color: lighten( $gray, 20% );
+	border-bottom-color: lighten( $gray, 10% );
 	font-weight: bold;
 }
 
@@ -43,4 +43,3 @@
 .product-list__list-cell-name {
 	max-width: none;
 }
-
