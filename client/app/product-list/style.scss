@@ -21,17 +21,26 @@
 	list-style: none;
 }
 
-.product-list__list-header {
+.product-list__list-row {
+	display: flex;
+	width: 100%;
 	padding: 25px;
-	border-bottom: 1px solid lighten( $gray, 10% );
+	border-bottom: 1px solid lighten( $gray, 30% );
+	box-sizing: border-box;
 }
 
-.product-list__list-row {
-	padding: 25px;
-	border-bottom: 1px solid lighten( $gray, 20% );
+.product-list__list-row-header {
+	border-bottom-color: lighten( $gray, 20% );
+	font-weight: bold;
 }
 
 .product-list__list-cell {
-	vertical-align: middle;
+	flex: 1;
+	flex-direction: column;
+	max-width: 10%;
+}
+
+.product-list__list-cell-name {
+	max-width: none;
 }
 
