@@ -4,8 +4,8 @@
 	padding: 24px;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
-	border-bottom-color: #cccccc;
-	background-color: #ffffff;
+	border-bottom-color: $light-gray;
+	background-color: white;
 
 	.title-bar__title {
 		flex: 1;
@@ -14,4 +14,3 @@
 	.title-bar__sidebar {
 	}
 }
-
