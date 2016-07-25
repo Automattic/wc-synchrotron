@@ -15,7 +15,7 @@ export default class TitleBar extends React.Component {
 			<div className="title-bar">
 				<div className="title-bar__title">
 					<h1>
-						<Gridicon icon={ icon } size={ iconSize } />
+						<Gridicon icon={ icon } size={ iconSize } className="title-bar__title-icon"/>
 						{ title }
 					</h1>
 				</div>
@@ -26,4 +26,3 @@ export default class TitleBar extends React.Component {
 		);
 	}
 }
-
