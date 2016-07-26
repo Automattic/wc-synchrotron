@@ -1,13 +1,8 @@
 import React, { PropTypes } from 'react';
-import classNames from 'classnames';
 
 export default class ListHeader extends React.Component {
 	propTypes: {
 		columns: PropTypes.array.isRequired,
-	}
-
-	constructor( props ) {
-		super( props );
 	}
 
 	render() {
@@ -21,8 +16,8 @@ export default class ListHeader extends React.Component {
 	}
 
 	renderTitle( col ) {
-		const classes = classNames( 'product-list__list-cell', 'product-list__list-cell-' + col.key );
+		const classes = 'product-list__list-cell product-list__list-cell-' + col.key;
 
-		return <span className={ classes } key={ col.title }>{ col.title }</span>;
+		return <span className={ classes } key={ col.key }>{ col.title }</span>;
 	}
 }

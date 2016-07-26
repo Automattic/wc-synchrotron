@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import classNames from 'classnames';
 
 export default class ListRow extends React.Component {
 	propTypes: {
@@ -25,10 +24,10 @@ export default class ListRow extends React.Component {
 
 	renderField( col ) {
 		const { data } = this.props;
-		const classes = classNames( 'product-list__list-cell', 'product-list__list-cell-' + col.key );
+		const classes = 'product-list__list-cell product-list__list-cell-' + col.key;
 
 		return (
-			<span className={ classes } key={ col.title }>
+			<span className={ classes } key={ col.key }>
 				{ col.func( data ) }
 			</span>
 		);

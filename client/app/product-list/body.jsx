@@ -14,14 +14,13 @@ class Body extends React.Component {
 		const __ = this.props.translate;
 
 		this.columns = [
-			{ key: 'name', title: __( 'Name' ), func: ( product ) => { return product.name; } },
-			{ key: 'price', title: __( 'Price' ), func: ( product ) => { return product.regular_price; } },
-			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => { return product.stock_quantity; } },
+			{ key: 'name', title: __( 'Name' ), func: ( product ) => product.name },
+			{ key: 'price', title: __( 'Price' ), func: ( product ) => product.regular_price },
+			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => product.stock_quantity },
 		];
 	}
 
 	render() {
-		const __ = this.props.translate;
 		const { products } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
