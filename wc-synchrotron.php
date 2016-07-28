@@ -109,19 +109,32 @@ class WC_Synchrotron {
 	}
 
 	/**
+	 * Checks if the current page being viewed is our admin page.
+	 */
+	public function is_admin_page() {
+		$current_screen = get_current_screen();
+
+		return 'toplevel_page_wc-synchrotron' === $current_screen->id;
+	}
+
+	/**
 	 * Adds the open tag for a notices container div.
 	 */
 	public function before_notices() {
-		echo '<div id="admin-notice-list" class="admin-notice-list-hide">';
+		if ( $this->is_admin_page() ) {
+			echo '<div id="admin-notice-list" class="admin-notice-list-hide">';
+		}
 	}
 
 	/**
 	 * Adds the close tag for a notices container div.
 	 */
 	public function after_notices() {
-		echo '</div>';
-		echo '<div id="wc-admin-notices" class="uses-s9n-styles">';
-		echo '</div>';
+		if ( $this->is_admin_page() ) {
+			echo '</div>';
+			echo '<div id="wc-admin-notices" class="uses-s9n-styles">';
+			echo '</div>';
+		}
 	}
 
 	/**
