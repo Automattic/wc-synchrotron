@@ -18,9 +18,9 @@ export default class ListTable extends React.Component {
 		const classes = 'product-list__list-table product-list__list-table-columns-' + columns.length;
 
 		return (
-			<Card className={ classes }>
-				<ul className="product-list__list">
-					<ListHeader columns={ columns } />
+			<Card ref="card" className="product-list__list-table" >
+				<ul className="product-list__list" >
+					<ListHeader ref="listHeader" columns={ columns } />
 					{ products.map( ( data ) => this.renderRow( data, columns ) ) }
 				</ul>
 			</Card>
