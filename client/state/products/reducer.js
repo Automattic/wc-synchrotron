@@ -7,11 +7,13 @@ export const initialState = {
 	error: null,
 	products: [],
 	editing: {},
+	display: {},
 };
 
 export default handleActions( {
 	[ TYPES.FETCHING ]: productsFetching,
 	[ TYPES.FETCHED ]: productsFetched,
+	[ TYPES.SET_DISPLAY_OPTION ]: productsSetDisplayOption,
 	[ TYPES.SET_ERROR ]: productsError,
 }, initialState );
 
@@ -29,6 +31,15 @@ export function productsFetched( state, action ) {
 		isFetched: true,
 		error: null,
 		products: action.payload,
+	} );
+}
+
+export function productsSetDisplayOption( state, action ) {
+	const { option, value } = action.payload;
+	const display = Object.assign( {}, state.display, { [option]: value } );
+
+	return Object.assign( {}, state, {
+		display
 	} );
 }
 
