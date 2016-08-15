@@ -7,6 +7,8 @@ import ListTable from './list-table';
 class Body extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		display: PropTypes.object.isRequired,
+		setDisplayOption: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
@@ -14,26 +16,39 @@ class Body extends React.Component {
 
 		const __ = this.props.translate;
 
+		this.renderColumnSelectIcon = this.renderColumnSelectIcon.bind( this );
+		this.onColumnSelectIconClick = this.onColumnSelectIconClick.bind( this );
+		this.onCloseColumnSelect = this.onCloseColumnSelect.bind( this );
+
 		this.columns = [
 			{ key: 'name', title: __( 'Name' ), func: ( product ) => product.name },
 			{ key: 'price', title: __( 'Price' ), func: ( product ) => product.regular_price },
 			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => product.stock_quantity },
 			{ key: 'action', title: this.renderColumnSelectIcon(), func: ( product ) => null },
 		];
-
-		this.renderColumnSelectIcon = this.renderColumnSelectIcon.bind( this );
-		this.onColumnSelectIconClick = this.onColumnSelectIconClick.bind( this );
 	}
 
 	onColumnSelectIconClick( evt ) {
 		evt.preventDefault();
-		// TODO: Show column selection panel.
-		console.log( 'show/hide column select!' );
+
+		const { display, setDisplayOption } = this.props;
+
+		// Toggle the display state of the column select.
+		setDisplayOption( 'showColumnPanel', ! display.showColumnPanel );
+	}
+
+	onCloseColumnSelect( evt ) {
+		this.props.setDisplayOption( 'showColumnPanel', false );
 	}
 
 	render() {
-		const { products } = this.props;
+		const { products, display } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
+
+		// TODO: Show column selection panel.
+		if ( display.showColumnPanel ) {
+			console.log( 'Show column panel!' );
+		}
 
 		return (
 			<div className="product-list__body">

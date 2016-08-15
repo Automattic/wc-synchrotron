@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchProducts } from '../../state/products/actions';
+import { fetchProducts, setDisplayOption } from '../../state/products/actions';
 import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
@@ -28,7 +28,7 @@ class ProductList extends React.Component {
 		const __ = this.props.translate;
 		const onEdit = null; // TODO: hook up to bound action creator
 		const onAdd = null; // TODO: hook up to bound action creator
-		const { products } = this.props;
+		const { products, setDisplayOption } = this.props;
 
 		return (
 			<div className="product-list">
@@ -38,7 +38,11 @@ class ProductList extends React.Component {
 						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
 					</TitleBar>
 				</div>
-				<ProductsBody products={ products.products } />
+				<ProductsBody
+					products={ products.products }
+					display={ products.display }
+					setDisplayOption={ setDisplayOption }
+				/>
 			</div>
 		);
 	}
@@ -48,7 +52,7 @@ function mapStateToProps( state ) {
 	const { products } = state;
 
 	return {
-		products
+		products,
 	};
 }
 
@@ -56,6 +60,7 @@ function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
 			fetchProducts,
+			setDisplayOption,
 		},
 		dispatch
 	);
