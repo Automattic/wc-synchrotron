@@ -44,14 +44,14 @@
     "commander": "^2.3.0",
     "component-classes": "^1.2.1",
     "debug": "^2.2.0",
-    "i18n-calypso": "^1.2.0",
-    "lodash.find": "^4.3.0",
-    "lodash.omit": "3.1.0",
+    "i18n-calypso": "1.6.2",
+    "lodash.find": "4.5.0",
+    "lodash.omit": "4.5.0",
     "moment": "2.10.6",
     "moment-timezone": "^0.4.0",
-    "react": "15.1.0",
-    "react-addons-create-fragment": "15.1.0",
-    "react-dom": "15.1.0",
+    "react": "15.3.0",
+    "react-addons-create-fragment": "15.3.0",
+    "react-dom": "15.3.0",
     "react-pure-render": "1.0.2",
     "react-redux": "4.4.5",
     "react-router": "^2.4.1",
@@ -99,6 +99,6 @@
     "style-loader": "^0.13.1",
     "webpack": "1.12.15",
     "webpack-dev-server": "1.11.0",
-    "wp-calypso": "github:automattic/wp-calypso#c6d65cd643bb4e666dda9920f8b344af242b297d"
+    "wp-calypso": "github:automattic/wp-calypso#ce8b5c4424269611c05e24daa584406761a88186"
   }
 }
