@@ -13,6 +13,10 @@ export default class ListTable extends React.Component {
 		super( props );
 	}
 
+	getListHeaderRef() {
+		return this.refs && this.refs.listHeader;
+	}
+
 	render() {
 		const { columns, products } = this.props;
 		const classes = 'product-list__list-table product-list__list-table-columns-' + columns.length;
@@ -20,7 +24,7 @@ export default class ListTable extends React.Component {
 		return (
 			<Card className={ classes }>
 				<ul className="product-list__list">
-					<ListHeader columns={ columns } />
+					<ListHeader ref="listHeader" columns={ columns } />
 					{ products.map( ( data ) => this.renderRow( data, columns ) ) }
 				</ul>
 			</Card>

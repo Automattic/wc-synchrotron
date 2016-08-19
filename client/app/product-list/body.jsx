@@ -1,10 +1,14 @@
 import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
+import Button from 'components/button';
 import Gridicon from 'components/gridicon';
 import SearchCard from 'components/search-card';
+import Popover from 'components/popover';
+import PopoverMenu from 'components/popover/menu';
+import PopoverMenuItem from 'components/popover/menu-item';
 import ListTable from './list-table';
 
-class Body extends React.Component {
+class ListBody extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
 		display: PropTypes.object.isRequired,
@@ -24,7 +28,7 @@ class Body extends React.Component {
 			{ key: 'name', title: __( 'Name' ), func: ( product ) => product.name },
 			{ key: 'price', title: __( 'Price' ), func: ( product ) => product.regular_price },
 			{ key: 'stock', title: __( 'Stock' ), func: ( product ) => product.stock_quantity },
-			{ key: 'action', title: this.renderColumnSelectIcon(), func: ( product ) => null },
+			{ key: 'action', title: this.renderColumnSelectIcon, func: ( product ) => null },
 		];
 	}
 
@@ -53,21 +57,44 @@ class Body extends React.Component {
 		return (
 			<div className="product-list__body">
 				<SearchCard onSearch={ onSearch } />
-				<ListTable products={ products } columns={ this.columns } />
+				<ListTable ref="listTable" products={ products } columns={ this.columns } />
 			</div>
 		);
 	}
 
 	renderColumnSelectIcon() {
 		const __ = this.props.translate;
+		const { display } = this.props;
+
+		// Drill down to the ref for the column select button (this will be null upon first render)
+		const listTableRef = this.refs && this.refs.listTable;
+		const headerRef = listTableRef && listTableRef.getListHeaderRef();
+		const columnSelectRef = headerRef && headerRef.refs && headerRef.refs.columnSelect;
+
+		console.log( columnSelectRef );
+		console.log( this.refs );
 
 		return (
-			<a href='#' onClick={ this.onColumnSelectIconClick } >
+			<Button borderless ref="columnSelect" onClick={ this.onColumnSelectIconClick }>
 				<Gridicon icon="grid" />
-			</a>
+				<PopoverMenu
+					context={ columnSelectRef }
+					isVisible={ display.showColumnPanel }
+					onClose={ this.onCloseColumnSelect }
+					className="component__popover"
+					rootClassName="uses-s9n-styles"
+					position="left"
+				>
+					<PopoverMenuItem action="A">Placeholder Menu Item A</PopoverMenuItem>
+					<PopoverMenuItem action="B">Placeholder Menu Item B</PopoverMenuItem>
+				</PopoverMenu>
+			</Button>
 		);
+	}
+
+	renderColumnSelectMenu() {
 	}
 }
 
-export default localize( Body );
+export default localize( ListBody );
 
