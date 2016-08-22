@@ -3,9 +3,7 @@ import { localize } from 'i18n-calypso';
 import Button from 'components/button';
 import Gridicon from 'components/gridicon';
 import SearchCard from 'components/search-card';
-import Popover from 'components/popover';
-import PopoverMenu from 'components/popover/menu';
-import PopoverMenuItem from 'components/popover/menu-item';
+import ColumnMenu from './column-menu';
 import ListTable from './list-table';
 
 class ListBody extends React.Component {
@@ -77,17 +75,11 @@ class ListBody extends React.Component {
 		return (
 			<Button borderless ref="columnSelect" onClick={ this.onColumnSelectIconClick }>
 				<Gridicon icon="grid" />
-				<PopoverMenu
+				<ColumnMenu
 					context={ columnSelectRef }
 					isVisible={ display.showColumnPanel }
 					onClose={ this.onCloseColumnSelect }
-					className="component__popover"
-					rootClassName="uses-s9n-styles"
-					position="left"
-				>
-					<PopoverMenuItem action="A">Placeholder Menu Item A</PopoverMenuItem>
-					<PopoverMenuItem action="B">Placeholder Menu Item B</PopoverMenuItem>
-				</PopoverMenu>
+				/>
 			</Button>
 		);
 	}
