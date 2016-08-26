@@ -7,7 +7,10 @@ export const initialState = {
 	error: null,
 	products: [],
 	editing: {},
-	display: {},
+	display: {
+		showColumnPanel: false,
+		selectedColumns: new Set( [ 'name', 'price', 'stock_quantity', 'action' ] ),
+	},
 };
 
 export default handleActions( {
