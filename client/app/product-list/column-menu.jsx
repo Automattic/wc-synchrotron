@@ -26,20 +26,24 @@ class ColumnMenu extends React.Component {
 		const __ = this.props.translate;
 		const { context, isVisible, columns, selectedColumns } = this.props;
 
-		return (
-				<PopoverMenu
-					context={ context }
-					isVisible={ isVisible }
-					onClose={ () => { /* do nothing */ } }
-					className="component__popover column-menu__popover"
-					rootClassName="uses-s9n-styles"
-					position="left"
-				>
-					<ul>
-						{ this.renderGroups( columns, selectedColumns ) }
-					</ul>
-				</PopoverMenu>
-		);
+		if ( isVisible ) {
+			return (
+					<PopoverMenu
+						context={ context }
+						isVisible={ isVisible }
+						onClose={ () => { /* do nothing */ } }
+						className="component__popover column-menu__popover"
+						rootClassName="uses-s9n-styles"
+						position="left"
+					>
+						<ul className='column-menu__list' >
+							{ this.renderGroups( columns, selectedColumns ) }
+						</ul>
+					</PopoverMenu>
+			);
+		} else {
+			return null;
+		}
 	}
 
 	renderGroups( columns, selectedColumns ) {
@@ -51,8 +55,8 @@ class ColumnMenu extends React.Component {
 				const groupColumns = columns.filter( ( col ) => { return group === col.group; } );
 
 				elements.push(
-					<li>
-						<p>{ group }</p>
+					<li className='column-menu__row' >
+						<p className='column-menu__group-label'>{ group }</p>
 						{ groupColumns.map( ( col ) => this.renderButton( col, selectedColumns ) ) }
 					</li>
 				);
@@ -64,7 +68,7 @@ class ColumnMenu extends React.Component {
 
 	renderButton( column, selectedColumns ) {
 		const selected = ( selectedColumns.has( column.key ) );
-		const className = 'column-menu__button:' + ( selected ? 'selected' : 'unselected' );
+		const className = 'column-menu__button ' + ( selected ? 'selected' : 'unselected' );
 		const onClick = ( evt ) => {
 			evt.preventDefault();
 			this.props.onColumnSelect( column.key, ! selected );

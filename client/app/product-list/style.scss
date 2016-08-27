@@ -38,8 +38,46 @@
 	flex: 1;
 	flex-direction: column;
 	max-width: 10%;
+	padding: 10px;
 }
 
 .product-list__list-cell-name {
 	max-width: none;
 }
+
+.column-menu__list {
+	list-style: none;
+}
+
+.column-menu__row {
+	padding: 1em;
+}
+
+.column-menu__group-label {
+	display: inline;
+	padding: 0.5em;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.column-menu__button {
+	display: inline;
+	padding: 0.5em;
+	vertical-align: middle;
+
+	&.selected {
+		background: $dark-gray;
+		color: white;
+
+		&:hover {
+			background: $gray;
+			color: white;
+		}
+	}
+
+	&.unselected {
+		background: white;
+		color: $dark-gray;
+	}
+}
+
