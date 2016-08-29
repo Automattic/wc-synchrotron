@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchProducts, setDisplayOption } from '../../state/products/actions';
+import { fetchProducts, setDisplayOption, initEdits, addProduct, cancelEdits, saveEdits } from '../../state/products/actions';
 import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
@@ -14,10 +14,19 @@ const data = screenData( 'wc_synchrotron_data' );
 class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		fetchProducts: PropTypes.func.isRequired,
+		setDisplayOption: PropTypes.func.isRequired,
+		initEdits: PropTypes.func.isRequired,
+		addProduct: PropTypes.func.isRequired,
+		cancelEdit: PropTypes.func.isRequired,
+		saveEdits: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
+
+		this.renderViewTitle = this.renderViewTitle.bind( this );
+		this.renderEditTitle = this.renderEditTitle.bind( this );
 	}
 
 	componentDidMount() {
@@ -26,17 +35,13 @@ class ProductList extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const onEdit = null; // TODO: hook up to bound action creator
-		const onAdd = null; // TODO: hook up to bound action creator
 		const { products, setDisplayOption } = this.props;
+		const { edits } = products;
 
 		return (
 			<div className="product-list">
 				<div className="product-list__header">
-					<TitleBar icon="product" title={ __( 'Products' ) }>
-						<Button onClick={ onEdit } >{ __( 'Edit products' ) }</Button>
-						<Button primary onClick={ onAdd } >{ __( 'Add product' ) }</Button>
-					</TitleBar>
+					{ edits ? this.renderEditTitle() : this.renderViewTitle() }
 				</div>
 				<ProductsBody
 					products={ products.products }
@@ -44,6 +49,30 @@ class ProductList extends React.Component {
 					setDisplayOption={ setDisplayOption }
 				/>
 			</div>
+		);
+	}
+
+	renderViewTitle() {
+		const __ = this.props.translate;
+		const { initEdits, addProduct } = this.props;
+
+		return (
+			<TitleBar icon="product" title={ __( 'Products' ) }>
+				<Button onClick={ initEdits } >{ __( 'Edit products' ) }</Button>
+				<Button primary onClick={ addProduct } >{ __( 'Add product' ) }</Button>
+			</TitleBar>
+		);
+	}
+
+	renderEditTitle() {
+		const __ = this.props.translate;
+		const { cancelEdits, saveEdits } = this.props;
+
+		return (
+			<TitleBar icon="product" title={ __( 'Products' ) }>
+				<Button onClick={ cancelEdits } >{ __( 'Cancel' ) }</Button>
+				<Button primary onClick={ saveEdits } >{ __( 'Save' ) }</Button>
+			</TitleBar>
 		);
 	}
 }
@@ -61,6 +90,10 @@ function mapDispatchToProps( dispatch ) {
 		{
 			fetchProducts,
 			setDisplayOption,
+			initEdits,
+			addProduct,
+			cancelEdits,
+			saveEdits,
 		},
 		dispatch
 	);
