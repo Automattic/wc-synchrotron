@@ -28,7 +28,7 @@ export default class ListRow extends React.Component {
 
 		return (
 			<span className={ classes } key={ col.key }>
-				{ ( col.func ? col.func( data, col.key ) : null ) }
+				{ ( col.renderCell ? col.renderCell( data, col.key ) : null ) }
 			</span>
 		);
 	}
