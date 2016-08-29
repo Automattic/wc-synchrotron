@@ -33,6 +33,9 @@ class ListBody extends React.Component {
 		const exposure     = __( 'Exposure' );
 		const misc         = __( 'Misc' );
 
+		const renderVisibility = ( product, key ) => this.renderBoolean( product, key, [ 'visible' ] );
+		const renderFeatured = ( product, key ) => this.renderBoolean( product, key, [ true ], 'heart', null );
+
 		return [
 			{ group: null,         key: 'name',               title: __( 'Name' ),                func: this.renderString },
 			{ group: general,      key: 'sku',                title: __( 'SKU' ),                 func: this.renderString },
@@ -48,8 +51,8 @@ class ListBody extends React.Component {
 			{ group: tax,          key: 'tax_class',          title: __( 'Tax class' ),           func: this.renderString },
 			{ group: organization, key: 'categories',         title: __( 'Categories' ),          func: this.renderCategories },
 			{ group: organization, key: 'tags',               title: __( 'Tags' ),                func: this.renderTags },
-			{ group: exposure,     key: 'catalog_visibility', title: __( 'Visibility' ),          func: this.renderBoolean },
-			{ group: exposure,     key: 'featured',           title: __( 'Featured' ),            func: this.renderBoolean },
+			{ group: exposure,     key: 'catalog_visibility', title: __( 'Visibility' ),          func: renderVisibility },
+			{ group: exposure,     key: 'featured',           title: __( 'Featured' ),            func: renderFeatured },
 			{ group: misc,         key: 'backorders',         title: __( 'Backorders' ),          func: this.renderBoolean },
 			{ group: misc,         key: 'sold_individually',  title: __( 'Sold invidivually' ),   func: this.renderBoolean },
 			{ group: null,         key: 'action',             title: this.renderColumnSelectIcon, func: ( ) => null },
@@ -63,37 +66,69 @@ class ListBody extends React.Component {
 
 	renderInteger( product, key, nanString = 'N/A' ) {
 		const value = Number( product[key] );
-		return ( ! isNaN( value ) ? value : nanString );
+		if ( value ) {
+			return ( ! isNaN( value ) ? value : nanString );
+		} else {
+			return '';
+		}
 	}
 
-	renderBoolean( product, key ) {
+	renderBoolean( product, key, trueValues = [ true, 'true', 'yes' ], trueIcon = 'checkmark', falseIcon = 'cross-small' ) {
 		// TODO: Render a graphic checkmark/x instead.
-		return product[key];
+		const value = trueValues.includes( product[key] );
+		if ( value ) {
+			return trueIcon && <Gridicon icon={ trueIcon } />;
+		} else {
+			return falseIcon && <Gridicon icon={ falseIcon } />;
+		}
 	}
 
 	renderCurrency( product, key ) {
 		const value = product[key];
 		// TODO: Get the currency symbol and format properly!!
-		return '$' + value;
+		if ( value ) {
+			return '$' + value;
+		} else {
+			return '';
+		}
 	}
 
 	renderDimensions( product, key ) {
 		const value = product[key];
-		const l = Number( value.length );
-		const w = Number( value.width );
-		const h = Number( value.height );
 
-		return l + '/' + w + '/' + h;
+		if ( value && ( value.length || value.width || value.height ) ) {
+			const l = value.length ? Number( value.length ) : '-';
+			const w = value.width ? Number( value.width ) : '-';
+			const h = value.height ? Number( value.height ) : '-';
+
+			return l + '/' + w + '/' + h;
+		} else {
+			return '';
+		}
 	}
 
 	renderCategories( product, key ) {
-		// TODO: Render names.
-		return product[key];
+		const value = product[key];
+
+		if ( value ) {
+			let names = value.map( ( c ) => c.name );
+
+			return names.join();
+		} else {
+			return '';
+		}
 	}
 
 	renderTags( product, key ) {
-		// TODO: Render tags.
-		return product[key];
+		const value = product[key];
+
+		if ( value ) {
+			let names = value.map( ( c ) => c.name );
+
+			return names.join();
+		} else {
+			return '';
+		}
 	}
 
 	onColumnSelectIconClick( evt ) {
