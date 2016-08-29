@@ -13,15 +13,6 @@ class ColumnMenu extends React.Component {
 		onColumnSelect: PropTypes.func.isRequired,
 	}
 
-	constructor( props ) {
-		super( props );
-
-		this.setColumnSelected = this.setColumnSelected.bind( this );
-	}
-
-	setColumnSelected( key, selected ) {
-	}
-
 	render() {
 		const __ = this.props.translate;
 		const { context, isVisible, columns, selectedColumns } = this.props;
