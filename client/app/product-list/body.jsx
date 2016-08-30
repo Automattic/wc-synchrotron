@@ -43,7 +43,7 @@ class ListBody extends React.Component {
 			{ group: general,      key: 'dimensions',         title: __( 'L/W/H' ),               renderCell: this.renderDimensions },
 			{ group: general,      key: 'weight',             title: __( 'Weight' ),              renderCell: this.renderString },
 			{ group: general,      key: 'sale_price',         title: __( 'Sale Price' ),          renderCell: this.renderCurrency },
-			{ group: inventory,    key: 'stock',              title: __( 'Stock' ),               renderCell: this.renderBoolean },
+			{ group: inventory,    key: 'in_stock',           title: __( 'Stock' ),               renderCell: this.renderBoolean },
 			{ group: inventory,    key: 'manage_stock',       title: __( 'Manage stock' ),        renderCell: this.renderBoolean },
 			{ group: inventory,    key: 'stock_quantity',     title: __( 'Stock quantity' ),      renderCell: this.renderInteger },
 			{ group: inventory,    key: 'shipping_class',     title: __( 'Shipping class' ),      renderCell: this.renderString },
