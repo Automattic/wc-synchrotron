@@ -70,7 +70,7 @@
 	width: 150px;
 
 	@include breakpoint( ">960px" ) {
-		width: 16.6666666667%;
+		width: 15.6666666667%;
 	}
 }
 
@@ -89,11 +89,12 @@
 	line-height: 1;
 
 	&.selected {
-		background: $dark-gray;
+		background: $gray;
+		border-color: $gray;
 		color: white;
 
 		&:hover {
-			background: $gray;
+			background: $dark-gray;
 			color: white;
 		}
 	}
