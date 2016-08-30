@@ -47,7 +47,7 @@ class ColumnMenu extends React.Component {
 
 				elements.push(
 					<li key={ group } className='column-menu__row' >
-						<p className='column-menu__group-label'>{ group }</p>
+						<div className='column-menu__group-label column-menu__group-item'>{ group }</div>
 						{ groupColumns.map( ( col ) => this.renderButton( col, selectedColumns ) ) }
 					</li>
 				);
@@ -59,7 +59,7 @@ class ColumnMenu extends React.Component {
 
 	renderButton( column, selectedColumns ) {
 		const selected = ( selectedColumns.has( column.key ) );
-		const className = 'column-menu__button ' + ( selected ? 'selected' : 'unselected' );
+		const className = 'column-menu__group-item column-menu__button ' + ( selected ? 'selected' : 'unselected' );
 		const onClick = ( evt ) => {
 			evt.preventDefault();
 			this.props.onColumnSelect( column.key, ! selected );
