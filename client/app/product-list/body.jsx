@@ -5,10 +5,12 @@ import Gridicon from 'components/gridicon';
 import SearchCard from 'components/search-card';
 import ColumnMenu from './column-menu';
 import ListTable from './list-table';
+import { renderTextInput } from './cell-render';
 
 class ListBody extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		editable: PropTypes.bool.isRequired,
 		display: PropTypes.object.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 	}
@@ -37,25 +39,25 @@ class ListBody extends React.Component {
 		const renderFeatured = ( product, key ) => this.renderBoolean( product, key, [ true ], 'heart', null );
 
 		return [
-			{ group: null,         key: 'name',               title: __( 'Name' ),                renderCell: this.renderString },
-			{ group: general,      key: 'sku',                title: __( 'SKU' ),                 renderCell: this.renderString },
-			{ group: general,      key: 'price',              title: __( 'Price' ),               renderCell: this.renderCurrency },
-			{ group: general,      key: 'dimensions',         title: __( 'L/W/H' ),               renderCell: this.renderDimensions },
-			{ group: general,      key: 'weight',             title: __( 'Weight' ),              renderCell: this.renderString },
-			{ group: general,      key: 'sale_price',         title: __( 'Sale Price' ),          renderCell: this.renderCurrency },
-			{ group: inventory,    key: 'in_stock',           title: __( 'Stock' ),               renderCell: this.renderBoolean },
-			{ group: inventory,    key: 'manage_stock',       title: __( 'Manage stock' ),        renderCell: this.renderBoolean },
-			{ group: inventory,    key: 'stock_quantity',     title: __( 'Stock quantity' ),      renderCell: this.renderInteger },
-			{ group: inventory,    key: 'shipping_class',     title: __( 'Shipping class' ),      renderCell: this.renderString },
-			{ group: tax,          key: 'tax_status',         title: __( 'Tax status' ),          renderCell: this.renderString },
-			{ group: tax,          key: 'tax_class',          title: __( 'Tax class' ),           renderCell: this.renderString },
-			{ group: organization, key: 'categories',         title: __( 'Categories' ),          renderCell: this.renderCategories },
-			{ group: organization, key: 'tags',               title: __( 'Tags' ),                renderCell: this.renderTags },
-			{ group: exposure,     key: 'catalog_visibility', title: __( 'Visibility' ),          renderCell: renderVisibility },
-			{ group: exposure,     key: 'featured',           title: __( 'Featured' ),            renderCell: renderFeatured },
-			{ group: misc,         key: 'backorders',         title: __( 'Backorders' ),          renderCell: this.renderBoolean },
-			{ group: misc,         key: 'sold_individually',  title: __( 'Sold invidivually' ),   renderCell: this.renderBoolean },
-			{ group: null,         key: 'action',             title: this.renderColumnSelectIcon, renderCell: ( ) => null },
+			{ group: null,         key: 'name',               title: __( 'Name' ),                view: this.renderString },
+			{ group: general,      key: 'sku',                title: __( 'SKU' ),                 view: this.renderString,     edit: renderTextInput },
+			{ group: general,      key: 'price',              title: __( 'Price' ),               view: this.renderCurrency },
+			{ group: general,      key: 'dimensions',         title: __( 'L/W/H' ),               view: this.renderDimensions },
+			{ group: general,      key: 'weight',             title: __( 'Weight' ),              view: this.renderString },
+			{ group: general,      key: 'sale_price',         title: __( 'Sale Price' ),          view: this.renderCurrency },
+			{ group: inventory,    key: 'in_stock',           title: __( 'Stock' ),               view: this.renderBoolean },
+			{ group: inventory,    key: 'manage_stock',       title: __( 'Manage stock' ),        view: this.renderBoolean },
+			{ group: inventory,    key: 'stock_quantity',     title: __( 'Stock quantity' ),      view: this.renderInteger },
+			{ group: inventory,    key: 'shipping_class',     title: __( 'Shipping class' ),      view: this.renderString },
+			{ group: tax,          key: 'tax_status',         title: __( 'Tax status' ),          view: this.renderString },
+			{ group: tax,          key: 'tax_class',          title: __( 'Tax class' ),           view: this.renderString },
+			{ group: organization, key: 'categories',         title: __( 'Categories' ),          view: this.renderCategories },
+			{ group: organization, key: 'tags',               title: __( 'Tags' ),                view: this.renderTags },
+			{ group: exposure,     key: 'catalog_visibility', title: __( 'Visibility' ),          view: renderVisibility },
+			{ group: exposure,     key: 'featured',           title: __( 'Featured' ),            view: renderFeatured },
+			{ group: misc,         key: 'backorders',         title: __( 'Backorders' ),          view: this.renderBoolean },
+			{ group: misc,         key: 'sold_individually',  title: __( 'Sold invidivually' ),   view: this.renderBoolean },
+			{ group: null,         key: 'action',             title: this.renderColumnSelectIcon },
 		];
 	}
 
@@ -155,7 +157,7 @@ class ListBody extends React.Component {
 	}
 
 	render() {
-		const { products, display } = this.props;
+		const { products, editable, display } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		return (
@@ -164,6 +166,7 @@ class ListBody extends React.Component {
 				<ListTable
 					ref="listTable"
 					products={ products }
+					editable={ editable }
 					columns={ this.columns }
 					selectedColumns={ display.selectedColumns }
 				/>

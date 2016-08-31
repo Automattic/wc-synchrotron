@@ -8,6 +8,7 @@ export default class ListTable extends React.Component {
 		products: PropTypes.object.isRequired,
 		columns: PropTypes.array.isRequired,
 		selectedColumns: PropTypes.array.isRequired,
+		editable: PropTypes.bool.isRequired,
 	}
 
 	constructor( props ) {
@@ -19,7 +20,7 @@ export default class ListTable extends React.Component {
 	}
 
 	render() {
-		const { products } = this.props;
+		const { products, editable } = this.props;
 
 		// Filter out all unselected columns.
 		const columns = this.props.columns.filter( ( col ) => this.props.selectedColumns.has( col.key ) );
@@ -30,14 +31,14 @@ export default class ListTable extends React.Component {
 			<Card className={ classes }>
 				<ul className="product-list__list">
 					<ListHeader ref="listHeader" columns={ columns } />
-					{ products.map( ( data ) => this.renderRow( data, columns ) ) }
+					{ products.map( ( data ) => this.renderRow( data, columns, editable ) ) }
 				</ul>
 			</Card>
 		);
 	}
 
-	renderRow( data, columns ) {
-		return <ListRow key={ data.id } columns={ columns } data={ data } />;
+	renderRow( data, columns, editable ) {
+		return <ListRow key={ data.id } columns={ columns } data={ data } editable={ editable } />;
 	}
 }
 
