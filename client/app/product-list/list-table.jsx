@@ -7,20 +7,29 @@ export default class ListTable extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
 		columns: PropTypes.array.isRequired,
+		selectedColumns: PropTypes.array.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
 	}
 
+	getListHeaderRef() {
+		return this.refs && this.refs.listHeader;
+	}
+
 	render() {
-		const { columns, products } = this.props;
+		const { products } = this.props;
+
+		// Filter out all unselected columns.
+		const columns = this.props.columns.filter( ( col ) => this.props.selectedColumns.has( col.key ) );
+
 		const classes = 'product-list__list-table product-list__list-table-columns-' + columns.length;
 
 		return (
 			<Card className={ classes }>
 				<ul className="product-list__list">
-					<ListHeader columns={ columns } />
+					<ListHeader ref="listHeader" columns={ columns } />
 					{ products.map( ( data ) => this.renderRow( data, columns ) ) }
 				</ul>
 			</Card>
