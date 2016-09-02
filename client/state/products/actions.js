@@ -50,7 +50,7 @@ export function addProduct() {
 }
 
 export function updateProduct( index, data ) {
-	return ACTIONS.UPDATE_PRODUCT( index, data );
+	return ACTIONS.UPDATE_PRODUCT( { index, data } );
 }
 
 export function deleteProduct( id ) {

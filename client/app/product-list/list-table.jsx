@@ -6,6 +6,7 @@ import Card from 'components/card';
 export default class ListTable extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		edits: PropTypes.object.isRequired,
 		columns: PropTypes.array.isRequired,
 		selectedColumnKeys: PropTypes.set.isRequired,
 		editable: PropTypes.bool.isRequired,
@@ -20,7 +21,7 @@ export default class ListTable extends React.Component {
 	}
 
 	render() {
-		const { products, editable, selectedColumnKeys } = this.props;
+		const { products, edits, editable, selectedColumnKeys, onEdit } = this.props;
 
 		// Pass down a complete set of selected columns to children components.
 		// Do the filtering once here and make use of it many times.
@@ -35,14 +36,26 @@ export default class ListTable extends React.Component {
 			<Card className={ classes }>
 				<ul className="product-list__list">
 					<ListHeader ref="listHeader" { ...headerProps } />
-					{ products.map( ( data ) => this.renderRow( data, selectedColumns, editable ) ) }
+					{ products.map( ( data ) => this.renderRow( data, edits, selectedColumns, editable, onEdit ) ) }
 				</ul>
 			</Card>
 		);
 	}
 
-	renderRow( data, selectedColumns, editable ) {
-		return <ListRow key={ data.id } selectedColumns={ selectedColumns } data={ data } editable={ editable } />;
+	renderRow( data, edits, selectedColumns, editable, onEdit ) {
+		// Check if there are edits on this data and show that instead.
+		const updatedData = edits && edits.updates && edits.updates[ data.id ];
+		data = updatedData || data;
+
+		return (
+			<ListRow
+				key={ data.id }
+				selectedColumns={ selectedColumns }
+				data={ data }
+				editable={ editable }
+				onEdit={ onEdit }
+			/>
+		);
 	}
 }
 

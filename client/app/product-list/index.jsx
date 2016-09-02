@@ -2,11 +2,20 @@ import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchProducts, setDisplayOption, initEdits, addProduct, cancelEdits, saveEdits } from '../../state/products/actions';
 import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
+
+import {
+	fetchProducts,
+	setDisplayOption,
+	initEdits,
+	addProduct,
+	updateProduct,
+	cancelEdits,
+	saveEdits
+} from '../../state/products/actions';
 
 // TODO: Do this in a more universal way.
 const data = screenData( 'wc_synchrotron_data' );
@@ -18,6 +27,7 @@ class ProductList extends React.Component {
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
 		addProduct: PropTypes.func.isRequired,
+		updateProduct: PropTypes.func.isRequired,
 		cancelEdit: PropTypes.func.isRequired,
 		saveEdits: PropTypes.func.isRequired,
 	}
@@ -35,7 +45,7 @@ class ProductList extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { products, setDisplayOption } = this.props;
+		const { products, setDisplayOption, updateProduct } = this.props;
 		const { edits } = products;
 
 		return (
@@ -45,9 +55,11 @@ class ProductList extends React.Component {
 				</div>
 				<ProductsBody
 					products={ products.products }
+					edits={ edits }
 					editable={ edits }
 					display={ products.display }
 					setDisplayOption={ setDisplayOption }
+					updateProduct={ updateProduct }
 				/>
 			</div>
 		);
@@ -93,6 +105,7 @@ function mapDispatchToProps( dispatch ) {
 			setDisplayOption,
 			initEdits,
 			addProduct,
+			updateProduct,
 			cancelEdits,
 			saveEdits,
 		},
