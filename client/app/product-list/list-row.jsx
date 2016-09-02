@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 export default class ListRow extends React.Component {
 	propTypes: {
-		columns: PropTypes.array.isRequired,
+		selectedColumns: PropTypes.array.isRequired,
 		data: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
 	}
@@ -15,11 +15,11 @@ export default class ListRow extends React.Component {
 	}
 
 	render() {
-		const { columns } = this.props;
+		const { selectedColumns } = this.props;
 
 		return (
 			<li className="product-list__list-row">
-				{ columns.map( this.renderField ) }
+				{ selectedColumns.map( this.renderField ) }
 			</li>
 		);
 	}
@@ -37,10 +37,10 @@ export default class ListRow extends React.Component {
 	renderFieldContents( col ) {
 		const { data, editable } = this.props;
 
-		if ( editable && col.edit ) {
-			return col.edit( data, col.key );
-		} else if ( col.view ) {
-			return col.view( data, col.key );
+		if ( editable && col.renderEdit ) {
+			return col.renderEdit( data, col.key );
+		} else if ( col.renderView ) {
+			return col.renderView( data, col.key );
 		} else {
 			return null;
 		}
