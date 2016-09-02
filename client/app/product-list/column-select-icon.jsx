@@ -21,7 +21,7 @@ class ColumnSelectIcon extends React.Component {
 				<Gridicon icon="grid" />
 				<ColumnMenu
 					columns={ columns }
-					selectedColumns={ display.selectedColumns }
+					selectedColumnKeys={ display.selectedColumnKeys }
 					context={ this.refs.columnSelect }
 					isVisible={ display.showColumnPanel }
 					onColumnSelect={ onColumnSelect }

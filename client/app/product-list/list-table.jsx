@@ -7,7 +7,7 @@ export default class ListTable extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
 		columns: PropTypes.array.isRequired,
-		selectedColumns: PropTypes.array.isRequired,
+		selectedColumnKeys: PropTypes.set.isRequired,
 		editable: PropTypes.bool.isRequired,
 	}
 
@@ -20,11 +20,11 @@ export default class ListTable extends React.Component {
 	}
 
 	render() {
-		const { products, editable } = this.props;
+		const { products, editable, selectedColumnKeys } = this.props;
 
 		// Pass down a complete set of selected columns to children components.
 		// Do the filtering once here and make use of it many times.
-		const selectedColumns = this.props.columns.filter( ( col ) => this.props.selectedColumns.has( col.key ) )
+		const selectedColumns = this.props.columns.filter( ( col ) => selectedColumnKeys.has( col.key ) )
 
 		// Copy all props and pass down to ListHeader for extension reasons.
 		const headerProps = Object.assign( {}, this.props, { selectedColumns } );

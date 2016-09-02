@@ -30,17 +30,17 @@ class ListBody extends React.Component {
 	}
 
 	onColumnSelect( key, selected ) {
-		const prevSelectedColumns = this.props.display.selectedColumns;
+		const prevKeys = this.props.display.selectedColumnKeys;
 
-		let selectedColumns = new Set( prevSelectedColumns );
+		let keys = new Set( prevKeys );
 
 		if ( selected ) {
-			selectedColumns.add( key );
+			keys.add( key );
 		} else {
-			selectedColumns.delete( key );
+			keys.delete( key );
 		}
 
-		this.props.setDisplayOption( 'selectedColumns', selectedColumns );
+		this.props.setDisplayOption( 'selectedColumnKeys', keys );
 	}
 
 	render() {
@@ -56,7 +56,7 @@ class ListBody extends React.Component {
 					display={ display }
 					editable={ editable }
 					columns={ columns }
-					selectedColumns={ display.selectedColumns }
+					selectedColumnKeys={ display.selectedColumnKeys }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect}
 				/>
