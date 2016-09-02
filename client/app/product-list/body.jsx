@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import Button from 'components/button';
-import Gridicon from 'components/gridicon';
+import Gridicon from 'gridicons/react/gridicon';
 import SearchCard from 'components/search-card';
 import ColumnMenu from './column-menu';
 import ListTable from './list-table';
-import { renderTextInput } from './cell-render';
+import * as cell from './cell-render';
 
 class ListBody extends React.Component {
 	propTypes: {
@@ -39,98 +39,26 @@ class ListBody extends React.Component {
 		const renderFeatured = ( product, key ) => this.renderBoolean( product, key, [ true ], 'heart', null );
 
 		return [
-			{ group: null,         key: 'name',               title: __( 'Name' ),                view: this.renderString },
-			{ group: general,      key: 'sku',                title: __( 'SKU' ),                 view: this.renderString,     edit: renderTextInput },
-			{ group: general,      key: 'price',              title: __( 'Price' ),               view: this.renderCurrency },
-			{ group: general,      key: 'dimensions',         title: __( 'L/W/H' ),               view: this.renderDimensions },
-			{ group: general,      key: 'weight',             title: __( 'Weight' ),              view: this.renderString },
-			{ group: general,      key: 'sale_price',         title: __( 'Sale Price' ),          view: this.renderCurrency },
-			{ group: inventory,    key: 'in_stock',           title: __( 'Stock' ),               view: this.renderBoolean },
-			{ group: inventory,    key: 'manage_stock',       title: __( 'Manage stock' ),        view: this.renderBoolean },
-			{ group: inventory,    key: 'stock_quantity',     title: __( 'Stock quantity' ),      view: this.renderInteger },
-			{ group: inventory,    key: 'shipping_class',     title: __( 'Shipping class' ),      view: this.renderString },
-			{ group: tax,          key: 'tax_status',         title: __( 'Tax status' ),          view: this.renderString },
-			{ group: tax,          key: 'tax_class',          title: __( 'Tax class' ),           view: this.renderString },
-			{ group: organization, key: 'categories',         title: __( 'Categories' ),          view: this.renderCategories },
-			{ group: organization, key: 'tags',               title: __( 'Tags' ),                view: this.renderTags },
+			{ group: null,         key: 'name',               title: __( 'Name' ),                view: cell.renderString },
+			{ group: general,      key: 'sku',                title: __( 'SKU' ),                 view: cell.renderString, edit: cell.renderTextInput },
+			{ group: general,      key: 'price',              title: __( 'Price' ),               view: cell.renderCurrency },
+			{ group: general,      key: 'dimensions',         title: __( 'L/W/H' ),               view: cell.renderDimensions },
+			{ group: general,      key: 'weight',             title: __( 'Weight' ),              view: cell.renderString },
+			{ group: general,      key: 'sale_price',         title: __( 'Sale Price' ),          view: cell.renderCurrency },
+			{ group: inventory,    key: 'in_stock',           title: __( 'Stock' ),               view: cell.renderBoolean },
+			{ group: inventory,    key: 'manage_stock',       title: __( 'Manage stock' ),        view: cell.renderBoolean },
+			{ group: inventory,    key: 'stock_quantity',     title: __( 'Stock quantity' ),      view: cell.renderInteger },
+			{ group: inventory,    key: 'shipping_class',     title: __( 'Shipping class' ),      view: cell.renderString },
+			{ group: tax,          key: 'tax_status',         title: __( 'Tax status' ),          view: cell.renderString },
+			{ group: tax,          key: 'tax_class',          title: __( 'Tax class' ),           view: cell.renderString },
+			{ group: organization, key: 'categories',         title: __( 'Categories' ),          view: cell.renderCategories },
+			{ group: organization, key: 'tags',               title: __( 'Tags' ),                view: cell.renderTags },
 			{ group: exposure,     key: 'catalog_visibility', title: __( 'Visibility' ),          view: renderVisibility },
 			{ group: exposure,     key: 'featured',           title: __( 'Featured' ),            view: renderFeatured },
-			{ group: misc,         key: 'backorders',         title: __( 'Backorders' ),          view: this.renderBoolean },
-			{ group: misc,         key: 'sold_individually',  title: __( 'Sold invidivually' ),   view: this.renderBoolean },
+			{ group: misc,         key: 'backorders',         title: __( 'Backorders' ),          view: cell.renderBoolean },
+			{ group: misc,         key: 'sold_individually',  title: __( 'Sold invidivually' ),   view: cell.renderBoolean },
 			{ group: null,         key: 'action',             title: this.renderColumnSelectIcon },
 		];
-	}
-
-	// TODO: Put these functions in a helper file outside of a class.
-	renderString( product, key ) {
-		return product[key];
-	}
-
-	renderInteger( product, key, nanString = 'N/A' ) {
-		const value = Number( product[key] );
-		if ( value ) {
-			return ( ! isNaN( value ) ? value : nanString );
-		} else {
-			return '';
-		}
-	}
-
-	renderBoolean( product, key, trueValues = [ true, 'true', 'yes' ], trueIcon = 'checkmark', falseIcon = 'cross-small' ) {
-		// TODO: Render a graphic checkmark/x instead.
-		const value = trueValues.includes( product[key] );
-		if ( value ) {
-			return trueIcon && <Gridicon icon={ trueIcon } />;
-		} else {
-			return falseIcon && <Gridicon icon={ falseIcon } />;
-		}
-	}
-
-	renderCurrency( product, key ) {
-		const value = product[key];
-		// TODO: Get the currency symbol and format properly!!
-		if ( value ) {
-			return '$' + value;
-		} else {
-			return '';
-		}
-	}
-
-	renderDimensions( product, key ) {
-		const value = product[key];
-
-		if ( value && ( value.length || value.width || value.height ) ) {
-			const l = value.length ? Number( value.length ) : '-';
-			const w = value.width ? Number( value.width ) : '-';
-			const h = value.height ? Number( value.height ) : '-';
-
-			return l + '/' + w + '/' + h;
-		} else {
-			return '';
-		}
-	}
-
-	renderCategories( product, key ) {
-		const value = product[key];
-
-		if ( value ) {
-			let names = value.map( ( c ) => c.name );
-
-			return names.join();
-		} else {
-			return '';
-		}
-	}
-
-	renderTags( product, key ) {
-		const value = product[key];
-
-		if ( value ) {
-			let names = value.map( ( c ) => c.name );
-
-			return names.join();
-		} else {
-			return '';
-		}
 	}
 
 	onColumnSelectIconClick( evt ) {
