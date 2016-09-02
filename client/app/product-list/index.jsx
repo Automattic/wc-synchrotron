@@ -45,6 +45,7 @@ class ProductList extends React.Component {
 				</div>
 				<ProductsBody
 					products={ products.products }
+					editable={ edits }
 					display={ products.display }
 					setDisplayOption={ setDisplayOption }
 				/>

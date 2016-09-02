@@ -9,13 +9,13 @@ class ColumnMenu extends React.Component {
 		context: PropTypes.object.isRequired,
 		isVisible: PropTypes.bool.isRequired,
 		columns: PropTypes.func.isRequired,
-		selectedColumns: PropTypes.array.isRequired,
+		selectedColumnKeys: PropTypes.set.isRequired,
 		onColumnSelect: PropTypes.func.isRequired,
 	}
 
 	render() {
 		const __ = this.props.translate;
-		const { context, isVisible, columns, selectedColumns } = this.props;
+		const { context, isVisible, columns, selectedColumnKeys } = this.props;
 
 		if ( isVisible ) {
 			return (
@@ -28,7 +28,7 @@ class ColumnMenu extends React.Component {
 						position="left"
 					>
 						<ul className='column-menu__list' >
-							{ this.renderGroups( columns, selectedColumns ) }
+							{ this.renderGroups( columns, selectedColumnKeys ) }
 						</ul>
 					</PopoverMenu>
 			);
@@ -37,7 +37,7 @@ class ColumnMenu extends React.Component {
 		}
 	}
 
-	renderGroups( columns, selectedColumns ) {
+	renderGroups( columns, selectedColumnKeys ) {
 		const groups = new Set( columns.map( ( col ) => col.group ) );
 		let elements = [];
 
@@ -48,7 +48,7 @@ class ColumnMenu extends React.Component {
 				elements.push(
 					<li key={ group } className='column-menu__row' >
 						<div className='column-menu__group-label column-menu__group-item'>{ group }</div>
-						{ groupColumns.map( ( col ) => this.renderButton( col, selectedColumns ) ) }
+						{ groupColumns.map( ( col ) => this.renderButton( col, selectedColumnKeys ) ) }
 					</li>
 				);
 			}
@@ -57,8 +57,8 @@ class ColumnMenu extends React.Component {
 		return elements;
 	}
 
-	renderButton( column, selectedColumns ) {
-		const selected = ( selectedColumns.has( column.key ) );
+	renderButton( column, selectedColumnKeys ) {
+		const selected = ( selectedColumnKeys.has( column.key ) );
 		const className = 'column-menu__group-item column-menu__button ' + ( selected ? 'selected' : 'unselected' );
 		const onClick = ( evt ) => {
 			evt.preventDefault();

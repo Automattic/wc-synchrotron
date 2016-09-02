@@ -2,35 +2,48 @@ import React, { PropTypes } from 'react';
 
 export default class ListRow extends React.Component {
 	propTypes: {
-		columns: PropTypes.array.isRequired,
+		selectedColumns: PropTypes.array.isRequired,
 		data: PropTypes.object.isRequired,
+		editable: PropTypes.bool.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
 
 		this.renderField = this.renderField.bind( this );
+		this.renderFieldContents = this.renderFieldContents.bind( this );
 	}
 
 	render() {
-		const { columns } = this.props;
+		const { selectedColumns } = this.props;
 
 		return (
 			<li className="product-list__list-row">
-				{ columns.map( this.renderField ) }
+				{ selectedColumns.map( this.renderField ) }
 			</li>
 		);
 	}
 
 	renderField( col ) {
-		const { data } = this.props;
 		const classes = 'product-list__list-cell product-list__list-cell-' + col.key;
 
 		return (
 			<span className={ classes } key={ col.key }>
-				{ ( col.renderCell ? col.renderCell( data, col.key ) : null ) }
+				{ this.renderFieldContents( col ) }
 			</span>
 		);
+	}
+
+	renderFieldContents( col ) {
+		const { data, editable } = this.props;
+
+		if ( editable && col.renderEdit ) {
+			return col.renderEdit( data, col.key );
+		} else if ( col.renderView ) {
+			return col.renderView( data, col.key );
+		} else {
+			return null;
+		}
 	}
 }
 
