@@ -12,7 +12,7 @@ class ListBody extends React.Component {
 		editable: PropTypes.bool.isRequired,
 		display: PropTypes.object.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
-		updateProduct: PropTypes.func.isRequired,
+		editProduct: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
@@ -47,10 +47,10 @@ class ListBody extends React.Component {
 	}
 
 	onEdit( product, key, value ) {
-		const { products, updateProduct } = this.props;
+		const { products, editProduct } = this.props;
 
 		const newProduct = Object.assign( {}, product, { [ key ]: value } );
-		updateProduct( products.indexOf( product ), newProduct );
+		editProduct( products.indexOf( product ), newProduct );
 	}
 
 	render() {

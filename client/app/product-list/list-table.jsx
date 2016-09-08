@@ -44,7 +44,7 @@ export default class ListTable extends React.Component {
 
 	renderRow( data, edits, selectedColumns, editable, onEdit ) {
 		// Check if there are edits on this data and show that instead.
-		const updatedData = edits && edits.updates && edits.updates[ data.id ];
+		const updatedData = edits && edits.update && edits.update[ data.id ];
 		data = updatedData || data;
 
 		return (

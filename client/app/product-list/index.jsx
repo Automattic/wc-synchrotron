@@ -12,7 +12,7 @@ import {
 	setDisplayOption,
 	initEdits,
 	addProduct,
-	updateProduct,
+	editProduct,
 	cancelEdits,
 	saveEdits
 } from '../../state/products/actions';
@@ -27,7 +27,7 @@ class ProductList extends React.Component {
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
 		addProduct: PropTypes.func.isRequired,
-		updateProduct: PropTypes.func.isRequired,
+		editProduct: PropTypes.func.isRequired,
 		cancelEdit: PropTypes.func.isRequired,
 		saveEdits: PropTypes.func.isRequired,
 	}
@@ -45,7 +45,7 @@ class ProductList extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { products, setDisplayOption, updateProduct } = this.props;
+		const { products, setDisplayOption, editProduct } = this.props;
 		const { edits } = products;
 
 		return (
@@ -59,7 +59,7 @@ class ProductList extends React.Component {
 					editable={ edits }
 					display={ products.display }
 					setDisplayOption={ setDisplayOption }
-					updateProduct={ updateProduct }
+					editProduct={ editProduct }
 				/>
 			</div>
 		);
@@ -80,11 +80,12 @@ class ProductList extends React.Component {
 	renderEditTitle() {
 		const __ = this.props.translate;
 		const { cancelEdits, saveEdits } = this.props;
+		const { edits } = this.props.products;
 
 		return (
 			<TitleBar icon="product" title={ __( 'Products' ) }>
 				<Button onClick={ cancelEdits } >{ __( 'Cancel' ) }</Button>
-				<Button primary onClick={ saveEdits } >{ __( 'Save' ) }</Button>
+				<Button primary onClick={ ( e ) => saveEdits( edits ) } >{ __( 'Save' ) }</Button>
 			</TitleBar>
 		);
 	}
@@ -105,7 +106,7 @@ function mapDispatchToProps( dispatch ) {
 			setDisplayOption,
 			initEdits,
 			addProduct,
-			updateProduct,
+			editProduct,
 			cancelEdits,
 			saveEdits,
 		},
