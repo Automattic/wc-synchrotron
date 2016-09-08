@@ -10,6 +10,7 @@ class ListBody extends React.Component {
 		products: PropTypes.object.isRequired,
 		edits: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
+		disabled: PropTypes.bool.isRequired,
 		display: PropTypes.object.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		editProduct: PropTypes.func.isRequired,
@@ -54,7 +55,7 @@ class ListBody extends React.Component {
 	}
 
 	render() {
-		const { products, edits, editable, display } = this.props;
+		const { products, edits, editable, disabled, display } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		return (
@@ -65,6 +66,7 @@ class ListBody extends React.Component {
 					edits={ edits }
 					display={ display }
 					editable={ editable }
+					disabled={ disabled }
 					columns={ columns }
 					selectedColumnKeys={ display.selectedColumnKeys }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }

@@ -17,7 +17,7 @@ export default handleActions( {
 	[ TYPES.FETCHING ]: productsFetching,
 	[ TYPES.FETCHED ]: productsFetched,
 	[ TYPES.INIT_EDITS ]: initEdits,
-	[ TYPES.CLEAR_EDITS ]: clearEdits,
+	[ TYPES.CANCEL_EDITS ]: cancelEdits,
 	[ TYPES.SAVING_EDITS ]: savingEdits,
 	[ TYPES.EDITS_SAVED ]: editsSaved,
 	[ TYPES.ADD_PRODUCT ]: addProduct,
@@ -55,19 +55,19 @@ export function initEdits( state, action ) {
 	}
 }
 
-export function clearEdits( state, action ) {
-	if ( null !== state.edits ) {
-		return Object.assign( {}, state, {
-			edits: null,
-		} );
-	} else {
-		// No edits to clear.
-		return state;
-	}
+export function cancelEdits( state, action ) {
+	return Object.assign( {}, state, {
+		edits: null,
+		saving: null,
+	} );
 }
 
 export function savingEdits( state, action ) {
-	console.log( 'savingEdits' );
+	// Save current edits set to a saving set.
+	return Object.assign( {}, state, {
+		saving: Object.assign( {}, state.edits )
+	} );
+
 	return state;
 }
 

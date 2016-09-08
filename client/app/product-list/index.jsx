@@ -46,7 +46,7 @@ class ProductList extends React.Component {
 	render() {
 		const __ = this.props.translate;
 		const { products, setDisplayOption, editProduct } = this.props;
-		const { edits } = products;
+		const { edits, saving } = products;
 
 		return (
 			<div className="product-list">
@@ -57,6 +57,7 @@ class ProductList extends React.Component {
 					products={ products.products }
 					edits={ edits }
 					editable={ edits }
+					disabled={ Boolean( saving ) }
 					display={ products.display }
 					setDisplayOption={ setDisplayOption }
 					editProduct={ editProduct }
@@ -80,12 +81,18 @@ class ProductList extends React.Component {
 	renderEditTitle() {
 		const __ = this.props.translate;
 		const { cancelEdits, saveEdits } = this.props;
-		const { edits } = this.props.products;
+		const { edits, saving } = this.props.products;
 
 		return (
 			<TitleBar icon="product" title={ __( 'Products' ) }>
 				<Button onClick={ cancelEdits } >{ __( 'Cancel' ) }</Button>
-				<Button primary onClick={ ( e ) => saveEdits( edits ) } >{ __( 'Save' ) }</Button>
+				<Button
+					primary
+					onClick={ ( e ) => saveEdits( edits ) }
+					disabled={ saving || 0 === Object.keys(edits).length }
+				>
+					{ ( saving ? __( 'Saving' ) : __( 'Save' ) ) }
+				</Button>
 			</TitleBar>
 		);
 	}

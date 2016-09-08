@@ -7,7 +7,7 @@ const registered = registerActionTypes( 'WC_PRODUCTS', [
 	'FETCHING',
 	'FETCHED',
 	'INIT_EDITS',
-	'CLEAR_EDITS',
+	'CANCEL_EDITS',
 	'SAVING_EDITS',
 	'EDITS_SAVED',
 	'ADD_PRODUCT',
@@ -39,7 +39,7 @@ export function initEdits() {
 }
 
 export function cancelEdits() {
-	return ACTIONS.CLEAR_EDITS();
+	return ACTIONS.CANCEL_EDITS();
 }
 
 export function saveEdits( edits ) {
