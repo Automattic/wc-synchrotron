@@ -1,3 +1,4 @@
+import omit from 'lodash.omit';
 import { handleActions } from 'redux-actions';
 import { TYPES } from './actions';
 
@@ -72,8 +73,26 @@ export function savingEdits( state, action ) {
 }
 
 export function editsSaved( state, action ) {
-	console.log( 'editsSaved' );
-	return state;
+	// TODO: add create/delete
+	const { update } = action.payload;
+
+	let products = state.products;
+
+	// Replace all products that have been updated.
+	if ( update ) {
+		const ids = update.map( ( p ) => p.id );
+
+		products = state.products.map( ( product ) => {
+			const index = ids.indexOf( product.id );
+			return ( index > -1 ? update[ index ] : product );
+		} );
+	}
+
+	return Object.assign( {}, state, {
+		products,
+		edits: null,
+		saving: null,
+	} );
 }
 
 export function addProduct( state, action ) {
@@ -90,12 +109,15 @@ export function addProduct( state, action ) {
 }
 
 export function editProduct( state, action ) {
-	const { index, data } = action.payload;
+	const { id, key, value } = action.payload;
 	const edits = state.edits || {};
-	const update = state.update || {};
+	const update = edits && edits.update || [];
+	const entry = update.find( ( p ) => id === p.id ) || {};
+	const newEntry = Object.assign( {}, entry, { id, [ key ]: value } );
 
-	// Assign the updated product data to its id under the update object.
-	const newUpdate = Object.assign( {}, update, { [ data.id ]: data } );
+	let newUpdate = update.filter( ( p ) => p.id != id );
+	newUpdate.push( newEntry );
+
 	const newEdits = Object.assign( {}, edits, { update: newUpdate } );
 	const newState = Object.assign( {}, state, { edits: newEdits } );
 
@@ -118,17 +140,25 @@ export function deleteProduct( state, action ) {
 
 export function productsSetDisplayOption( state, action ) {
 	const { option, value } = action.payload;
-	const display = Object.assign( {}, state.display, { [option]: value } );
+	const display = Object.assign( {}, state.display, { [ option ]: value } );
 
 	return Object.assign( {}, state, {
 		display
 	} );
 }
 
+// TODO: Show error on page.
+// TODO: Split this out to better functionality.
+// Right now this is handling errors for both fetching and saving.
+// And that's not the best solution. Both of those should be split out
+// with their own error states, since it's theoretically possible to do
+// both at the same time.
 export function productsError( state, action ) {
 	return Object.assign( {}, state, {
 		isFetching: false,
 		isFetched: false,
+		edits: null,
+		saving: null,
 		error: action.payload,
 	} );
 }

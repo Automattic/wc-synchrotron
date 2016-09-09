@@ -1,7 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { registerActionTypes } from '../actions-registry';
-import { wcApi } from '../../wc-api-redux';
+import * as wcApi from '../../wc-api-redux';
 
 const registered = registerActionTypes( 'WC_PRODUCTS', [
 	'FETCHING',
@@ -43,15 +43,18 @@ export function cancelEdits() {
 }
 
 export function saveEdits( edits ) {
-	return ACTIONS.SAVING_EDITS();
+	return [
+		ACTIONS.SAVING_EDITS(),
+		wcApi.batchUpdateProducts( edits, ACTIONS.EDITS_SAVED, ACTIONS.SET_ERROR ),
+	];
 }
 
 export function addProduct() {
 	return ACTIONS.ADD_PRODUCT();
 }
 
-export function editProduct( index, data ) {
-	return ACTIONS.EDIT_PRODUCT( { index, data } );
+export function editProduct( id, key, value ) {
+	return ACTIONS.EDIT_PRODUCT( { id, key, value } );
 }
 
 export function deleteProduct( id ) {

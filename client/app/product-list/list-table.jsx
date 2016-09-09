@@ -46,8 +46,13 @@ export default class ListTable extends React.Component {
 
 	renderRow( data, edits, selectedColumns, editable, disabled, onEdit ) {
 		// Check if there are edits on this data and show that instead.
-		const updatedData = edits && edits.update && edits.update[ data.id ];
-		data = updatedData || data;
+		const updates = edits && edits.update;
+		// TODO: A generic List Table implementation can't assume a unique ID.
+		const updatedData = updates && updates.find( ( el ) => el.id === data.id );
+
+		if ( updatedData ) {
+			data = Object.assign( {}, data, updatedData );
+		}
 
 		return (
 			<ListRow

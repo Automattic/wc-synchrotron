@@ -409,6 +409,7 @@ class WC_Synchrotron {
 		wp_localize_script( 'wc-synchrotron-js', 'wc_synchrotron_data', array(
 			'currency_symbol'        => get_woocommerce_currency_symbol(),
 			'currency_pos_is_prefix' => 'left' === substr( get_option( 'woocommerce_currency_pos', 'left' ), 0, 4 ),
+			'api_root'               => esc_url_raw( rest_url( '/wc/v1' ) ),
 			'endpoints' => array(
 				'get_coupons' => esc_url_raw( rest_url( '/wc/v1/coupons' ) ),
 				'products'    => esc_url_raw( rest_url( '/wc/v1/products' ) ),

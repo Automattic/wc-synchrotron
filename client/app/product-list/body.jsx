@@ -50,8 +50,7 @@ class ListBody extends React.Component {
 	onEdit( product, key, value ) {
 		const { products, editProduct } = this.props;
 
-		const newProduct = Object.assign( {}, product, { [ key ]: value } );
-		editProduct( products.indexOf( product ), newProduct );
+		editProduct( product.id, key, value );
 	}
 
 	render() {
