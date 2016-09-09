@@ -2,6 +2,7 @@ import React from 'react';
 import Gridicon from 'gridicons/react/gridicon';
 import FormCheckbox from 'components/forms/form-checkbox';
 import FormTextInput from 'components/forms/form-text-input';
+import FormNumberInput from 'components/forms/form-number-input';
 
 export function renderString( product, key ) {
 	return product[key];
@@ -82,6 +83,18 @@ export function renderTextInput( product, key, disabled, onEdit ) {
 
 	return (
 		<FormTextInput id={ key } disabled={ disabled } value={ product[ key ] } onChange={ onChange } />
+	);
+}
+
+export function renderNumberInput( product, key, disabled, onEdit, min, max ) {
+	const onChange = ( evt ) => {
+		const value = evt.target.value;
+		// TODO: Add customizable validation step here?
+		onEdit( product, key, value );
+	};
+
+	return (
+		<FormNumberInput id={ key } disabled={ disabled } value={ product[ key ] } onChange={ onChange } min={ min } max={ max} />
 	);
 }
 

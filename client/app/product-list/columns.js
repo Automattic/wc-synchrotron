@@ -45,6 +45,7 @@ export default [
 		title: __( 'Weight' ),
 		group: __( 'General' ),
 		renderView: cell.renderString,
+		renderEdit: cell.renderNumberInput,
 	},
 	{
 		key: 'sale_price',
@@ -71,6 +72,7 @@ export default [
 		title: __( 'Stock quantity' ),
 		group: __( 'Inventory' ),
 		renderView: cell.renderInteger,
+		renderEdit: cell.renderNumberInput,
 	},
 	{
 		key: 'shipping_class',
