@@ -5,11 +5,11 @@ import ColumnSelectIcon from './column-select-icon';
 
 // Custom cell render functions.
 function renderVisibility( product, key ) {
-	cell.renderBoolean( product, key, [ 'visible' ] );
+	return cell.renderBoolean( product, key, [ 'visible' ] );
 }
 
 function renderFeatured( product, key ) {
-	cell.renderBoolean( product, key, [ true ], 'heart', null );
+	return cell.renderBoolean( product, key, [ true ], 'heart', null );
 }
 
 // Column table for products: Index order matters!!
@@ -19,6 +19,7 @@ export default [
 		title: __( 'Name' ),
 		group: null,
 		renderView: cell.renderString,
+		renderEdit: cell.renderTextInput,
 	},
 	{
 		key: 'sku',
@@ -56,12 +57,14 @@ export default [
 		title: __( 'Stock' ),
 		group: __( 'Inventory' ),
 		renderView: cell.renderBoolean,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'manage_stock',
 		title: __( 'Manage stock' ),
 		group: __( 'Inventory' ),
 		renderView: cell.renderBoolean,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'stock_quantity',
@@ -104,24 +107,28 @@ export default [
 		title: __( 'Visibility' ),
 		group: __( 'Exposure' ),
 		renderView: renderVisibility,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'featured',
 		title: __( 'Featured' ),
 		group: __( 'Exposure' ),
 		renderView: renderFeatured,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'backorders',
 		title: __( 'Backorders' ),
 		group: __( 'Misc' ),
 		renderView: cell.renderBoolean,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'sold_individually',
 		title: __( 'Sold invidivually' ),
 		group: __( 'Misc' ),
 		renderView: cell.renderBoolean,
+		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'action',

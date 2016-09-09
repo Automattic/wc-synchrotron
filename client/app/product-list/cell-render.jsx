@@ -1,5 +1,6 @@
 import React from 'react';
 import Gridicon from 'gridicons/react/gridicon';
+import FormCheckbox from 'components/forms/form-checkbox';
 import FormTextInput from 'components/forms/form-text-input';
 
 export function renderString( product, key ) {
@@ -80,7 +81,20 @@ export function renderTextInput( product, key, disabled, onEdit ) {
 	};
 
 	return (
-		<FormTextInput id={ key } disabled={ disabled } value={ product[key] } onChange={ onChange } />
+		<FormTextInput id={ key } disabled={ disabled } value={ product[ key ] } onChange={ onChange } />
+	);
+}
+
+export function renderCheckboxInput( product, key, disabled, onEdit, trueValue = true ) {
+	const value = trueValue === product[ key ];
+
+	const onChange = ( evt ) => {
+		const value = evt.target.checked;
+		onEdit( product, key, value );
+	}
+
+	return (
+		<FormCheckbox id={ key } disabled={ disabled } checked={ value } onChange={ onChange } />
 	);
 }
 
