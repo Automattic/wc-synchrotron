@@ -18,7 +18,7 @@ class ColumnSelectIcon extends React.Component {
 
 		return (
 			<Button borderless ref="columnSelect" onClick={ onColumnSelectIconClick }>
-				<Gridicon icon="grid" />
+				<Gridicon icon="cog" />
 				<ColumnMenu
 					columns={ columns }
 					selectedColumnKeys={ display.selectedColumnKeys }
