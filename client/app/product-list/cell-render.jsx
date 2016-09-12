@@ -26,11 +26,19 @@ export function renderBoolean( product, key, trueValues = [ true, 'true', 'yes' 
 	}
 }
 
-export function renderCurrency( product, key ) {
+export function renderCurrency( product, key, helpers ) {
 	const value = product[key];
-	// TODO: Get the currency symbol and format properly!!
+	const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat } = helpers;
 	if ( value ) {
-		return '$' + value;
+		let number = numberFormat( value, currencyDecimals );
+		let text;
+
+		if ( currencyIsPrefix ) {
+			text = currencySymbol + number;
+		} else {
+			text = number + currencySymbol;
+		}
+		return text;
 	} else {
 		return '';
 	}
