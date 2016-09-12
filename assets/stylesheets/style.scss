@@ -15,6 +15,26 @@
 	// Components
 	@import 'calypso-components';
 	@import 'synchrotron-components';
+
+	.card {
+		-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.1);
+		box-shadow: 0 1px 2px rgba(0,0,0,.1);
+	}
+
+	.search {
+		height: 64px;
+
+		.search-open__icon {
+			width: inherit;
+			margin-left: 24px;
+			margin-top: -11px;
+		}
+	}
+
+	.search__input[type=search] {
+		height: 64px;
+		font-size: 14px;
+	}
 }
 
 // Outside the frame

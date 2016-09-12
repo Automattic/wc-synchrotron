@@ -30,12 +30,12 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	border-bottom: 1px solid $light-gray;
+	border-bottom: 1px solid $gray-border-lighter;
 	box-sizing: border-box;
 }
 
 .product-list__list-row-header {
-	border-bottom-color: lighten( $gray, 10% );
+	border-bottom-color: $gray-border;
 	font-weight: bold;
 
 	.button {
