@@ -3,6 +3,7 @@ import createLogger from 'redux-logger';
 import multi from 'redux-multi';
 import effects from 'redux-effects';
 import fetch from 'redux-effects-fetch';
+import createWcApi from '../wc-api-redux';
 import { routerReducer } from 'react-router-redux';
 
 import coupons from './coupons/reducer';
@@ -20,6 +21,7 @@ const createStoreWithMiddleware = applyMiddleware(
 	multi,
 	effects,
 	fetch,
+	createWcApi(),
 	createLogger()
 )( createStore );
 

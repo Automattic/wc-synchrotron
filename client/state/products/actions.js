@@ -1,14 +1,17 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { registerActionTypes } from '../actions-registry';
+import * as wcApi from '../../wc-api-redux';
 
 const registered = registerActionTypes( 'WC_PRODUCTS', [
 	'FETCHING',
 	'FETCHED',
 	'INIT_EDITS',
-	'CLEAR_EDITS',
+	'CANCEL_EDITS',
+	'SAVING_EDITS',
+	'EDITS_SAVED',
 	'ADD_PRODUCT',
-	'UPDATE_PRODUCT',
+	'EDIT_PRODUCT',
 	'DELETE_PRODUCT',
 	'SET_DISPLAY_OPTION',
 	'SET_ERROR',
@@ -36,21 +39,22 @@ export function initEdits() {
 }
 
 export function cancelEdits() {
-	return ACTIONS.CLEAR_EDITS();
+	return ACTIONS.CANCEL_EDITS();
 }
 
-export function saveEdits() {
-	// TODO: Make this save using the API asynchronously.
-	// Need to reconcile any outstanding updates, adds, and deletes.
-	return ACTIONS.CLEAR_EDITS();
+export function saveEdits( edits ) {
+	return [
+		ACTIONS.SAVING_EDITS(),
+		wcApi.batchUpdateProducts( edits, ACTIONS.EDITS_SAVED, ACTIONS.SET_ERROR ),
+	];
 }
 
 export function addProduct() {
 	return ACTIONS.ADD_PRODUCT();
 }
 
-export function updateProduct( index, data ) {
-	return ACTIONS.UPDATE_PRODUCT( index, data );
+export function editProduct( id, key, value ) {
+	return ACTIONS.EDIT_PRODUCT( { id, key, value } );
 }
 
 export function deleteProduct( id ) {

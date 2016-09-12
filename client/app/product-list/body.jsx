@@ -8,9 +8,12 @@ import columns from './columns';
 class ListBody extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		edits: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
+		disabled: PropTypes.bool.isRequired,
 		display: PropTypes.object.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
+		editProduct: PropTypes.func.isRequired,
 	}
 
 	constructor( props ) {
@@ -18,6 +21,7 @@ class ListBody extends React.Component {
 
 		this.onColumnSelectIconClick = this.onColumnSelectIconClick.bind( this );
 		this.onColumnSelect = this.onColumnSelect.bind( this );
+		this.onEdit = this.onEdit.bind( this );
 	}
 
 	onColumnSelectIconClick( evt ) {
@@ -43,22 +47,30 @@ class ListBody extends React.Component {
 		this.props.setDisplayOption( 'selectedColumnKeys', keys );
 	}
 
+	onEdit( product, key, value ) {
+		const { products, editProduct } = this.props;
+
+		editProduct( product.id, key, value );
+	}
+
 	render() {
-		const { products, editable, display } = this.props;
+		const { products, edits, editable, disabled, display } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		return (
 			<div className="product-list__body">
 				<SearchCard onSearch={ onSearch } />
 				<ListTable
-					ref="listTable"
 					products={ products }
+					edits={ edits }
 					display={ display }
 					editable={ editable }
+					disabled={ disabled }
 					columns={ columns }
 					selectedColumnKeys={ display.selectedColumnKeys }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
-					onColumnSelect={ this.onColumnSelect}
+					onColumnSelect={ this.onColumnSelect }
+					onEdit={ this.onEdit }
 				/>
 			</div>
 		);

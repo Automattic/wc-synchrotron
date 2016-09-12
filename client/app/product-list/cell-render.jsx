@@ -72,9 +72,15 @@ export function renderTags( product, key ) {
 	}
 }
 
-export function renderTextInput( product, key, title ) {
+export function renderTextInput( product, key, disabled, onEdit ) {
+	const onChange = ( evt ) => {
+		const value = evt.target.value;
+		// TODO: Add customizable validation step here?
+		onEdit( product, key, value );
+	};
+
 	return (
-		<FormTextInput id={ key } value={ product[key] } />
+		<FormTextInput id={ key } disabled={ disabled } value={ product[key] } onChange={ onChange } />
 	);
 }
 
