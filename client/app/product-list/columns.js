@@ -4,13 +4,6 @@ import { translate as __ } from 'i18n-calypso';
 import ColumnSelectIcon from './column-select-icon';
 
 // Custom cell render functions.
-function renderVisibility( product, key ) {
-	return cell.renderBoolean( product, key, [ 'visible' ] );
-}
-
-function renderFeatured( product, key ) {
-	return cell.renderBoolean( product, key, [ true ], 'heart', null );
-}
 
 // Column table for products: Index order matters!!
 export default [
@@ -46,6 +39,10 @@ export default [
 		group: __( 'General' ),
 		renderView: cell.renderString,
 		renderEdit: cell.renderNumberInput,
+		constraints: {
+			min: 0,
+			max: 1000000
+		},
 	},
 	{
 		key: 'sale_price',
@@ -73,6 +70,10 @@ export default [
 		group: __( 'Inventory' ),
 		renderView: cell.renderInteger,
 		renderEdit: cell.renderNumberInput,
+		constraints: {
+			min: 0,
+			max: 1000000000000
+		},
 	},
 	{
 		key: 'shipping_class',
@@ -108,15 +109,24 @@ export default [
 		key: 'catalog_visibility',
 		title: __( 'Visibility' ),
 		group: __( 'Exposure' ),
-		renderView: renderVisibility,
+		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
+		constraints: {
+			trueValue: 'visible',
+			falseValue: '',
+			trueValues: [ 'visible' ],
+		}
 	},
 	{
 		key: 'featured',
 		title: __( 'Featured' ),
 		group: __( 'Exposure' ),
-		renderView: renderFeatured,
+		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
+		constraints: {
+			trueIcon: 'heart',
+			falseIcon: null,
+		},
 	},
 	{
 		key: 'backorders',
