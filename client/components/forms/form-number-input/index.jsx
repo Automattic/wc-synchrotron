@@ -8,7 +8,7 @@ export default class FormNumberInput extends React.Component {
 	}
 
 	render() {
-		let otherProps = omit( this.props, [ 'className', 'type' ] );
+		const otherProps = omit( this.props, [ 'className', 'type' ] );
 
 		const classes = classNames(
 			this.props.className,

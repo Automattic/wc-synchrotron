@@ -3,6 +3,9 @@ import Gridicon from 'gridicons/react/gridicon';
 import FormCheckbox from 'components/forms/form-checkbox';
 import FormTextInput from 'components/forms/form-text-input';
 import FormNumberInput from 'components/forms/form-number-input';
+import FormCurrencyInput from 'components/forms/form-currency-input';
+import FormTextInputWithAffixes from 'components/forms/form-text-input-with-affixes';
+import FormNumberInputWithAffixes from 'components/forms/form-number-input-with-affixes';
 
 // View Renderers
 // Parameter Format: product, key, constraints, helpers
@@ -110,6 +113,8 @@ export function renderTextInput( product, key, constraints, helpers, disabled, o
 	);
 }
 
+// Constraint (optional): min - Minimunm numeric value allowed.
+// Constraint (optional): max - Maximum numeric value allowed.
 export function renderNumberInput( product, key, constraints, helpers, disabled, onEdit ) {
 	const onChange = ( evt ) => {
 		const value = evt.target.value;
@@ -136,6 +141,39 @@ export function renderNumberInput( product, key, constraints, helpers, disabled,
 			value={ value }
 			onChange={ onChange }
 			{ ...constraintsProps } />
+	);
+}
+
+export function renderCurrencyInput( product, key, constraints, helpers, disabled, onEdit ) {
+	const onChange = ( evt ) => {
+		const value = evt.target.value;
+		// TODO: Add customizable validation step here?
+		onEdit( product, key, value );
+	};
+
+	const constraintsProps = {};
+
+	if ( constraints ) {
+
+		if ( constraints.min ) {
+			constraintsProps.min = constraints.min;
+		} else if ( constraints.max ) {
+			constraintsProps.max = constraints.max;
+		}
+	}
+
+	const value = product[ key ] || '';
+
+	return (
+		<FormCurrencyInput
+			id={ key }
+			disabled={ disabled }
+			value={ value }
+			onChange={ onChange }
+			currencySymbol={ helpers.currencySymbol }
+			currencySymbolIsPrefix={ helpers.currencyIsPrefix }
+			{ ...constraintsProps }
+		/>
 	);
 }
 

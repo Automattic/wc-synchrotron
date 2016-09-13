@@ -22,12 +22,6 @@ export default [
 		renderEdit: cell.renderTextInput,
 	},
 	{
-		key: 'price',
-		title: __( 'Price' ),
-		group: __( 'General' ),
-		renderView: cell.renderCurrency,
-	},
-	{
 		key: 'dimensions',
 		title: __( 'L/W/H' ),
 		group: __( 'General' ),
@@ -45,10 +39,24 @@ export default [
 		},
 	},
 	{
+		key: 'price',
+		title: __( 'Current Price' ),
+		group: __( 'General' ),
+		renderView: cell.renderCurrency,
+	},
+	{
+		key: 'regular_price',
+		title: __( 'Regular Price' ),
+		group: __( 'General' ),
+		renderView: cell.renderCurrency,
+		renderEdit: cell.renderCurrencyInput,
+	},
+	{
 		key: 'sale_price',
 		title: __( 'Sale Price' ),
 		group: __( 'General' ),
 		renderView: cell.renderCurrency,
+		renderEdit: cell.renderCurrencyInput,
 	},
 	{
 		key: 'in_stock',

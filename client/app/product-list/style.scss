@@ -83,10 +83,6 @@
 	display: inline-block;
 	vertical-align: middle;
 	width: 150px;
-
-	@include breakpoint( ">960px" ) {
-		width: 15.6666666667%;
-	}
 }
 
 .column-menu__group-label {
@@ -102,6 +98,7 @@
 	border-radius: 2px;
 	border: 1px solid $light-gray;
 	line-height: 1;
+	min-width: 140px;
 
 	&.selected {
 		background: $gray;
@@ -127,7 +124,6 @@
 	}
 
 	@include breakpoint( ">960px" ) {
-		width: 900px;
 		max-width: 90%;
 	}
 }
