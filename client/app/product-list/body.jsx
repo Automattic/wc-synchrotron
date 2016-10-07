@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import SearchCard from 'components/search-card';
-import ListTable from './list-table';
+import ListTable, { createRenderHelpers } from './list-table';
 import * as cell from './cell-render';
 import columns from './columns';
 
@@ -14,6 +14,9 @@ class ListBody extends React.Component {
 		display: PropTypes.object.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		editProduct: PropTypes.func.isRequired,
+		currencySymbol: PropTypes.string.isRequired,
+		currencyDecimals: PropTypes.number.isRequired,
+		currencyIsPrefix: PropTypes.bool.isRequired,
 	}
 
 	constructor( props ) {
@@ -55,7 +58,15 @@ class ListBody extends React.Component {
 
 	render() {
 		const { products, edits, editable, disabled, display } = this.props;
+		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
+
+		const renderHelpers = createRenderHelpers(
+			currencySymbol,
+			currencyIsPrefix,
+			currencyDecimals,
+			numberFormat
+		);
 
 		return (
 			<div className="product-list__body">
@@ -71,6 +82,7 @@ class ListBody extends React.Component {
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect }
 					onEdit={ this.onEdit }
+					renderHelpers={ renderHelpers }
 				/>
 			</div>
 		);

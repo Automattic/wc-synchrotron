@@ -3,6 +3,15 @@ import ListHeader from './list-header';
 import ListRow from './list-row';
 import Card from 'components/card';
 
+export function createRenderHelpers( currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat ) {
+	return {
+		currencySymbol,
+		currencyIsPrefix,
+		currencyDecimals,
+		numberFormat,
+	};
+}
+
 export default class ListTable extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
@@ -12,6 +21,7 @@ export default class ListTable extends React.Component {
 		columns: PropTypes.array.isRequired,
 		selectedColumnKeys: PropTypes.set.isRequired,
 		editable: PropTypes.bool.isRequired,
+		renderHelpers: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
@@ -23,7 +33,7 @@ export default class ListTable extends React.Component {
 	}
 
 	render() {
-		const { products, edits, editable, disabled, selectedColumnKeys, onEdit } = this.props;
+		const { products, edits, editable, disabled, selectedColumnKeys, onEdit, renderHelpers } = this.props;
 
 		// Pass down a complete set of selected columns to children components.
 		// Do the filtering once here and make use of it many times.
@@ -38,13 +48,13 @@ export default class ListTable extends React.Component {
 			<Card className={ classes }>
 				<ul className="product-list__list">
 					<ListHeader ref="listHeader" { ...headerProps } />
-					{ products.map( ( data ) => this.renderRow( data, edits, selectedColumns, editable, disabled, onEdit ) ) }
+					{ products.map( ( data ) => this.renderRow( data, edits, selectedColumns, editable, disabled, onEdit, renderHelpers ) ) }
 				</ul>
 			</Card>
 		);
 	}
 
-	renderRow( data, edits, selectedColumns, editable, disabled, onEdit ) {
+	renderRow( data, edits, selectedColumns, editable, disabled, onEdit, renderHelpers ) {
 		// Check if there are edits on this data and show that instead.
 		const updates = edits && edits.update;
 		// TODO: A generic List Table implementation can't assume a unique ID.
@@ -62,6 +72,7 @@ export default class ListTable extends React.Component {
 				editable={ editable }
 				disabled={ disabled }
 				onEdit={ onEdit }
+				renderHelpers={ renderHelpers }
 			/>
 		);
 	}

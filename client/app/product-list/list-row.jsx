@@ -7,6 +7,7 @@ export default class ListRow extends React.Component {
 		editable: PropTypes.bool.isRequired,
 		disabled: PropTypes.bool.isRequired,
 		onEdit: PropTypes.func.isRequired,
+		renderHelpers: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
@@ -37,12 +38,12 @@ export default class ListRow extends React.Component {
 	}
 
 	renderFieldContents( col ) {
-		const { data, editable, disabled, onEdit } = this.props;
+		const { data, editable, disabled, onEdit, renderHelpers } = this.props;
 
 		if ( editable && col.renderEdit ) {
-			return col.renderEdit( data, col.key, disabled, onEdit );
+			return col.renderEdit( data, col.key, col.constraints, renderHelpers, disabled, onEdit );
 		} else if ( col.renderView ) {
-			return col.renderView( data, col.key );
+			return col.renderView( data, col.key, col.constraints, renderHelpers );
 		} else {
 			return null;
 		}

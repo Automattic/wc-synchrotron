@@ -30,6 +30,9 @@ class ProductList extends React.Component {
 		editProduct: PropTypes.func.isRequired,
 		cancelEdit: PropTypes.func.isRequired,
 		saveEdits: PropTypes.func.isRequired,
+		currencySymbol: PropTypes.string.isRequired,
+		currencyIsPrefix: PropTypes.bool.isRequired,
+		currencyDecimals: PropTypes.number.isRequired,
 	}
 
 	constructor( props ) {
@@ -46,6 +49,7 @@ class ProductList extends React.Component {
 	render() {
 		const __ = this.props.translate;
 		const { products, setDisplayOption, editProduct } = this.props;
+		const { currencySymbol, currencyIsPrefix, currencyDecimals } = this.props;
 		const { edits, saving } = products;
 
 		return (
@@ -61,6 +65,9 @@ class ProductList extends React.Component {
 					display={ products.display }
 					setDisplayOption={ setDisplayOption }
 					editProduct={ editProduct }
+					currencySymbol={ currencySymbol }
+					currencyIsPrefix={ currencyIsPrefix }
+					currencyDecimals={ currencyDecimals }
 				/>
 			</div>
 		);
