@@ -99,7 +99,29 @@ export default [
 		key: 'tax_class',
 		title: __( 'Tax class' ),
 		group: __( 'Tax' ),
-		renderView: cell.renderString,
+		renderView: ( product, key, constraints, helpers ) => {
+			// If it's blank, it should show the first tax class from the list.
+
+			const value = product[ key ];
+			const taxClass = helpers.data.taxClasses.find( ( taxClass, index ) => {
+				if ( value === taxClass.slug || 0 === value.length && 0 === index ) {
+					return taxClass;
+				}
+			} );
+
+			return ( taxClass ? taxClass.name : '' );
+		},
+		renderEdit: cell.renderSelectInput,
+		constraints: {
+			getOptions: ( product, key, helpers ) => {
+				return helpers.data.taxClasses.map( ( taxClass ) => {
+					return {
+						name: taxClass.name,
+						value: taxClass.slug,
+					}
+				} );
+			},
+		},
 	},
 	{
 		key: 'categories',
@@ -109,8 +131,6 @@ export default [
 		renderEdit: cell.renderTokenField,
 		constraints: {
 			inConvert: ( categories, helpers ) => {
-				console.log( 'categories' );
-				console.log( categories );
 				return categories.map( ( category ) => {
 					return category.name;
 				} );

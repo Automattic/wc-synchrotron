@@ -196,6 +196,36 @@ export function renderCheckboxInput( product, key, constraints, helpers, disable
 	);
 }
 
+// Constraint (required): getSelectValue - Function( product, key ), returns scalar value for select.
+// Constraint (required): getOptions - Function( product, key, helpers ), return array of: { name: <string>, value: <any> }
+export function renderSelectInput( product, key, constraints, helpers, disabled, onEdit ) {
+	const __ = helpers.translate;
+	const getSelectValue = ( constraints && constraints.hasOwnProperty( 'getSelectValue' ) ? constraints.getSelectValue : null );
+	const getOptions = ( constraints && constraints.hasOwnProperty( 'getOptions' ) ? constraints.getOptions : null );
+	const options = ( 'function' === typeof getOptions ? getOptions( product, key, helpers ) : [] );
+	const value = (
+		'function' === typeof constraints.inConvert ? constraints.inConvert( product[ key ], helpers ) : product[ key ]
+	);
+
+	const onChange = ( evt ) => {
+		const value = (
+			'function' === typeof constraints.outConvert ? constraints.outConvert( evt.target.value, helpers ) : evt.target.value
+		);
+		onEdit( product, key, value );
+	}
+
+	let optionTags = [];
+	options.forEach( ( option ) => {
+		optionTags.push( <option key={ option.name } value={ option.value } >{ __( option.name ) }</option> );
+	} );
+
+	return (
+		<FormSelect id={ key } disabled={ disabled } value={ value } onChange={ onChange } >
+			{ optionTags }
+		</FormSelect>
+	);
+}
+
 // Constraint (required): getSuggestions - Function ( product, key, helpers ), return array of strings
 // Constraint (optional): inConvert - Function ( dataValue, helpers ),
 //                        converts from product[ key ] to TokenField value array.
