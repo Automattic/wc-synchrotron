@@ -7,6 +7,9 @@ import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
 
+// TODO: Combine product-specific code from index and body into one file.
+// TODO: Make the entire list-table component general and move it to client/components
+
 import {
 	SERVICE,
 	fetchProductCategories,
@@ -60,7 +63,7 @@ class ProductList extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { products, setDisplayOption, editProduct } = this.props;
+		const { products, categories, setDisplayOption, editProduct } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals } = this.props;
 		const { edits, saving } = products;
 
@@ -71,6 +74,7 @@ class ProductList extends React.Component {
 				</div>
 				<ProductsBody
 					products={ products.products }
+					categories={ categories }
 					edits={ edits }
 					editable={ edits }
 					disabled={ Boolean( saving ) }
@@ -118,10 +122,14 @@ class ProductList extends React.Component {
 }
 
 function mapStateToProps( state ) {
-	const { products } = state;
+	const { products, fetchData } = state;
+	// TODO: Reference this in a more general way without having to type the query here.
+	const service = fetchData[ SERVICE ];
+	const categories = service ? service[ '/products/categories' ] : [];
 
 	return {
 		products,
+		categories,
 	};
 }
 

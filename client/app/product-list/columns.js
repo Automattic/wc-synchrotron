@@ -106,6 +106,30 @@ export default [
 		title: __( 'Categories' ),
 		group: __( 'Organization' ),
 		renderView: cell.renderCategories,
+		renderEdit: cell.renderTokenField,
+		constraints: {
+			inConvert: ( categories, helpers ) => {
+				console.log( 'categories' );
+				console.log( categories );
+				return categories.map( ( category ) => {
+					return category.name;
+				} );
+			},
+			outConvert: ( names, helpers ) => {
+				// Reject any names that aren't in categories already.
+				// This keeps people from entering values that aren't valid
+				return helpers.data.categories.filter( ( category ) => {
+					if ( names.includes( category.name ) ) {
+						return category.name;
+					}
+				} );
+			},
+			getSuggestions: ( product, key, helpers ) => {
+				return helpers.data.categories.map( ( category ) => {
+					return category.name;
+				} );
+			}
+		}
 	},
 	{
 		key: 'tags',
