@@ -8,13 +8,22 @@ import Button from 'components/button';
 import screenData from '../../utils/screen-data';
 
 import {
+	SERVICE,
+	fetchProductCategories,
+} from '../../wc-api-redux';
+
+import {
+	getData,
+} from '../../state/fetch-data/actions';
+
+import {
 	fetchProducts,
 	setDisplayOption,
 	initEdits,
 	addProduct,
 	editProduct,
 	cancelEdits,
-	saveEdits
+	saveEdits,
 } from '../../state/products/actions';
 
 // TODO: Do this in a more universal way.
@@ -23,6 +32,7 @@ const data = screenData( 'wc_synchrotron_data' );
 class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		fetchProductCategories: PropTypes.func.isRequired,
 		fetchProducts: PropTypes.func.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
@@ -43,6 +53,8 @@ class ProductList extends React.Component {
 	}
 
 	componentDidMount() {
+		// TODO: Fetch this through wc-api-redux
+		this.props.fetchProductCategories();
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
 
@@ -116,6 +128,8 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
+			fetchApiData: ( query ) => getData( SERVICE, query, dispatch.getState()[ 'fetch-data' ] ),
+			fetchProductCategories,
 			fetchProducts,
 			setDisplayOption,
 			initEdits,

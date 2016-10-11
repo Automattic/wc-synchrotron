@@ -1,9 +1,16 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { registerActionTypes } from '../state/actions-registry';
+import { dataFetched } from '../state/fetch-data/actions';
 
 const registeredActions = registerActionTypes( 'WC_API', [
 	'INIT',
+
+	'FETCH_PRODUCT_CATEGORIES',
+	'FETCHING_PRODUCT_CATEGORIES',
+	'FETCHED_PRODUCT_CATEGORIES',
+	'ERROR_FETCH_PRODUCT_CATEGORIES',
+
 	'UPDATE_PRODUCT',
 	'UPDATING_PRODUCT',
 	'UPDATED_PRODUCT',
@@ -12,11 +19,24 @@ const registeredActions = registerActionTypes( 'WC_API', [
 	'API_ERROR',
 ] );
 
+export const SERVICE = 'wc-api-redux';
 const TYPES = registeredActions.types;
 const ACTIONS = registeredActions.actions;
 
 export function initialize( baseUrl, nonce ) {
 	return ACTIONS.INIT( { baseUrl, nonce } );
+}
+
+/**
+ * Fetches all product categories.
+ *
+ * See http://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-product-categories
+ *
+ */
+export function fetchProductCategories() {
+	// TODO: Handle per_page loading
+	// TODO: Allow to get all through multiple page requests (for when there are LOTS of categories)
+	return ACTIONS.FETCH_PRODUCT_CATEGORIES();
 }
 
 /**
@@ -55,6 +75,24 @@ const handlers = {
 
 		context.baseUrl = baseUrl;
 		context.nonce = nonce;
+	},
+	[ TYPES.FETCH_PRODUCT_CATEGORIES ]: ( action, store, context ) => {
+
+		if ( checkInit( context, store.dispatch ) ) {
+			const query = '/products/categories';
+
+			store.dispatch( [
+				ACTIONS.FETCHING_PRODUCT_CATEGORIES(),
+				createRequest(
+					context,
+					query,
+					'GET',
+					null,
+					( data ) => dataFetched( SERVICE, query, data ),
+					ACTIONS.ERROR_FETCH_PRODUCT_CATEGORIES
+				)
+			] );
+		}
 	},
 	[ TYPES.UPDATE_PRODUCT ]: ( action, store, context ) => {
 
