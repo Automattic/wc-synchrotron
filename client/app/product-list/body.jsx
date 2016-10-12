@@ -37,18 +37,18 @@ class ListBody extends React.Component {
 		setDisplayOption( 'showColumnPanel', ! display.showColumnPanel );
 	}
 
-	onColumnSelect( key, selected ) {
-		const prevKeys = this.props.display.selectedColumnKeys;
+	onColumnSelect( selection, selected ) {
+		const prevKeys = this.props.display.columnSelections;
 
-		let keys = new Set( prevKeys );
+		const keys = Object.assign( {}, prevKeys );
 
 		if ( selected ) {
-			keys.add( key );
+			keys[ selection.key ] = selection;
 		} else {
-			keys.delete( key );
+			delete keys[ selection.key ];
 		}
 
-		this.props.setDisplayOption( 'selectedColumnKeys', keys );
+		this.props.setDisplayOption( 'columnSelections', keys );
 	}
 
 	onEdit( product, key, value ) {
@@ -84,7 +84,7 @@ class ListBody extends React.Component {
 					editable={ editable }
 					disabled={ disabled }
 					columns={ columns }
-					selectedColumnKeys={ display.selectedColumnKeys }
+					columnSelections={ display.columnSelections }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect }
 					onEdit={ this.onEdit }

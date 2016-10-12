@@ -23,7 +23,7 @@ class ColumnSelectIcon extends React.Component {
 				<ColumnMenu
 					columns={ columns }
 					columnGroups={ columnGroups }
-					selectedColumnKeys={ display.selectedColumnKeys }
+					columnSelections={ display.columnSelections }
 					context={ this.refs.columnSelect }
 					isVisible={ display.showColumnPanel }
 					onColumnSelect={ onColumnSelect }

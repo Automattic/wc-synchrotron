@@ -25,9 +25,28 @@ export default [
 		renderEdit: cell.renderTextInput,
 	},
 	{
-		key: 'dimensions',
-		title: __( 'L/W/H' ),
-		renderView: cell.renderDimensions,
+		key: 'length',
+		title: __( 'L' ),
+		renderView: ( product, key, constraints, helpers ) => {
+			const value = product[ 'dimensions' ] || {};
+			return value.length ? Number( value.length ) : '';
+		},
+	},
+	{
+		key: 'width',
+		title: __( 'W' ),
+		renderView: ( product, key, constraints, helpers ) => {
+			const value = product[ 'dimensions' ] || {};
+			return value.width ? Number( value.width ) : '';
+		},
+	},
+	{
+		key: 'height',
+		title: __( 'H' ),
+		renderView: ( product, key, constraints, helpers ) => {
+			const value = product[ 'dimensions' ] || {};
+			return value.height ? Number( value.height ) : '';
+		},
 	},
 	{
 		key: 'weight',
@@ -41,7 +60,7 @@ export default [
 	},
 	{
 		key: 'price',
-		title: __( 'Current Price' ),
+		title: __( 'Price' ),
 		renderView: cell.renderCurrency,
 	},
 	{
@@ -199,45 +218,63 @@ export default [
 	},
 ];
 
-export const defaultSelectedColumnNames = [
-	'name', 'price', 'stock_quantity', 'action',
-];
+export const defaultColumnSelections = {
+	name: { key: 'name' },
+	price: { key: 'price' },
+	stock_quantity: { key: 'stock_quantity' },
+	action: { key: 'action' },
+};
 
 const columnGroups = [
 	{
 		name: __( 'General' ),
-		columns: [
-			'sku', 'dimensions', 'weight', 'price', 'regular_price', 'sale_price',
+		selections: [
+			{ key: 'sku',                title: __( 'SKU' ) },
+			{
+				key: 'dimensions',       title: __( 'Dimensions' ),
+				columnKeys: [ 'length', 'width', 'height' ]
+			},
+			{ key: 'weight',             title: __( 'Weight' ) },
+			{ key: 'price',              title: __( 'Current Price' ) },
+			{ key: 'regular_price',      title: __( 'Regular Price' ) },
+			{ key: 'sale_price',         title: __( 'Sale Price' ) },
 		],
 	},
 	{
 		name: __( 'Inventory' ),
-		columns: [
-			'in_stock', 'manage_stock', 'stock_quantity', 'shipping_class',
+		selections: [
+			{ key: 'in_stock',           title: __( 'Stock' ) },
+			{ key: 'manage_stock',       title: __( 'Manage Stock' ) },
+			{ key: 'stock_quantity',     title: __( 'Stock Quantity' ) },
+			{ key: 'shipping_class',     title: __( 'Shipping Class' ) },
 		],
 	},
 	{
 		name: __( 'Tax' ),
-		columns: [
-			'tax_status', 'tax_class',
+		selections: [
+			{ key: 'tax_status',         title: __( 'Tax status' ) },
+			{ key: 'tax_class',          title: __( 'Tax class' ) },
 		],
 	},
 	{
 		name: __( 'Organization' ),
-		columns: [
-			'categories', 'tags',
+		selections: [
+			{ key: 'categories',         title: __( 'Categories' ) },
+			{ key: 'tags',               title: __( 'Tags' ) },
 		],
 	},
 	{
 		name: __( 'Exposure' ),
-		columns: [
-			'catalog_visibility', 'featured',
+		selections: [
+			{ key: 'catalog_visibility', title: __( 'Visibility' ) },
+			{ key: 'featured',           title: __( 'Featured' ) },
 		],
 	},
 	{
 		name: __( 'Misc' ),
-		columns: [
-			'backorders', 'sold_individually',
+		selections: [
+			{ key: 'backorders',         title: __( 'Backorders' ) },
+			{ key: 'sold_individually',  title: __( 'Sold individually' ) },
 		],
 	},
 ];

@@ -10,13 +10,13 @@ class ColumnMenu extends React.Component {
 		isVisible: PropTypes.bool.isRequired,
 		columns: PropTypes.array.isRequired,
 		columnGroups: PropTypes.array.isRequired,
-		selectedColumnKeys: PropTypes.set.isRequired,
+		columnSelections: PropTypes.set.isRequired,
 		onColumnSelect: PropTypes.func.isRequired,
 	}
 
 	render() {
 		const __ = this.props.translate;
-		const { context, isVisible, columns, columnGroups, selectedColumnKeys } = this.props;
+		const { context, isVisible, columns, columnGroups, columnSelections } = this.props;
 
 		if ( isVisible ) {
 			return (
@@ -29,7 +29,7 @@ class ColumnMenu extends React.Component {
 						position="left"
 					>
 						<ul className='column-menu__list' >
-							{ this.renderGroups( columns, columnGroups, selectedColumnKeys ) }
+							{ this.renderGroups( columns, columnGroups, columnSelections ) }
 						</ul>
 					</PopoverMenu>
 			);
@@ -38,22 +38,15 @@ class ColumnMenu extends React.Component {
 		}
 	}
 
-	renderGroups( columns, columnGroups, selectedColumnKeys ) {
+	renderGroups( columns, columnGroups, columnSelections ) {
 		const groups = new Set( columns.map( ( col ) => col.group ) );
 		let elements = [];
 
 		columnGroups.forEach( ( group ) => {
-			console.log( 'group: ' + group.name );
 			elements.push(
 				<li key={ group.name } className='column-menu__row' >
 					<div className='column-menu__group-label column-menu__group-item'>{ group.name }</div>
-					{
-						group.columns.map( ( colName ) => {
-							// TODO: Consider making columns an object with keys instead of an array.
-							const column = columns.find( ( c ) => colName === c.key );
-							return this.renderButton( column, selectedColumnKeys )
-						} )
-					}
+					{ group.selections.map( ( selection ) => this.renderButton( selection, columnSelections ) ) }
 				</li>
 			);
 		} );
@@ -61,15 +54,15 @@ class ColumnMenu extends React.Component {
 		return elements;
 	}
 
-	renderButton( column, selectedColumnKeys ) {
-		const selected = ( selectedColumnKeys.has( column.key ) );
+	renderButton( selection, columnSelections ) {
+		const selected = ( columnSelections.hasOwnProperty( selection.key ) );
 		const className = 'column-menu__group-item column-menu__button ' + ( selected ? 'selected' : 'unselected' );
 		const onClick = ( evt ) => {
 			evt.preventDefault();
-			this.props.onColumnSelect( column.key, ! selected );
+			this.props.onColumnSelect( selection, ! selected );
 		};
 
-		return <Button key={ column.title } className={ className } onClick={ onClick } >{ column.title }</Button>
+		return <Button key={ selection.key } className={ className } onClick={ onClick } >{ selection.title }</Button>
 	}
 }
 
