@@ -199,7 +199,6 @@ export function renderCheckboxInput( product, key, constraints, helpers, disable
 // Constraint (required): getSelectValue - Function( product, key ), returns scalar value for select.
 // Constraint (required): getOptions - Function( product, key, helpers ), return array of: { name: <string>, value: <any> }
 export function renderSelectInput( product, key, constraints, helpers, disabled, onEdit ) {
-	const __ = helpers.translate;
 	const getSelectValue = ( constraints && constraints.hasOwnProperty( 'getSelectValue' ) ? constraints.getSelectValue : null );
 	const getOptions = ( constraints && constraints.hasOwnProperty( 'getOptions' ) ? constraints.getOptions : null );
 	const options = ( 'function' === typeof getOptions ? getOptions( product, key, helpers ) : [] );
@@ -216,7 +215,7 @@ export function renderSelectInput( product, key, constraints, helpers, disabled,
 
 	let optionTags = [];
 	options.forEach( ( option ) => {
-		optionTags.push( <option key={ option.name } value={ option.value } >{ __( option.name ) }</option> );
+		optionTags.push( <option key={ option.name } value={ option.value } >{ option.name }</option> );
 	} );
 
 	return (

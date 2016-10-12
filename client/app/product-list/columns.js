@@ -4,6 +4,11 @@ import { translate as __ } from 'i18n-calypso';
 import ColumnSelectIcon from './column-select-icon';
 
 // Custom cell render functions.
+const TAX_STATUS_NAMES = {
+	taxable: __( 'Taxable' ),
+	shipping: __( 'Shipping only' ),
+	none: __( 'None' ),
+};
 
 // Column table for products: Index order matters!!
 export default [
@@ -93,7 +98,18 @@ export default [
 		key: 'tax_status',
 		title: __( 'Tax status' ),
 		group: __( 'Tax' ),
-		renderView: cell.renderString,
+		renderView: ( product, key, constraints, helpers ) => {
+			return TAX_STATUS_NAMES[ product[ key ] ];
+		},
+		renderEdit: cell.renderSelectInput,
+		constraints: {
+			getOptions: ( product, key, helpers ) => {
+				let options = Object.keys( TAX_STATUS_NAMES ).map( ( value ) => {
+					return { name: TAX_STATUS_NAMES[ value ], value };
+				} );
+				return options;
+			}
+		},
 	},
 	{
 		key: 'tax_class',
