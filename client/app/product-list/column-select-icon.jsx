@@ -7,6 +7,7 @@ import ColumnMenu from './column-menu';
 class ColumnSelectIcon extends React.Component {
 	propTypes: {
 		columns: PropTypes.array.isRequired,
+		columnGroups: PropTypes.array.isRequired,
 		display: PropTypes.object.isRequired,
 		onColumnSelectIconClick: PropTypes.func.isRequired,
 		onColumnSelect: PropTypes.func.isRequired,
@@ -14,13 +15,14 @@ class ColumnSelectIcon extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { display, columns, onColumnSelectIconClick, onColumnSelect } = this.props;
+		const { display, columns, columnGroups, onColumnSelectIconClick, onColumnSelect } = this.props;
 
 		return (
 			<Button borderless ref="columnSelect" onClick={ onColumnSelectIconClick }>
 				<Gridicon icon="cog" />
 				<ColumnMenu
 					columns={ columns }
+					columnGroups={ columnGroups }
 					selectedColumnKeys={ display.selectedColumnKeys }
 					context={ this.refs.columnSelect }
 					isVisible={ display.showColumnPanel }

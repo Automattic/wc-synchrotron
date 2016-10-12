@@ -8,14 +8,15 @@ class ColumnMenu extends React.Component {
 	propTypes: {
 		context: PropTypes.object.isRequired,
 		isVisible: PropTypes.bool.isRequired,
-		columns: PropTypes.func.isRequired,
+		columns: PropTypes.array.isRequired,
+		columnGroups: PropTypes.array.isRequired,
 		selectedColumnKeys: PropTypes.set.isRequired,
 		onColumnSelect: PropTypes.func.isRequired,
 	}
 
 	render() {
 		const __ = this.props.translate;
-		const { context, isVisible, columns, selectedColumnKeys } = this.props;
+		const { context, isVisible, columns, columnGroups, selectedColumnKeys } = this.props;
 
 		if ( isVisible ) {
 			return (
@@ -28,7 +29,7 @@ class ColumnMenu extends React.Component {
 						position="left"
 					>
 						<ul className='column-menu__list' >
-							{ this.renderGroups( columns, selectedColumnKeys ) }
+							{ this.renderGroups( columns, columnGroups, selectedColumnKeys ) }
 						</ul>
 					</PopoverMenu>
 			);
@@ -37,21 +38,24 @@ class ColumnMenu extends React.Component {
 		}
 	}
 
-	renderGroups( columns, selectedColumnKeys ) {
+	renderGroups( columns, columnGroups, selectedColumnKeys ) {
 		const groups = new Set( columns.map( ( col ) => col.group ) );
 		let elements = [];
 
-		groups.forEach( ( group ) => {
-			if ( group ) {
-				const groupColumns = columns.filter( ( col ) => { return group === col.group; } );
-
-				elements.push(
-					<li key={ group } className='column-menu__row' >
-						<div className='column-menu__group-label column-menu__group-item'>{ group }</div>
-						{ groupColumns.map( ( col ) => this.renderButton( col, selectedColumnKeys ) ) }
-					</li>
-				);
-			}
+		columnGroups.forEach( ( group ) => {
+			console.log( 'group: ' + group.name );
+			elements.push(
+				<li key={ group.name } className='column-menu__row' >
+					<div className='column-menu__group-label column-menu__group-item'>{ group.name }</div>
+					{
+						group.columns.map( ( colName ) => {
+							// TODO: Consider making columns an object with keys instead of an array.
+							const column = columns.find( ( c ) => colName === c.key );
+							return this.renderButton( column, selectedColumnKeys )
+						} )
+					}
+				</li>
+			);
 		} );
 
 		return elements;

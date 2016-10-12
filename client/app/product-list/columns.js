@@ -15,27 +15,23 @@ export default [
 	{
 		key: 'name',
 		title: __( 'Name' ),
-		group: null,
 		renderView: cell.renderString,
 		renderEdit: cell.renderTextInput,
 	},
 	{
 		key: 'sku',
 		title: __( 'SKU' ),
-		group: __( 'General' ),
 		renderView: cell.renderString,
 		renderEdit: cell.renderTextInput,
 	},
 	{
 		key: 'dimensions',
 		title: __( 'L/W/H' ),
-		group: __( 'General' ),
 		renderView: cell.renderDimensions,
 	},
 	{
 		key: 'weight',
 		title: __( 'Weight' ),
-		group: __( 'General' ),
 		renderView: cell.renderString,
 		renderEdit: cell.renderNumberInput,
 		constraints: {
@@ -46,41 +42,35 @@ export default [
 	{
 		key: 'price',
 		title: __( 'Current Price' ),
-		group: __( 'General' ),
 		renderView: cell.renderCurrency,
 	},
 	{
 		key: 'regular_price',
 		title: __( 'Regular Price' ),
-		group: __( 'General' ),
 		renderView: cell.renderCurrency,
 		renderEdit: cell.renderCurrencyInput,
 	},
 	{
 		key: 'sale_price',
 		title: __( 'Sale Price' ),
-		group: __( 'General' ),
 		renderView: cell.renderCurrency,
 		renderEdit: cell.renderCurrencyInput,
 	},
 	{
 		key: 'in_stock',
 		title: __( 'Stock' ),
-		group: __( 'Inventory' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'manage_stock',
 		title: __( 'Manage stock' ),
-		group: __( 'Inventory' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'stock_quantity',
 		title: __( 'Stock quantity' ),
-		group: __( 'Inventory' ),
 		renderView: cell.renderInteger,
 		renderEdit: cell.renderNumberInput,
 		constraints: {
@@ -91,7 +81,6 @@ export default [
 	{
 		key: 'shipping_class',
 		title: __( 'Shipping class' ),
-		group: __( 'Inventory' ),
 		renderView: cell.renderString,
 	},
 	{
@@ -142,7 +131,6 @@ export default [
 	{
 		key: 'categories',
 		title: __( 'Categories' ),
-		group: __( 'Organization' ),
 		renderView: cell.renderCategories,
 		renderEdit: cell.renderTokenField,
 		constraints: {
@@ -170,13 +158,11 @@ export default [
 	{
 		key: 'tags',
 		title: __( 'Tags' ),
-		group: __( 'Organization' ),
 		renderView: cell.renderTags,
 	},
 	{
 		key: 'catalog_visibility',
 		title: __( 'Visibility' ),
-		group: __( 'Exposure' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 		constraints: {
@@ -188,7 +174,6 @@ export default [
 	{
 		key: 'featured',
 		title: __( 'Featured' ),
-		group: __( 'Exposure' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 		constraints: {
@@ -199,21 +184,60 @@ export default [
 	{
 		key: 'backorders',
 		title: __( 'Backorders' ),
-		group: __( 'Misc' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'sold_individually',
 		title: __( 'Sold invidivually' ),
-		group: __( 'Misc' ),
 		renderView: cell.renderBoolean,
 		renderEdit: cell.renderCheckboxInput,
 	},
 	{
 		key: 'action',
-		group: null,
-		title: ( props ) => <ColumnSelectIcon { ...props } />,
+		title: ( props ) => <ColumnSelectIcon { ...props } columnGroups={ columnGroups } />,
 	},
 ];
 
+export const defaultSelectedColumnNames = [
+	'name', 'price', 'stock_quantity', 'action',
+];
+
+const columnGroups = [
+	{
+		name: __( 'General' ),
+		columns: [
+			'sku', 'dimensions', 'weight', 'price', 'regular_price', 'sale_price',
+		],
+	},
+	{
+		name: __( 'Inventory' ),
+		columns: [
+			'in_stock', 'manage_stock', 'stock_quantity', 'shipping_class',
+		],
+	},
+	{
+		name: __( 'Tax' ),
+		columns: [
+			'tax_status', 'tax_class',
+		],
+	},
+	{
+		name: __( 'Organization' ),
+		columns: [
+			'categories', 'tags',
+		],
+	},
+	{
+		name: __( 'Exposure' ),
+		columns: [
+			'catalog_visibility', 'featured',
+		],
+	},
+	{
+		name: __( 'Misc' ),
+		columns: [
+			'backorders', 'sold_individually',
+		],
+	},
+];
