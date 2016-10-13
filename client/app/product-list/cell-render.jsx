@@ -1,11 +1,13 @@
 import React from 'react';
 import Gridicon from 'gridicons/react/gridicon';
 import FormCheckbox from 'components/forms/form-checkbox';
+import FormSelect from 'components/forms/form-select';
 import FormTextInput from 'components/forms/form-text-input';
 import FormNumberInput from 'components/forms/form-number-input';
 import FormCurrencyInput from 'components/forms/form-currency-input';
 import FormTextInputWithAffixes from 'components/forms/form-text-input-with-affixes';
 import FormNumberInputWithAffixes from 'components/forms/form-number-input-with-affixes';
+import TokenField from 'components/token-field';
 
 // View Renderers
 // Parameter Format: product, key, constraints, helpers
@@ -191,6 +193,37 @@ export function renderCheckboxInput( product, key, constraints, helpers, disable
 
 	return (
 		<FormCheckbox id={ key } disabled={ disabled } checked={ value } onChange={ onChange } />
+	);
+}
+
+// Constraint (required): getSuggestions - Function ( product, key, helpers ), return array of strings
+// Constraint (optional): inConvert - Function ( dataValue, helpers ),
+//                        converts from product[ key ] to TokenField value array.
+// Constraint (optional): outConvert - Function ( tokenFieldValue, helpers ),
+//                        converts from TokenField-compatible values to product[ key ] value.
+export function renderTokenField( product, key, constraints, helpers, disabled, onEdit ) {
+	const suggestions = (
+		'function' === typeof constraints.getSuggestions ? constraints.getSuggestions( product, key, helpers ) : []
+	);
+	const value = (
+		'function' === typeof constraints.inConvert ? constraints.inConvert( product[ key ], helpers ) : product[ key ]
+	);
+
+	const onChange = ( value ) => {
+		value = (
+			'function' === typeof constraints.outConvert ? constraints.outConvert( value, helpers ) : value
+		);
+		onEdit( product, key, value );
+	}
+
+	return (
+		<TokenField
+			id={ key }
+			value={ value }
+			onChange={ onChange }
+			suggestions={ suggestions }
+			disabled={ disabled }
+		/>
 	);
 }
 

@@ -3,12 +3,13 @@ import ListHeader from './list-header';
 import ListRow from './list-row';
 import Card from 'components/card';
 
-export function createRenderHelpers( currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat ) {
+export function createRenderHelpers( currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat, data ) {
 	return {
 		currencySymbol,
 		currencyIsPrefix,
 		currencyDecimals,
 		numberFormat,
+		data,
 	};
 }
 

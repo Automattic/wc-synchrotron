@@ -8,6 +8,7 @@ import columns from './columns';
 class ListBody extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		categories: PropTypes.array.isRequired,
 		edits: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
 		disabled: PropTypes.bool.isRequired,
@@ -57,7 +58,7 @@ class ListBody extends React.Component {
 	}
 
 	render() {
-		const { products, edits, editable, disabled, display } = this.props;
+		const { products, categories, edits, editable, disabled, display } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
@@ -65,7 +66,10 @@ class ListBody extends React.Component {
 			currencySymbol,
 			currencyIsPrefix,
 			currencyDecimals,
-			numberFormat
+			numberFormat,
+			{
+				categories
+			}
 		);
 
 		return (

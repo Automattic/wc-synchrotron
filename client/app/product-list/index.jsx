@@ -7,6 +7,18 @@ import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
 
+// TODO: Combine product-specific code from index and body into one file.
+// TODO: Make the entire list-table component general and move it to client/components
+
+import {
+	SERVICE,
+	fetchProductCategories,
+} from '../../wc-api-redux';
+
+import {
+	getData,
+} from '../../state/fetch-data/actions';
+
 import {
 	fetchProducts,
 	setDisplayOption,
@@ -14,7 +26,7 @@ import {
 	addProduct,
 	editProduct,
 	cancelEdits,
-	saveEdits
+	saveEdits,
 } from '../../state/products/actions';
 
 // TODO: Do this in a more universal way.
@@ -23,6 +35,7 @@ const data = screenData( 'wc_synchrotron_data' );
 class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
+		fetchProductCategories: PropTypes.func.isRequired,
 		fetchProducts: PropTypes.func.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
@@ -43,12 +56,14 @@ class ProductList extends React.Component {
 	}
 
 	componentDidMount() {
+		// TODO: Fetch this through wc-api-redux
+		this.props.fetchProductCategories();
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
 
 	render() {
 		const __ = this.props.translate;
-		const { products, setDisplayOption, editProduct } = this.props;
+		const { products, categories, setDisplayOption, editProduct } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals } = this.props;
 		const { edits, saving } = products;
 
@@ -59,6 +74,7 @@ class ProductList extends React.Component {
 				</div>
 				<ProductsBody
 					products={ products.products }
+					categories={ categories }
 					edits={ edits }
 					editable={ edits }
 					disabled={ Boolean( saving ) }
@@ -106,16 +122,22 @@ class ProductList extends React.Component {
 }
 
 function mapStateToProps( state ) {
-	const { products } = state;
+	const { products, fetchData } = state;
+	// TODO: Reference this in a more general way without having to type the query here.
+	const service = fetchData[ SERVICE ];
+	const categories = service ? service[ '/products/categories' ] : [];
 
 	return {
 		products,
+		categories,
 	};
 }
 
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
+			fetchApiData: ( query ) => getData( SERVICE, query, dispatch.getState()[ 'fetch-data' ] ),
+			fetchProductCategories,
 			fetchProducts,
 			setDisplayOption,
 			initEdits,
