@@ -196,21 +196,20 @@ export function renderCheckboxInput( product, key, constraints, helpers, disable
 	);
 }
 
-// Constraint (required): getSelectValue - Function( product, key ), returns scalar value for select.
 // Constraint (required): getOptions - Function( product, key, helpers ), return array of: { name: <string>, value: <any> }
+// Constraint (optional): inConvert - Function ( dataValue, helpers ),
+//                        converts from product[ key ] to TokenField value array.
 export function renderSelectInput( product, key, constraints, helpers, disabled, onEdit ) {
-	const getSelectValue = ( constraints && constraints.hasOwnProperty( 'getSelectValue' ) ? constraints.getSelectValue : null );
-	const getOptions = ( constraints && constraints.hasOwnProperty( 'getOptions' ) ? constraints.getOptions : null );
-	const options = ( 'function' === typeof getOptions ? getOptions( product, key, helpers ) : [] );
-	const value = (
-		'function' === typeof constraints.inConvert ? constraints.inConvert( product[ key ], helpers ) : product[ key ]
-	);
+	const getOptions = constraints.getOptions || ( () => [] );
+	const inConvert = constraints.inConvert || ( ( value ) => value );
+	const outConvert = constraints.outConvert || ( ( value ) => value );
+
+	const options = getOptions( product, key, helpers );
+	const value = inConvert( product[ key ], helpers );
 
 	const onChange = ( evt ) => {
-		const value = (
-			'function' === typeof constraints.outConvert ? constraints.outConvert( evt.target.value, helpers ) : evt.target.value
-		);
-		onEdit( product, key, value );
+		const convertedValue = outConvert( evt.target.value, helpers );
+		onEdit( product, key, convertedValue );
 	}
 
 	let optionTags = [];
@@ -231,18 +230,16 @@ export function renderSelectInput( product, key, constraints, helpers, disabled,
 // Constraint (optional): outConvert - Function ( tokenFieldValue, helpers ),
 //                        converts from TokenField-compatible values to product[ key ] value.
 export function renderTokenField( product, key, constraints, helpers, disabled, onEdit ) {
-	const suggestions = (
-		'function' === typeof constraints.getSuggestions ? constraints.getSuggestions( product, key, helpers ) : []
-	);
-	const value = (
-		'function' === typeof constraints.inConvert ? constraints.inConvert( product[ key ], helpers ) : product[ key ]
-	);
+	const getSuggestions = constraints.getSuggestions || ( () => [] );
+	const inConvert = constraints.inConvert || ( ( value ) => value );
+	const outConvert = constraints.outConvert || ( ( value ) => value );
+
+	const suggestions = constraints.getSuggestions( product, key, helpers );
+	const value = inConvert( product[ key ], helpers );
 
 	const onChange = ( value ) => {
-		value = (
-			'function' === typeof constraints.outConvert ? constraints.outConvert( value, helpers ) : value
-		);
-		onEdit( product, key, value );
+		const convertedValue = outConvert( value, helpers );
+		onEdit( product, key, convertedValue );
 	}
 
 	return (
