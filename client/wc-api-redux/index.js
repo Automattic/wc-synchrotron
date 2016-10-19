@@ -11,6 +11,11 @@ const registeredActions = registerActionTypes( 'WC_API', [
 	'FETCHED_PRODUCT_CATEGORIES',
 	'ERROR_FETCH_PRODUCT_CATEGORIES',
 
+	'FETCH_TAX_CLASSES',
+	'FETCHING_TAX_CLASSES',
+	'FETCHED_TAX_CLASSES',
+	'ERROR_FETCH_TAX_CLASSES',
+
 	'UPDATE_PRODUCT',
 	'UPDATING_PRODUCT',
 	'UPDATED_PRODUCT',
@@ -37,6 +42,10 @@ export function fetchProductCategories() {
 	// TODO: Handle per_page loading
 	// TODO: Allow to get all through multiple page requests (for when there are LOTS of categories)
 	return ACTIONS.FETCH_PRODUCT_CATEGORIES();
+}
+
+export function fetchTaxClasses() {
+	return ACTIONS.FETCH_TAX_CLASSES();
 }
 
 /**
@@ -90,6 +99,24 @@ const handlers = {
 					null,
 					( data ) => dataFetched( SERVICE, query, data ),
 					ACTIONS.ERROR_FETCH_PRODUCT_CATEGORIES
+				)
+			] );
+		}
+	},
+	[ TYPES.FETCH_TAX_CLASSES ]: ( action, store, context ) => {
+
+		if ( checkInit( context, store.dispatch ) ) {
+			const query = '/taxes/classes';
+
+			store.dispatch( [
+				ACTIONS.FETCHING_TAX_CLASSES(),
+				createRequest(
+					context,
+					query,
+					'GET',
+					null,
+					( data ) => dataFetched( SERVICE, query, data ),
+					ACTIONS.ERROR_FETCH_TAX_CLASSES
 				)
 			] );
 		}

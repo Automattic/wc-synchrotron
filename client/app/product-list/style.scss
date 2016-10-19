@@ -59,10 +59,22 @@
 	flex-direction: column;
 	max-width: 10%;
 	padding: 16px 24px;
+
+	input, select {
+		min-height: 40px;
+	}
 }
 
 .product-list__list-cell-name {
 	max-width: none;
+}
+
+.product-list__list-cell-tax_class, .product-list__list-cell-tax_status {
+	max-width: 15%;
+
+	select {
+		width: 100%;
+	}
 }
 
 .column-menu__list {

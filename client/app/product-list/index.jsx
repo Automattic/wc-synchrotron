@@ -13,6 +13,7 @@ import screenData from '../../utils/screen-data';
 import {
 	SERVICE,
 	fetchProductCategories,
+	fetchTaxClasses,
 } from '../../wc-api-redux';
 
 import {
@@ -36,6 +37,7 @@ class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
 		fetchProductCategories: PropTypes.func.isRequired,
+		fetchTaxClasses: PropTypes.func.isRequired,
 		fetchProducts: PropTypes.func.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
@@ -56,14 +58,16 @@ class ProductList extends React.Component {
 	}
 
 	componentDidMount() {
-		// TODO: Fetch this through wc-api-redux
 		this.props.fetchProductCategories();
+		this.props.fetchTaxClasses();
+
+		// TODO: Fetch this through wc-api-redux
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
 
 	render() {
 		const __ = this.props.translate;
-		const { products, categories, setDisplayOption, editProduct } = this.props;
+		const { products, categories, taxClasses, setDisplayOption, editProduct } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals } = this.props;
 		const { edits, saving } = products;
 
@@ -75,6 +79,7 @@ class ProductList extends React.Component {
 				<ProductsBody
 					products={ products.products }
 					categories={ categories }
+					taxClasses={ taxClasses }
 					edits={ edits }
 					editable={ edits }
 					disabled={ Boolean( saving ) }
@@ -126,10 +131,12 @@ function mapStateToProps( state ) {
 	// TODO: Reference this in a more general way without having to type the query here.
 	const service = fetchData[ SERVICE ];
 	const categories = service ? service[ '/products/categories' ] : [];
+	const taxClasses = service ? service[ '/taxes/classes' ] : [];
 
 	return {
 		products,
 		categories,
+		taxClasses,
 	};
 }
 
@@ -138,6 +145,7 @@ function mapDispatchToProps( dispatch ) {
 		{
 			fetchApiData: ( query ) => getData( SERVICE, query, dispatch.getState()[ 'fetch-data' ] ),
 			fetchProductCategories,
+			fetchTaxClasses,
 			fetchProducts,
 			setDisplayOption,
 			initEdits,

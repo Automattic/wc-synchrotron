@@ -58,8 +58,8 @@ class ListBody extends React.Component {
 	}
 
 	render() {
-		const { products, categories, edits, editable, disabled, display } = this.props;
-		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat } = this.props;
+		const { products, categories, taxClasses, edits, editable, disabled, display } = this.props;
+		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat, translate } = this.props;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		const renderHelpers = createRenderHelpers(
@@ -67,8 +67,10 @@ class ListBody extends React.Component {
 			currencyIsPrefix,
 			currencyDecimals,
 			numberFormat,
+			translate,
 			{
-				categories
+				categories,
+				taxClasses,
 			}
 		);
 
