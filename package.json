@@ -23,7 +23,7 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.hot.js --hot --inline --watch --content-base dist --port 8090",
     "start-https": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.hot.js --hot --inline --watch --content-base dist --port 8090 --https",
-    "test": "npm run build-dev && npm run test-client",
+    "test": "npm run test-client",
     "test-client": "NODE_ENV=test NODE_PATH=test:client TEST_ROOT=client node test/runner.babel.js",
     "build-dev": "npm run clean && npm run calypso-prep && npm run build-client-dev",
     "build-client-dev": "node_modules/webpack/bin/webpack.js -d --progress --colors --config webpack.config.dev.js",

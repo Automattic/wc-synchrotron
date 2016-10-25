@@ -1,7 +1,6 @@
 import omit from 'lodash.omit';
 import { handleActions } from 'redux-actions';
 import { TYPES } from './actions';
-import { defaultColumnSelections } from '../../app/product-list/columns';
 
 export const initialState = {
 	isFetching: false,
@@ -11,7 +10,7 @@ export const initialState = {
 	edits: null,
 	display: {
 		showColumnPanel: false,
-		columnSelections: defaultColumnSelections,
+		columnSelections: null,
 	},
 };
 

@@ -3,7 +3,7 @@ import { localize } from 'i18n-calypso';
 import SearchCard from 'components/search-card';
 import ListTable, { createRenderHelpers } from './list-table';
 import * as cell from './cell-render';
-import columns from './columns';
+import columns, { defaultColumnSelections } from './columns';
 
 class ListBody extends React.Component {
 	propTypes: {
@@ -60,6 +60,7 @@ class ListBody extends React.Component {
 	render() {
 		const { products, categories, taxClasses, edits, editable, disabled, display } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat, translate } = this.props;
+		const columnSelections = display.columnSelections || defaultColumnSelections;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		const renderHelpers = createRenderHelpers(
@@ -84,7 +85,7 @@ class ListBody extends React.Component {
 					editable={ editable }
 					disabled={ disabled }
 					columns={ columns }
-					columnSelections={ display.columnSelections }
+					columnSelections={ columnSelections }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect }
 					onEdit={ this.onEdit }
