@@ -15,7 +15,7 @@ class ColumnSelectIcon extends React.Component {
 
 	render() {
 		const __ = this.props.translate;
-		const { display, columns, columnGroups, onColumnSelectIconClick, onColumnSelect } = this.props;
+		const { display, columns, columnGroups, columnSelections, onColumnSelectIconClick, onColumnSelect } = this.props;
 
 		return (
 			<Button borderless ref="columnSelect" onClick={ onColumnSelectIconClick }>
@@ -23,7 +23,7 @@ class ColumnSelectIcon extends React.Component {
 				<ColumnMenu
 					columns={ columns }
 					columnGroups={ columnGroups }
-					columnSelections={ display.columnSelections }
+					columnSelections={ columnSelections }
 					context={ this.refs.columnSelect }
 					isVisible={ display.showColumnPanel }
 					onColumnSelect={ onColumnSelect }

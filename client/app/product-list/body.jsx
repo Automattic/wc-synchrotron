@@ -38,9 +38,9 @@ class ListBody extends React.Component {
 	}
 
 	onColumnSelect( selection, selected ) {
-		const prevKeys = this.props.display.columnSelections;
+		const prevKeys = this.getColumnSelections();
 
-		const keys = Object.assign( {}, prevKeys );
+		const keys = { ...prevKeys };
 
 		if ( selected ) {
 			keys[ selection.key ] = selection;
@@ -57,10 +57,13 @@ class ListBody extends React.Component {
 		editProduct( product.id, key, value );
 	}
 
+	getColumnSelections() {
+		return this.props.display.columnSelections || defaultColumnSelections;
+	}
+
 	render() {
 		const { products, categories, taxClasses, edits, editable, disabled, display } = this.props;
 		const { currencySymbol, currencyIsPrefix, currencyDecimals, numberFormat, translate } = this.props;
-		const columnSelections = display.columnSelections || defaultColumnSelections;
 		const onSearch = () => {}; // TODO: hook up to search/filter action.
 
 		const renderHelpers = createRenderHelpers(
@@ -85,7 +88,7 @@ class ListBody extends React.Component {
 					editable={ editable }
 					disabled={ disabled }
 					columns={ columns }
-					columnSelections={ columnSelections }
+					columnSelections={ this.getColumnSelections() }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect }
 					onEdit={ this.onEdit }

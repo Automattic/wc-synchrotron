@@ -21,16 +21,18 @@ export default class ListTable extends React.Component {
 		editable: PropTypes.bool.isRequired,
 		disabled: PropTypes.bool.isRequired,
 		columns: PropTypes.array.isRequired,
-		columnSelections: PropTypes.set.isRequired,
+		columnSelections: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
 		renderHelpers: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
+
+		this.isColumnSelected = this.isColumnSelected.bind( this );
 	}
 
-	isColumnSelected( key ) {
+	isColumnSelected( { key } ) {
 		const { columnSelections } = this.props;
 
 		// Iterate through all the selections and see if it's included.
@@ -57,9 +59,7 @@ export default class ListTable extends React.Component {
 
 		// Pass down a complete set of selected columns to children components.
 		// Do the filtering once here and make use of it many times.
-		const selectedColumns = columns.filter( ( column ) => {
-			return this.isColumnSelected( column.key );
-		} );
+		const selectedColumns = columns.filter( this.isColumnSelected );
 
 		// Copy all props and pass down to ListHeader for extension reasons.
 		const headerProps = Object.assign( {}, this.props, { selectedColumns } );

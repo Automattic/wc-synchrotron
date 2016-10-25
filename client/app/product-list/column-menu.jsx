@@ -10,7 +10,7 @@ class ColumnMenu extends React.Component {
 		isVisible: PropTypes.bool.isRequired,
 		columns: PropTypes.array.isRequired,
 		columnGroups: PropTypes.array.isRequired,
-		columnSelections: PropTypes.set.isRequired,
+		columnSelections: PropTypes.object.isRequired,
 		onColumnSelect: PropTypes.func.isRequired,
 	}
 
@@ -40,26 +40,23 @@ class ColumnMenu extends React.Component {
 
 	renderGroups( columns, columnGroups, columnSelections ) {
 		const groups = new Set( columns.map( ( col ) => col.group ) );
-		let elements = [];
 
-		columnGroups.forEach( ( group ) => {
-			elements.push(
+		return columnGroups.map( ( group ) => {
+			return  (
 				<li key={ group.name } className='column-menu__row' >
 					<div className='column-menu__group-label column-menu__group-item'>{ group.name }</div>
 					{ group.selections.map( ( selection ) => this.renderButton( selection, columnSelections ) ) }
 				</li>
 			);
 		} );
-
-		return elements;
 	}
 
 	renderButton( selection, columnSelections ) {
-		const selected = ( columnSelections.hasOwnProperty( selection.key ) );
-		const className = 'column-menu__group-item column-menu__button ' + ( selected ? 'selected' : 'unselected' );
+		const isSelected = columnSelections[ selection.key ];
+		const className = 'column-menu__group-item column-menu__button ' + ( isSelected ? 'selected' : 'unselected' );
 		const onClick = ( evt ) => {
 			evt.preventDefault();
-			this.props.onColumnSelect( selection, ! selected );
+			this.props.onColumnSelect( selection, ! isSelected );
 		};
 
 		return <Button key={ selection.key } className={ className } onClick={ onClick } >{ selection.title }</Button>
