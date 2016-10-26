@@ -10,7 +10,7 @@ export const initialState = {
 	edits: null,
 	display: {
 		showColumnPanel: false,
-		selectedColumnKeys: new Set( [ 'name', 'price', 'stock_quantity', 'action' ] ),
+		columnSelections: null,
 	},
 };
 

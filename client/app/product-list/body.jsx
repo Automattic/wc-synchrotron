@@ -3,7 +3,7 @@ import { localize } from 'i18n-calypso';
 import SearchCard from 'components/search-card';
 import ListTable, { createRenderHelpers } from './list-table';
 import * as cell from './cell-render';
-import columns from './columns';
+import columns, { defaultColumnSelections } from './columns';
 
 class ListBody extends React.Component {
 	propTypes: {
@@ -37,24 +37,28 @@ class ListBody extends React.Component {
 		setDisplayOption( 'showColumnPanel', ! display.showColumnPanel );
 	}
 
-	onColumnSelect( key, selected ) {
-		const prevKeys = this.props.display.selectedColumnKeys;
+	onColumnSelect( selection, selected ) {
+		const prevKeys = this.getColumnSelections();
 
-		let keys = new Set( prevKeys );
+		const keys = { ...prevKeys };
 
 		if ( selected ) {
-			keys.add( key );
+			keys[ selection.key ] = selection;
 		} else {
-			keys.delete( key );
+			delete keys[ selection.key ];
 		}
 
-		this.props.setDisplayOption( 'selectedColumnKeys', keys );
+		this.props.setDisplayOption( 'columnSelections', keys );
 	}
 
 	onEdit( product, key, value ) {
 		const { products, editProduct } = this.props;
 
 		editProduct( product.id, key, value );
+	}
+
+	getColumnSelections() {
+		return this.props.display.columnSelections || defaultColumnSelections;
 	}
 
 	render() {
@@ -84,7 +88,7 @@ class ListBody extends React.Component {
 					editable={ editable }
 					disabled={ disabled }
 					columns={ columns }
-					selectedColumnKeys={ display.selectedColumnKeys }
+					columnSelections={ this.getColumnSelections() }
 					onColumnSelectIconClick={ this.onColumnSelectIconClick }
 					onColumnSelect={ this.onColumnSelect }
 					onEdit={ this.onEdit }

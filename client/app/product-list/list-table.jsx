@@ -21,25 +21,45 @@ export default class ListTable extends React.Component {
 		editable: PropTypes.bool.isRequired,
 		disabled: PropTypes.bool.isRequired,
 		columns: PropTypes.array.isRequired,
-		selectedColumnKeys: PropTypes.set.isRequired,
+		columnSelections: PropTypes.object.isRequired,
 		editable: PropTypes.bool.isRequired,
 		renderHelpers: PropTypes.object.isRequired,
 	}
 
 	constructor( props ) {
 		super( props );
+
+		this.isColumnSelected = this.isColumnSelected.bind( this );
 	}
 
-	getListHeaderRef() {
-		return this.refs && this.refs.listHeader;
+	isColumnSelected( { key } ) {
+		const { columnSelections } = this.props;
+
+		// Iterate through all the selections and see if it's included.
+		for ( let selectionKey in columnSelections ) {
+			const selection = columnSelections[ selectionKey ];
+
+			if ( selection.hasOwnProperty( 'columnKeys' ) ) {
+				if ( selection.columnKeys.includes( key ) ) {
+					// It's in a selection's columnKeys
+					return true;
+				}
+			} else {
+				if ( key === selection.key ) {
+					// It's a simple selection (without columnKeys)
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	render() {
-		const { products, edits, editable, disabled, selectedColumnKeys, onEdit, renderHelpers } = this.props;
+		const { products, edits, editable, disabled, columns, columnSelections, onEdit, renderHelpers } = this.props;
 
 		// Pass down a complete set of selected columns to children components.
 		// Do the filtering once here and make use of it many times.
-		const selectedColumns = this.props.columns.filter( ( col ) => selectedColumnKeys.has( col.key ) )
+		const selectedColumns = columns.filter( this.isColumnSelected );
 
 		// Copy all props and pass down to ListHeader for extension reasons.
 		const headerProps = Object.assign( {}, this.props, { selectedColumns } );

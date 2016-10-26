@@ -62,20 +62,6 @@ export function renderCurrency( product, key, constraints, helpers ) {
 	}
 }
 
-export function renderDimensions( product, key, constraints, helpers ) {
-	const value = product[key];
-
-	if ( value && ( value.length || value.width || value.height ) ) {
-		const l = value.length ? Number( value.length ) : '-';
-		const w = value.width ? Number( value.width ) : '-';
-		const h = value.height ? Number( value.height ) : '-';
-
-		return l + '/' + w + '/' + h;
-	} else {
-		return '';
-	}
-}
-
 export function renderCategories( product, key, constraints, helpers ) {
 	const value = product[key];
 
