@@ -6,6 +6,13 @@ import { fetchProductCategories, fetchTaxClasses } from '../../wc-api-redux';
 
 const SERVICE = 'wc-api-redux';
 
+export function configureApi( apiRoot, nonce ) {
+	return setConfig( SERVICE, {
+		apiRoot,
+		nonce
+	} );
+}
+
 export function categories() {
 	return {
 		action: fetchProductCategories,
