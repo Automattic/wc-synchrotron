@@ -6,6 +6,7 @@ import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
+import { getApiData } from '../../data/wc-api';
 
 // TODO: Combine product-specific code from index and body into one file.
 // TODO: Make the entire list-table component general and move it to client/components
@@ -15,10 +16,6 @@ import {
 	fetchProductCategories,
 	fetchTaxClasses,
 } from '../../wc-api-redux';
-
-import {
-	getData,
-} from '../../state/fetch-data/actions';
 
 import {
 	fetchProducts,
@@ -128,10 +125,10 @@ class ProductList extends React.Component {
 
 function mapStateToProps( state ) {
 	const { products, fetchData } = state;
-	// TODO: Reference this in a more general way without having to type the query here.
-	const service = fetchData[ SERVICE ];
-	const categories = service ? service[ '/products/categories' ] : [];
-	const taxClasses = service ? service[ '/taxes/classes' ] : [];
+
+	const apiData = getApiData( state );
+	const categories = apiData.categories();
+	const taxClasses = apiData.taxClasses();
 
 	return {
 		products,
@@ -143,7 +140,6 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
-			fetchApiData: ( query ) => getData( SERVICE, query, dispatch.getState()[ 'fetch-data' ] ),
 			fetchProductCategories,
 			fetchTaxClasses,
 			fetchProducts,
@@ -159,3 +155,4 @@ function mapDispatchToProps( dispatch ) {
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( localize( ProductList ) );
+

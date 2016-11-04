@@ -1,4 +1,5 @@
-
+import { createElement, Component } from 'react';
+import { connect } from 'react-redux';
 
 export { dataFetched } from './actions';
 
@@ -13,9 +14,10 @@ export { dataFetched } from './actions';
  * @param { Object } The fetch data state as returned by the reducer.
  * @return { Any } The data if it exists in memory, otherwise null.
  */
-export function getData( service, query, fetchDataState ) {
-	const serviceNode = fetchDataState[ service ];
-	const data = ( serviceNode ? serviceNode[ query ] : null );
+export function getFetchData( service, query, defaultValue, state ) {
+	const { fetchData } = state;
+	const serviceData = fetchData[ service ];
+	const data = ( serviceData ? serviceData[ query ] : defaultValue );
 	return data;
 }
 
