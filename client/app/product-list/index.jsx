@@ -6,7 +6,8 @@ import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
-import { getApiData } from '../../data/wc-api';
+import * as wcApi from '../../data/wc-api';
+import { getFetchProps } from '../../state/fetch-data';
 
 // TODO: Combine product-specific code from index and body into one file.
 // TODO: Make the entire list-table component general and move it to client/components
@@ -60,6 +61,11 @@ class ProductList extends React.Component {
 
 		// TODO: Fetch this through wc-api-redux
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
+	}
+
+	componentWillReceiveProps( nextProps ) {
+		// TODO: Figure out a way to put this into a Higher Order Component.
+		setFetchProps( nextProps );
 	}
 
 	render() {
@@ -123,17 +129,22 @@ class ProductList extends React.Component {
 	}
 }
 
+// TODO: Move this into a Higher Order Component.
+let fetchProps = {};
+
+function setFetchProps( props ) {
+	fetchProps = {
+		categories: wcApi.categories(), // Could be a query here based on other props.
+		taxClasses: wcApi.taxClasses(), // Could be a query here based on other props.
+	};
+}
+
 function mapStateToProps( state ) {
 	const { products, fetchData } = state;
 
-	const apiData = getApiData( state );
-	const categories = apiData.categories();
-	const taxClasses = apiData.taxClasses();
-
 	return {
+		...getFetchProps( fetchProps, state ),
 		products,
-		categories,
-		taxClasses,
 	};
 }
 

@@ -21,3 +21,11 @@ export function getFetchData( service, query, defaultValue, state ) {
 	return data;
 }
 
+export function getFetchProps( fetchList, state ) {
+	let props = {};
+	for ( name in fetchList ) {
+		props[ name ] = fetchList[ name ].data( state );
+	}
+	return props;
+}
+

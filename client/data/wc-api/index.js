@@ -1,17 +1,27 @@
 import { getConfig, setConfig } from '../../state/app-config';
 import { getFetchData } from '../../state/fetch-data';
 
+// TODO: This is temporary, until the rest of the stuff gets moved over from here.
+import { fetchProductCategories, fetchTaxClasses } from '../../wc-api-redux';
+
 const SERVICE = 'wc-api-redux';
 
-export function getApiData( state ) {
+export function categories() {
 	return {
-		categories: () => {
+		action: fetchProductCategories,
+		data: ( state ) => {
 			return getFetchData( SERVICE, '/products/categories', [], state );
 		},
-		taxClasses: () => {
+	};
+}
+
+export function taxClasses() {
+	return {
+		action: fetchTaxClasses,
+		data: ( state ) => {
 			return getFetchData( SERVICE, '/taxes/classes', [], state );
 		},
-	}
+	};
 }
 
 function getEndpoint( endpointUrl, updateFrequency, config, reduxState ) {
