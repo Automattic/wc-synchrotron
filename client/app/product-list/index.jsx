@@ -156,5 +156,7 @@ function mapDispatchToProps( dispatch ) {
 	);
 }
 
-export default fetchConnect( getFetchProps, mapStateToProps, mapDispatchToProps )( localize( ProductList ) );
+const localizedComponent = localize( ProductList );
+const fetchedComponent = fetchConnect( getFetchProps )( localizedComponent );
+export default connect( mapStateToProps, mapDispatchToProps )( fetchedComponent );
 

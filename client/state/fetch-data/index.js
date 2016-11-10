@@ -1,5 +1,4 @@
-import { createElement, Component } from 'react';
-import { connect } from 'react-redux';
+import { createElement, Component, PropTypes } from 'react';
 
 export { dataFetched } from './actions';
 
@@ -26,36 +25,38 @@ export function fetchConnect( getFetchProps, mapStateToProps, mapDispatchToProps
 	return function wrapWithFetchConnect( WrappedComponent ) {
 
 		let fetchProps = {};
-
-		const combinedMapStateToProps = ( state ) => {
-			const props = { ...mapStateToProps( state ) };
-
-			// Overwrite anything in the existing props with what we have here.
-			for ( name in fetchProps ) {
-				props[ name ] = fetchProps[ name ].data( state );
-			}
-			console.log( 'fetch props' );
-			console.log( fetchProps );
-			console.log( 'combined props' );
-			console.log( props );
-			return props;
-		}
-
+		let fetchActions = {};
+		let boundActions = {};
 
 		class FetchConnect extends Component {
+			constructor( props, context ) {
+				super( props, context );
+				this.store = props.store || context.store;
+			}
+
 			componentWillReceiveProps( nextProps ) {
-				fetchProps = getFetchProps( nextProps );
 			}
 
 			render() {
-				const element = createElement( WrappedComponent, this.props );
-				return element;
+				let state = this.store.getState();
+				let fetchProps = getFetchProps( this.props );
+				let combinedProps = { ...this.props };
+
+				// Overwrite anything in the existing props with what we have here.
+				for ( name in fetchProps ) {
+					const prop = fetchProps[ name ];
+
+					combinedProps[ name ] = prop.data( state );
+				}
+
+				return createElement( WrappedComponent, combinedProps );
 			}
 		};
 
+		FetchConnect.contextTypes = { store: PropTypes.object };
 		FetchConnect.displayName = 'FetchConnected' + WrappedComponent.displayName;
 
-		return connect( combinedMapStateToProps, mapDispatchToProps )( FetchConnect );
+		return FetchConnect;
 	}
 }
 
