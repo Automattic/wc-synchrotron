@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { registerActionTypes } from '../actions-registry';
 
-const MODULE_NAME = 'app-config';
+const MODULE_NAME = 'appConfig';
 
 const registeredActions = registerActionTypes( MODULE_NAME, [
 	'SET_CONFIG',
