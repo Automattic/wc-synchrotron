@@ -2,25 +2,14 @@ import { createElement, Component, PropTypes } from 'react';
 
 export { dataFetched } from './actions';
 
-/**
- * @summary Retrieves data from the fetch-data state store.
- *
- * This looks for the fetched data in memory and returns it if it exists.
- * Otherwise, returns null.
- *
- * @param { String } service Name of service to which the data belongs.
- * @param { String } key Describes uniquely what data was fetched.
- * @param { Object } The fetch data state as returned by the reducer.
- * @return { Any } The data if it exists in memory, otherwise null.
- */
-export function getFetchData( service, key, defaultValue, state ) {
+function getFetchData( fetch, state ) {
 	const { fetchData } = state;
-	const serviceData = fetchData[ service ];
-	const data = ( serviceData ? serviceData[ key ] : defaultValue );
+	const serviceData = fetchData[ fetch.service ];
+	const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
 	return data;
 }
 
-export function fetchConnect( getFetchProps, mapStateToProps, mapDispatchToProps ) {
+export function fetchConnect( mapFetchProps, mapStateToProps, mapDispatchToProps ) {
 
 	return function wrapWithFetchConnect( WrappedComponent ) {
 
@@ -39,14 +28,14 @@ export function fetchConnect( getFetchProps, mapStateToProps, mapDispatchToProps
 
 			render() {
 				let state = this.store.getState();
-				let fetchProps = getFetchProps( this.props );
+				let fetchProps = mapFetchProps( this.props );
 				let combinedProps = { ...this.props };
 
 				// Overwrite anything in the existing props with what we have here.
 				for ( name in fetchProps ) {
-					const prop = fetchProps[ name ];
+					const fetch = fetchProps[ name ];
 
-					combinedProps[ name ] = prop.data( state );
+					combinedProps[ name ] = getFetchData( fetch, state );
 				}
 
 				return createElement( WrappedComponent, combinedProps );
@@ -54,7 +43,7 @@ export function fetchConnect( getFetchProps, mapStateToProps, mapDispatchToProps
 		};
 
 		FetchConnect.contextTypes = { store: PropTypes.object };
-		FetchConnect.displayName = 'FetchConnected' + WrappedComponent.displayName;
+		FetchConnect.displayName = 'FetchConnect' + WrappedComponent.displayName;
 
 		return FetchConnect;
 	}

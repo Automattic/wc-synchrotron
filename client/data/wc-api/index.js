@@ -1,5 +1,4 @@
 import { getConfig, setConfig } from '../../state/app-config';
-import { getFetchData } from '../../state/fetch-data';
 import { fetchAction } from '../../state/fetch-data/actions';
 
 const SERVICE = 'wc-api-redux';
@@ -12,18 +11,22 @@ export function configureApi( apiRoot, nonce ) {
 }
 
 // TODO: Add parameters to filter?
-export function getCategories() {
+export function fetchCategories() {
 	return {
+		service: SERVICE,
+		key: '/products/categories',
+		defaultValue: [],
 		action: ( state ) => createRequestAction( '/products/categories', state ),
-		data: ( state ) => getFetchData( SERVICE, '/products/categories', [], state ),
 	};
 }
 
 // TODO: Add parameters to filter?
-export function getTaxClasses() {
+export function fetchTaxClasses() {
 	return {
+		service: SERVICE,
+		key: '/taxes/classes',
+		defaultValue: [],
 		action: ( state ) => createRequestAction( '/taxes/classes', state ),
-		data: ( state ) => getFetchData( SERVICE, '/taxes/classes', [], state ),
 	};
 }
 

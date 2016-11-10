@@ -124,10 +124,10 @@ class ProductList extends React.Component {
 	}
 }
 
-function getFetchProps( props ) {
+function mapFetchProps( props ) {
 	return {
-		categories: wcApi.getCategories(),
-		taxClasses: wcApi.getTaxClasses(),
+		categories: wcApi.fetchCategories(),
+		taxClasses: wcApi.fetchTaxClasses(),
 	};
 }
 
@@ -157,6 +157,6 @@ function mapDispatchToProps( dispatch ) {
 }
 
 const localizedComponent = localize( ProductList );
-const fetchedComponent = fetchConnect( getFetchProps )( localizedComponent );
-export default connect( mapStateToProps, mapDispatchToProps )( fetchedComponent );
+const fetchComponent = fetchConnect( mapFetchProps )( localizedComponent );
+export default connect( mapStateToProps, mapDispatchToProps )( fetchComponent );
 
