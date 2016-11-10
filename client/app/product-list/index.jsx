@@ -126,8 +126,8 @@ class ProductList extends React.Component {
 
 function getFetchProps( props ) {
 	return {
-		categories: wcApi.categories(), // Could be a query here based on other props.
-		taxClasses: wcApi.taxClasses(), // Could be a query here based on other props.
+		categories: wcApi.getCategories(),
+		taxClasses: wcApi.getTaxClasses(),
 	};
 }
 

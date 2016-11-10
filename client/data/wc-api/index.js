@@ -1,8 +1,6 @@
 import { getConfig, setConfig } from '../../state/app-config';
 import { getFetchData } from '../../state/fetch-data';
-
-// TODO: This is temporary, until the rest of the stuff gets moved over from here.
-import { fetchProductCategories, fetchTaxClasses } from '../../wc-api-redux';
+import { fetchAction } from '../../state/fetch-data/actions';
 
 const SERVICE = 'wc-api-redux';
 
@@ -13,35 +11,35 @@ export function configureApi( apiRoot, nonce ) {
 	} );
 }
 
-export function categories() {
+// TODO: Add parameters to filter?
+export function getCategories() {
 	return {
-		action: fetchProductCategories,
-		data: ( state ) => {
-			return getFetchData( SERVICE, '/products/categories', [], state );
-		},
+		action: ( state ) => createRequestAction( '/products/categories', state ),
+		data: ( state ) => getFetchData( SERVICE, '/products/categories', [], state ),
 	};
 }
 
-export function taxClasses() {
+// TODO: Add parameters to filter?
+export function getTaxClasses() {
 	return {
-		action: fetchTaxClasses,
-		data: ( state ) => {
-			return getFetchData( SERVICE, '/taxes/classes', [], state );
-		},
+		action: ( state ) => createRequestAction( '/taxes/classes', state ),
+		data: ( state ) => getFetchData( SERVICE, '/taxes/classes', [], state ),
 	};
 }
 
-function getEndpoint( endpointUrl, updateFrequency, config, reduxState ) {
-
-	const url = config.baseUrl + endpointUrl;
-	const method = 'GET';
-	const credentials = 'same-origin';
+function createRequestAction( endpointUrl, state ) {
+	const config = getConfig( state )( SERVICE );
+	const url = config.apiRoot + endpointUrl;
 	const headers = new Headers();
 
 	headers.set( 'x-wp-nonce', config.nonce );
 
-	const params = { method, credentials, headers };
+	const params = {
+		method: 'GET',
+		credentials: 'same-origin',
+		headers,
+	};
 
-	return getFetchData( url, params, updateFrequency, reduxState );
+	return fetchAction( SERVICE, endpointUrl, url, params );
 }
 
