@@ -32,7 +32,7 @@ A `fetch` object is defined as such:
 * `action` is a `function( state )` that returns a redux action. `fetchAction` should be used to create this action.
 This will handle both successful and error results from the fetch, and update the `fetch-data` cache state in redux accordingly.
 
-Also, the following helper functions are available for `shouldUpdate`
+The following `updateWhen` helper functions are available for `shouldUpdate`. See below for an example.
 * `notPresent()` - Simply checks if the fetch data is available yet or not.
 
 #### How to use:
@@ -44,7 +44,7 @@ Note: The `params` of `fetchAction` match the `init` params of the [HTTP fetch
 interface](https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch)
 
 ```js
-import fetchData, { fetchAction } from 'fetch-data';
+import { fetchAction, updateWhen } from 'fetch-data';
 
 function fetchApiData( queryString ) {
   const baseUrl = 'http://my.api';
@@ -62,7 +62,7 @@ function fetchApiData( queryString ) {
     service,
     key,
     defaultValue: [],
-    shouldUpdate: fetchData.notPresent(),
+    shouldUpdate: updateWhen.notPresent(),
     action: ( state ) => fetchAction( service, key, fullUrl, params );
   };
 }

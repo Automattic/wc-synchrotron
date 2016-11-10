@@ -2,7 +2,10 @@ import { createElement, Component, PropTypes } from 'react';
 
 export { fetchAction } from './actions';
 
-export default {
+/**
+ * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
+ */
+export const updateWhen = {
 	notPresent: () => {
 		return function fetchDataNotPresent( fetch, data ) {
 			return data === fetch.defaultValue;
@@ -10,7 +13,13 @@ export default {
 	}
 }
 
-export function fetchConnect( mapFetchProps, mapStateToProps, mapDispatchToProps ) {
+/**
+ * Higher Order Component to map `fetch` objects to props.
+ *
+ * @param mapFetchProps { function( props ) } Returns a mapping object where keys are the prop names, and values are `fetch` objects.
+ * @return { function( WrappedComponent ) } A function that wraps an existing React component with this mapping.
+ */
+export function fetchConnect( mapFetchProps ) {
 
 	return function wrapWithFetchConnect( WrappedComponent ) {
 

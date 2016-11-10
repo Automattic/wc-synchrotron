@@ -1,5 +1,5 @@
 import { getConfig, setConfig } from '../../state/app-config';
-import fetchData, { fetchAction } from '../../state/fetch-data';
+import { fetchAction, updateWhen } from '../../state/fetch-data';
 
 const SERVICE = 'wc-api-redux';
 
@@ -35,7 +35,7 @@ export function fetchCategories() {
 		service: SERVICE,
 		key: url,
 		defaultValue: [],
-		shouldUpdate: fetchData.notPresent(),
+		shouldUpdate: updateWhen.notPresent(),
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }
@@ -56,7 +56,7 @@ export function fetchTaxClasses() {
 		service: SERVICE,
 		key: url,
 		defaultValue: [],
-		shouldUpdate: fetchData.notPresent(),
+		shouldUpdate: updateWhen.notPresent(),
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }
