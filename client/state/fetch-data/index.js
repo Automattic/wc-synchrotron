@@ -1,41 +1,57 @@
 import { createElement, Component, PropTypes } from 'react';
 
-export { dataFetched } from './actions';
+export { fetchAction } from './actions';
 
-function getFetchData( fetch, state ) {
-	const { fetchData } = state;
-	const serviceData = fetchData[ fetch.service ];
-	const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
-	return data;
+export default {
+	notPresent: () => {
+		return function fetchDataNotPresent( fetch, data ) {
+			return data === fetch.defaultValue;
+		}
+	}
 }
 
 export function fetchConnect( mapFetchProps, mapStateToProps, mapDispatchToProps ) {
 
 	return function wrapWithFetchConnect( WrappedComponent ) {
 
-		let fetchProps = {};
-		let fetchActions = {};
-		let boundActions = {};
-
 		class FetchConnect extends Component {
 			constructor( props, context ) {
 				super( props, context );
 				this.store = props.store || context.store;
+				this.fetchProps = {};
 			}
 
 			componentWillReceiveProps( nextProps ) {
+				// Every time this component gets new props,
+				// update the fetch props because they can depend on them.
+				this.fetchProps = mapFetchProps( this.props );
+
+				// Check if we should update our fetches.
+				for ( name in this.fetchProps ) {
+					const fetch = this.fetchProps[ name ];
+					const data = this.getFetchData( fetch );
+
+					if ( fetch.shouldUpdate( fetch, data ) ) {
+						this.store.dispatch( fetch.action( this.store.getState() ) );
+					}
+				}
+			}
+
+			getFetchData( fetch ) {
+				const { fetchData } = this.store.getState();
+				const serviceData = fetchData[ fetch.service ];
+				const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
+				return data;
 			}
 
 			render() {
-				let state = this.store.getState();
-				let fetchProps = mapFetchProps( this.props );
 				let combinedProps = { ...this.props };
 
 				// Overwrite anything in the existing props with what we have here.
-				for ( name in fetchProps ) {
-					const fetch = fetchProps[ name ];
+				for ( name in this.fetchProps ) {
+					const fetch = this.fetchProps[ name ];
 
-					combinedProps[ name ] = getFetchData( fetch, state );
+					combinedProps[ name ] = this.getFetchData( fetch );
 				}
 
 				return createElement( WrappedComponent, combinedProps );

@@ -13,12 +13,6 @@ import { fetchConnect } from '../../state/fetch-data';
 // TODO: Make the entire list-table component general and move it to client/components
 
 import {
-	SERVICE,
-	fetchProductCategories,
-	fetchTaxClasses,
-} from '../../wc-api-redux';
-
-import {
 	fetchProducts,
 	setDisplayOption,
 	initEdits,
@@ -34,8 +28,6 @@ const data = screenData( 'wc_synchrotron_data' );
 class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
-		fetchProductCategories: PropTypes.func.isRequired,
-		fetchTaxClasses: PropTypes.func.isRequired,
 		fetchProducts: PropTypes.func.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
@@ -56,9 +48,6 @@ class ProductList extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchProductCategories();
-		this.props.fetchTaxClasses();
-
 		// TODO: Fetch this through wc-api-redux
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
@@ -142,8 +131,6 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
-			fetchProductCategories,
-			fetchTaxClasses,
 			fetchProducts,
 			setDisplayOption,
 			initEdits,
