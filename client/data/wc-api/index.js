@@ -3,6 +3,16 @@ import fetchData, { fetchAction } from '../../state/fetch-data';
 
 const SERVICE = 'wc-api-redux';
 
+/**
+ * Configures the WooCommerce API for requests.
+ *
+ * This sets the root URL of the API and the
+ * nonce for authentication. It adds this data to the
+ * redux state for later retrieval.
+ *
+ * @param apiRoot { string } Base URL to use for the API.
+ * @param nonce { string } The current API nonce to use for authentication.
+ */
 export function configureApi( apiRoot, nonce ) {
 	return setConfig( SERVICE, {
 		apiRoot,
@@ -19,12 +29,14 @@ export function configureApi( apiRoot, nonce ) {
  * TODO: Add parameters to filter?
  */
 export function fetchCategories() {
+	const url = '/products/categories';
+
 	return {
 		service: SERVICE,
-		key: '/products/categories',
+		key: url,
 		defaultValue: [],
 		shouldUpdate: fetchData.notPresent(),
-		action: ( state ) => createRequestAction( '/products/categories', state ),
+		action: ( state ) => createRequestAction( url, state ),
 	};
 }
 
@@ -38,12 +50,14 @@ export function fetchCategories() {
  * TODO: Add parameters to filter?
  */
 export function fetchTaxClasses() {
+	const url = '/taxes/classes';
+
 	return {
 		service: SERVICE,
-		key: '/taxes/classes',
+		key: url,
 		defaultValue: [],
 		shouldUpdate: fetchData.notPresent(),
-		action: ( state ) => createRequestAction( '/taxes/classes', state ),
+		action: ( state ) => createRequestAction( url, state ),
 	};
 }
 
