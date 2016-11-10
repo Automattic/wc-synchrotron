@@ -10,14 +10,14 @@ export { dataFetched } from './actions';
  * Otherwise, returns null.
  *
  * @param { String } service Name of service to which the data belongs.
- * @param { String } query Query used to originally fetch the data.
+ * @param { String } key Describes uniquely what data was fetched.
  * @param { Object } The fetch data state as returned by the reducer.
  * @return { Any } The data if it exists in memory, otherwise null.
  */
-export function getFetchData( service, query, defaultValue, state ) {
+export function getFetchData( service, key, defaultValue, state ) {
 	const { fetchData } = state;
 	const serviceData = fetchData[ service ];
-	const data = ( serviceData ? serviceData[ query ] : defaultValue );
+	const data = ( serviceData ? serviceData[ key ] : defaultValue );
 	return data;
 }
 
