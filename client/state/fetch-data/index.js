@@ -27,26 +27,64 @@ export function fetchConnect( mapFetchProps ) {
 			constructor( props, context ) {
 				super( props, context );
 				this.store = props.store || context.store;
+				this.clearCache();
+			}
+
+			clearCache() {
 				this.fetchProps = {};
+				this.fetchPropsData = {};
+				this.haveOwnPropsChanged = true;
+				this.haveFetchPropsChanged = true;
+			}
+
+			shouldComponentUpdate() {
+				return this.haveOwnPropsChanged || this.haveFetchPropsChanged;
+			}
+
+			componentDidMount() {
+				this.unsubscribe = this.store.subscribe( this.handleChange.bind( this ) );
+				this.updateFetchPropsData( true );
 			}
 
 			componentWillReceiveProps( nextProps ) {
+				this.haveOwnPropsChanged = true;
+
 				// Every time this component gets new props,
 				// update the fetch props because they can depend on them.
-				this.fetchProps = mapFetchProps( this.props );
+				this.fetchProps = mapFetchProps( nextProps );
+				this.updateFetchPropsData( true );
+			}
 
-				// Check if we should update our fetches.
-				for ( name in this.fetchProps ) {
+			componentWillUnmount() {
+				if ( this.unsubscribe ) {
+					this.unsubscribe();
+					this.unsubscribe = null;
+				}
+				this.clearCache();
+			}
+
+			handleChange() {
+				this.updateFetchPropsData();
+			}
+
+			updateFetchPropsData( fetchUpdates = false ) {
+				for ( let name in this.fetchProps ) {
 					const fetch = this.fetchProps[ name ];
-					const data = this.getFetchData( fetch );
+					const data = this.fetchPropsData[ name ];
+					const storeData = this.getStoreData( fetch );
 
-					if ( fetch.shouldUpdate( fetch, data ) ) {
+					if ( data !== storeData ) {
+						this.fetchPropsData[ name ] = storeData;
+						this.haveFetchPropsChanged = true;
+					}
+
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, storeData ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
 			}
 
-			getFetchData( fetch ) {
+			getStoreData( fetch ) {
 				const { fetchData } = this.store.getState();
 				const serviceData = fetchData[ fetch.service ];
 				const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
@@ -54,14 +92,10 @@ export function fetchConnect( mapFetchProps ) {
 			}
 
 			render() {
-				let combinedProps = { ...this.props };
+				let combinedProps = { ...this.props, ...this.fetchPropsData };
 
-				// Overwrite anything in the existing props with what we have here.
-				for ( name in this.fetchProps ) {
-					const fetch = this.fetchProps[ name ];
-
-					combinedProps[ name ] = this.getFetchData( fetch );
-				}
+				this.haveOwnPropsChanged = false;
+				this.haveFetchPropsChanged = false;
 
 				return createElement( WrappedComponent, combinedProps );
 			}
