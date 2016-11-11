@@ -35,7 +35,7 @@ describe( 'app-config', () => {
 		it ( 'should get config value', () => {
 			const testObject = { stringValue: 'objectString', number1: 1, number2: 2.2, number3: -3.3 };
 
-			const state = { [ 'app-config' ]: { testValue: testObject } };
+			const state = { [ 'appConfig' ]: { testValue: testObject } };
 			const value = getConfig( state )( 'testValue' );
 
 			expect( value ).to.equal( testObject );
