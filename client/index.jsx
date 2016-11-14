@@ -25,6 +25,7 @@ const store          = configureStore();
 const history        = syncHistoryWithStore( browserHistory, store );
 
 // Initialize the WooCommerce Redux Middleware
+// TODO: Remove this after fetch-data is fully implemented.
 store.dispatch( initializeApi( data.api_root, data.nonce ) );
 
 // Configure the WooCommerce API

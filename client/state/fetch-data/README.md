@@ -81,7 +81,7 @@ function mapFetchProps( props ) {
   };
 }
 
-export default fetchConnect( myReactComponent );
+export default fetchConnect( mapFetchProps )( myReactComponent );
 ```
 
 By doing this, the react component will gain a property called `myApiData` that

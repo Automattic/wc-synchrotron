@@ -127,8 +127,6 @@ describe( 'fetch-data', () => {
 
 			// Regenerate the store with a real reduced state for testing the resulting fetchResult property.
 			initialState.fetchData = reducer( initialState.fetchData, store.getActions()[0] );
-			console.log( 'new state' );
-			console.log( JSON.stringify( store.getState() ) );
 
 			// fetchConnect subscribes to the store's updates, but the mock doesn't do that.
 			// so we have to update manually here.
