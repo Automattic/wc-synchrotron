@@ -6,19 +6,11 @@ import TitleBar from '../../components/title-bar';
 import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
+import * as wcApi from '../../data/wc-api';
+import { fetchConnect } from '../../state/fetch-data';
 
 // TODO: Combine product-specific code from index and body into one file.
 // TODO: Make the entire list-table component general and move it to client/components
-
-import {
-	SERVICE,
-	fetchProductCategories,
-	fetchTaxClasses,
-} from '../../wc-api-redux';
-
-import {
-	getData,
-} from '../../state/fetch-data/actions';
 
 import {
 	fetchProducts,
@@ -36,8 +28,6 @@ const data = screenData( 'wc_synchrotron_data' );
 class ProductList extends React.Component {
 	propTypes: {
 		products: PropTypes.object.isRequired,
-		fetchProductCategories: PropTypes.func.isRequired,
-		fetchTaxClasses: PropTypes.func.isRequired,
 		fetchProducts: PropTypes.func.isRequired,
 		setDisplayOption: PropTypes.func.isRequired,
 		initEdits: PropTypes.func.isRequired,
@@ -58,9 +48,6 @@ class ProductList extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchProductCategories();
-		this.props.fetchTaxClasses();
-
 		// TODO: Fetch this through wc-api-redux
 		this.props.fetchProducts( data.endpoints.products, data.nonce );
 	}
@@ -126,26 +113,24 @@ class ProductList extends React.Component {
 	}
 }
 
+function mapFetchProps( props ) {
+	return {
+		categories: wcApi.fetchCategories(),
+		taxClasses: wcApi.fetchTaxClasses(),
+	};
+}
+
 function mapStateToProps( state ) {
-	const { products, fetchData } = state;
-	// TODO: Reference this in a more general way without having to type the query here.
-	const service = fetchData[ SERVICE ];
-	const categories = service ? service[ '/products/categories' ] : [];
-	const taxClasses = service ? service[ '/taxes/classes' ] : [];
+	const { products } = state;
 
 	return {
 		products,
-		categories,
-		taxClasses,
 	};
 }
 
 function mapDispatchToProps( dispatch ) {
 	return bindActionCreators(
 		{
-			fetchApiData: ( query ) => getData( SERVICE, query, dispatch.getState()[ 'fetch-data' ] ),
-			fetchProductCategories,
-			fetchTaxClasses,
 			fetchProducts,
 			setDisplayOption,
 			initEdits,
@@ -158,4 +143,7 @@ function mapDispatchToProps( dispatch ) {
 	);
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( localize( ProductList ) );
+const localizedComponent = localize( ProductList );
+const fetchComponent = fetchConnect( mapFetchProps )( localizedComponent );
+export default connect( mapStateToProps, mapDispatchToProps )( fetchComponent );
+

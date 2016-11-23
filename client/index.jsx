@@ -12,6 +12,7 @@ import { routes } from './routes';
 import AdminNotices from './admin-notices';
 import screenData from './utils/screen-data';
 import { initialize as initializeApi } from './wc-api-redux';
+import { configureApi } from './data/wc-api';
 
 const data = screenData( 'wc_synchrotron_data' );
 
@@ -24,7 +25,11 @@ const store          = configureStore();
 const history        = syncHistoryWithStore( browserHistory, store );
 
 // Initialize the WooCommerce Redux Middleware
+// TODO: Remove this after fetch-data is fully implemented.
 store.dispatch( initializeApi( data.api_root, data.nonce ) );
+
+// Configure the WooCommerce API
+store.dispatch( configureApi( data.api_root, data.nonce ) );
 
 const rootComponent  =
 	<Provider store={ store }>

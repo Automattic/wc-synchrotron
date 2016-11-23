@@ -9,10 +9,10 @@ export default handleActions( {
 }, initialState );
 
 function dataFetched( state, action ) {
-	const { service, query, data } = action.payload;
+	const { service, key, data } = action.payload;
 
 	const serviceNode = Object.assign( {}, state[ service ], {
-		[ query ]: data
+		[ key ]: data
 	} );
 
 	return Object.assign( {}, state, {
