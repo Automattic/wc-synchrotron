@@ -14,6 +14,25 @@ export const updateWhen = {
 }
 
 /**
+ * Gets fetch state from the redux store state.
+ *
+ * @param fetch { Object } Fetch object for which to get the fetch state
+ * @param state { Object } Redux store state
+ * @return { Object } fetch state node, contains { data, error, lastFetched, lastUsed }
+ */
+function getFetchState( fetch, state ) {
+	const { fetchData } = state;
+	const serviceData = fetchData[ fetch.service ] || {};
+	const fetchState = serviceData && serviceData[ fetch.key ] || {};
+
+	if ( fetchState.hasOwnProperty( 'data' ) ) {
+		return fetchState;
+	} else {
+		return { ...fetchState, data: fetch.defaultValue };
+	}
+}
+
+/**
  * Higher Order Component to map `fetch` objects to props.
  *
  * @param mapFetchProps { function( props ) } Returns a mapping object where keys are the prop names, and values are `fetch` objects.
@@ -71,24 +90,17 @@ export function fetchConnect( mapFetchProps ) {
 				for ( let name in this.fetchProps ) {
 					const fetch = this.fetchProps[ name ];
 					const data = this.fetchPropsData[ name ];
-					const storeData = this.getStoreData( fetch );
+					const fetchState = getFetchState( fetch, this.store.getState() );
 
-					if ( data !== storeData ) {
-						this.fetchPropsData[ name ] = storeData;
+					if ( data !== fetchState.data ) {
+						this.fetchPropsData[ name ] = fetchState.data;
 						this.haveFetchPropsChanged = true;
 					}
 
-					if ( fetchUpdates && fetch.shouldUpdate( fetch, storeData ) ) {
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState.data ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
-			}
-
-			getStoreData( fetch ) {
-				const { fetchData } = this.store.getState();
-				const serviceData = fetchData[ fetch.service ];
-				const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
-				return data;
 			}
 
 			render() {
