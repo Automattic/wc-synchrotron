@@ -7,8 +7,8 @@ export { fetchAction } from './actions';
  */
 export const updateWhen = {
 	notPresent: () => {
-		return function fetchDataNotPresent( fetch, data ) {
-			return data === fetch.defaultValue;
+		return function fetchDataNotPresent( fetch, fetchState ) {
+			return fetchState.data === fetch.defaultValue;
 		}
 	}
 }
@@ -47,11 +47,13 @@ export function fetchConnect( mapFetchProps ) {
 				super( props, context );
 				this.store = props.store || context.store;
 				this.clearCache();
+				this.fetchProps = mapFetchProps( props );
+				this.updateFetchPropsData();
 			}
 
 			clearCache() {
 				this.fetchProps = {};
-				this.fetchPropsData = {};
+				this.fetchPropsState = {};
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -89,22 +91,22 @@ export function fetchConnect( mapFetchProps ) {
 			updateFetchPropsData( fetchUpdates = false ) {
 				for ( let name in this.fetchProps ) {
 					const fetch = this.fetchProps[ name ];
-					const data = this.fetchPropsData[ name ];
+					const propState = this.fetchPropsState[ name ];
 					const fetchState = getFetchState( fetch, this.store.getState() );
 
-					if ( data !== fetchState.data ) {
-						this.fetchPropsData[ name ] = fetchState.data;
+					if ( propState !== fetchState ) {
+						this.fetchPropsState[ name ] = fetchState;
 						this.haveFetchPropsChanged = true;
 					}
 
-					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState.data ) ) {
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
 			}
 
 			render() {
-				let combinedProps = { ...this.props, ...this.fetchPropsData };
+				let combinedProps = { ...this.props, ...this.fetchPropsState };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;

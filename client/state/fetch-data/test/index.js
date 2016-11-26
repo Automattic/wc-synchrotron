@@ -51,8 +51,8 @@ describe( 'fetch-data', () => {
 			const fetch = createFetch( query, defaultValue, fetchValue );
 
 			it( 'should check for state data', () => {
-				expect( fetch.shouldUpdate( fetch, defaultValue ) ).to.be.true;
-				expect( fetch.shouldUpdate( fetch, fetchValue ) ).to.be.false;
+				expect( fetch.shouldUpdate( fetch, { data: defaultValue } ) ).to.be.true;
+				expect( fetch.shouldUpdate( fetch, { data: fetchValue } ) ).to.be.false;
 			} );
 		} );
 	} );
@@ -90,7 +90,9 @@ describe( 'fetch-data', () => {
 			const initialState = {
 				fetchData: {
 					[ service ]: {
-						[ endpoint + query1 ]: initialValue,
+						[ endpoint + query1 ]: {
+							data: initialValue,
+						}
 					}
 				}
 			};
@@ -103,14 +105,16 @@ describe( 'fetch-data', () => {
 			tree.reRender( props );
 
 			expect( tree.props.query ).to.equal( query1 );
-			expect( tree.props.fetchResult ).to.equal( initialValue );
+			expect( tree.props.fetchResult.data ).to.equal( initialValue );
 		} );
 
 		it( 'should fetch when the query changes', () => {
 			const initialState = {
 				fetchData: {
 					[ service ]: {
-						[ endpoint + query1 ]: initialValue,
+						[ endpoint + query1 ]: {
+							data: initialValue,
+						}
 					}
 				}
 			};
@@ -133,7 +137,7 @@ describe( 'fetch-data', () => {
 			tree.reRender( { query: query2, store } );
 
 			expect( tree.props.query ).to.equal( query2 );
-			expect( tree.props.fetchResult ).to.equal( fetchValue );
+			expect( tree.props.fetchResult.data ).to.equal( fetchValue );
 		} );
 	} );
 } );
