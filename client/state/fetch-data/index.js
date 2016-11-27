@@ -6,10 +6,24 @@ export { fetchAction } from './actions';
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
 export const updateWhen = {
-	notPresent: () => {
-		return function fetchDataNotPresent( fetch, fetchState ) {
-			return fetchState.data === fetch.defaultValue;
-		}
+	notFetched: updateWhenNotFetched,
+}
+
+/**
+ * Checks if fetch has been successfully fetched yet.
+ *
+ * @param timeout { number } The amount of time between fetch attempts (default 10 seconds)
+ */
+function updateWhenNotFetched( timeout = 10000 ) {
+	return function updateWhenNotFetched_inner( fetch, fetchState ) {
+		const lastFetch = fetchState.lastFetchTime || 0;
+		const lastError = fetchState.lastErrorTime || 0;
+		const fetched = lastFetch > lastError;
+
+		// Make sure to not rapidly ping the server.
+		const timeoutReached = lastFetch + timeout < Date.now();
+
+		return ! fetched && timeoutReached;
 	}
 }
 

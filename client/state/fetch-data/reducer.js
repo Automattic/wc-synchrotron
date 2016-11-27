@@ -5,20 +5,46 @@ const initialState = {
 };
 
 export default handleActions( {
+	[ TYPES.FETCHING ]: dataFetching,
 	[ TYPES.FETCHED ]: dataFetched,
 	[ TYPES.ERROR ]: dataFetchError,
 }, initialState );
 
+function dataFetching( state, action ) {
+	const { service, key } = action.payload;
+	const lastFetchTime = Date.now();
+
+	const serviceNode = state[ service ] || {};
+	const dataNode = serviceNode[ key ] || {};
+
+	const newDataNode = Object.assign( {}, dataNode, {
+		lastFetchTime,
+	} );
+
+	const newServiceNode = Object.assign( {}, serviceNode, {
+		[ key ]: newDataNode,
+	} );
+
+	return Object.assign( {}, state, {
+		[ service ]: newServiceNode,
+	} );
+}
+
 function dataFetched( state, action ) {
 	const { service, key, data } = action.payload;
+	const lastSuccessTime = Date.now();
 
 	const serviceNode = state[ service ] || {};
 	const dataNode = serviceNode[ key ] || {};
 
 	const newDataNode = Object.assign( {}, dataNode, {
 		data,
+		lastSuccessTime,
 	} );
-	delete newDataNode.error; // Successful fetch, remove any previous error.
+
+	// Successful fetch, clear error.
+	delete newDataNode.error;
+	delete newDataNode.lastErrorTime;
 
 	const newServiceNode = Object.assign( {}, serviceNode, {
 		[ key ]: newDataNode,
@@ -31,14 +57,15 @@ function dataFetched( state, action ) {
 
 function dataFetchError( state, action ) {
 	const { service, key, error } = action.payload;
+	const lastErrorTime = Data.now();
 
 	const serviceNode = state[ service ] || {};
 	const dataNode = serviceNode[ key ] || {};
 
 	const newDataNode = Object.assign( {}, dataNode, {
 		error,
+		lastErrorTime,
 	} );
-	delete newDataNode.data; // Fetch failed, delete old data.
 
 	const newServiceNode = Object.assign( {}, serviceNode, {
 		[ key ]: newDataNode,

@@ -62,7 +62,7 @@ function fetchApiData( queryString ) {
     service,
     key,
     defaultValue: [],
-    shouldUpdate: updateWhen.notPresent(),
+    shouldUpdate: updateWhen.notFetched( 20000 ),
     action: ( state ) => fetchAction( service, key, fullUrl, params );
   };
 }
@@ -72,6 +72,14 @@ function fetchApiData( queryString ) {
 
 ```js
 import { fetchConnect } from 'fetch-data';
+
+function myReactComponent( props ) {
+  return (
+    <div>
+      { myApiData.data }
+    </div>
+  );
+}
 
 function mapFetchProps( props ) {
   const { apiQuery } = props;
