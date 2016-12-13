@@ -3,7 +3,6 @@ import { fetch } from 'redux-effects-fetch';
 import { registerActionTypes } from '../actions-registry';
 
 const registered = registerActionTypes( 'WC_FETCH_DATA', [
-	'FETCH',
 	'FETCHING',
 	'FETCHED',
 	'ERROR',

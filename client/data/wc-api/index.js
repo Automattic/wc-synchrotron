@@ -35,7 +35,7 @@ export function fetchCategories() {
 		service: SERVICE,
 		key: url,
 		defaultValue: [],
-		shouldUpdate: updateWhen.notPresent(),
+		shouldUpdate: updateWhen.notFetched( 10000 ), // Timeout of 10 seconds to keep it from pinging too rapidly.
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }
@@ -56,7 +56,7 @@ export function fetchTaxClasses() {
 		service: SERVICE,
 		key: url,
 		defaultValue: [],
-		shouldUpdate: updateWhen.notPresent(),
+		shouldUpdate: updateWhen.notFetched( 10000 ), // Timeout of 10 seconds to keep it from pinging too rapidly.
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }

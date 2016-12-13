@@ -33,7 +33,7 @@ function createFetch( query, defaultValue, fetchValue ) {
 		service,
 		key,
 		defaultValue,
-		shouldUpdate: updateWhen.notPresent(),
+		shouldUpdate: updateWhen.notFetched(),
 		action: ( state ) => {
 			return fetchActionSuccess( service, key, fetchValue );
 		}
@@ -43,7 +43,7 @@ function createFetch( query, defaultValue, fetchValue ) {
 describe( 'fetch-data', () => {
 	describe( '#updateWhen', () => {
 
-		describe( '#notPresent()', () => {
+		describe( '#notFetched()', () => {
 			const query = '?q=x';
 			const defaultValue = [];
 			const fetchValue = [ 1, 2, 3 ];
@@ -51,8 +51,8 @@ describe( 'fetch-data', () => {
 			const fetch = createFetch( query, defaultValue, fetchValue );
 
 			it( 'should check for state data', () => {
-				expect( fetch.shouldUpdate( fetch, defaultValue ) ).to.be.true;
-				expect( fetch.shouldUpdate( fetch, fetchValue ) ).to.be.false;
+				expect( fetch.shouldUpdate( fetch, { data: defaultValue } ) ).to.be.true;
+				expect( fetch.shouldUpdate( fetch, { data: fetchValue, lastFetchTime: Date.now() } ) ).to.be.false;
 			} );
 		} );
 	} );
@@ -90,7 +90,9 @@ describe( 'fetch-data', () => {
 			const initialState = {
 				fetchData: {
 					[ service ]: {
-						[ endpoint + query1 ]: initialValue,
+						[ endpoint + query1 ]: {
+							data: initialValue,
+						}
 					}
 				}
 			};
@@ -103,14 +105,16 @@ describe( 'fetch-data', () => {
 			tree.reRender( props );
 
 			expect( tree.props.query ).to.equal( query1 );
-			expect( tree.props.fetchResult ).to.equal( initialValue );
+			expect( tree.props.fetchResult.data ).to.equal( initialValue );
 		} );
 
 		it( 'should fetch when the query changes', () => {
 			const initialState = {
 				fetchData: {
 					[ service ]: {
-						[ endpoint + query1 ]: initialValue,
+						[ endpoint + query1 ]: {
+							data: initialValue,
+						}
 					}
 				}
 			};
@@ -123,17 +127,20 @@ describe( 'fetch-data', () => {
 			tree.reRender( props );
 			tree.reRender( { query: query2, store } );
 
-			expect( store.getActions() ).to.eql( [ testFetch( query2 ).action( store.getState() ) ] );
+			expect( store.getActions() ).to.eql( [
+				testFetch( query1 ).action( store.getState() ),
+				testFetch( query2 ).action( store.getState() ),
+			] );
 
 			// Regenerate the store with a real reduced state for testing the resulting fetchResult property.
-			initialState.fetchData = reducer( initialState.fetchData, store.getActions()[0] );
+			initialState.fetchData = reducer( initialState.fetchData, store.getActions()[1] );
 
 			// fetchConnect subscribes to the store's updates, but the mock doesn't do that.
 			// so we have to update manually here.
 			tree.reRender( { query: query2, store } );
 
 			expect( tree.props.query ).to.equal( query2 );
-			expect( tree.props.fetchResult ).to.equal( fetchValue );
+			expect( tree.props.fetchResult.data ).to.equal( fetchValue );
 		} );
 	} );
 } );

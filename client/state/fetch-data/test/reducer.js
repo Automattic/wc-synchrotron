@@ -16,7 +16,7 @@ describe( 'fetch-data/reducer', () => {
 			const stateOut = reducer( stateIn, action );
 
 			expect( stateOut.myService ).to.exist;
-			expect( stateOut.myService.myQuery ).to.equal( 'myString' );
+			expect( stateOut.myService.myQuery.data ).to.equal( 'myString' );
 		} );
 
 		it( 'should store new object', () => {
@@ -27,7 +27,7 @@ describe( 'fetch-data/reducer', () => {
 			const stateOut = reducer( stateIn, action );
 
 			expect( stateOut.myService ).to.exist;
-			expect( stateOut.myService.myQuery ).to.equal( myObject );
+			expect( stateOut.myService.myQuery.data ).to.equal( myObject );
 		} );
 
 		it( 'should store updated object', () => {
@@ -41,10 +41,10 @@ describe( 'fetch-data/reducer', () => {
 			const state2 = reducer( state1, action2 );
 
 			expect( state1.myService ).to.exist;
-			expect( state1.myService.myQuery ).to.equal( myObject1 );
+			expect( state1.myService.myQuery.data ).to.equal( myObject1 );
 
 			expect( state2.myService ).to.exist;
-			expect( state2.myService.myQuery ).to.equal( myObject2 );
+			expect( state2.myService.myQuery.data ).to.equal( myObject2 );
 		} );
 	} );
 } );

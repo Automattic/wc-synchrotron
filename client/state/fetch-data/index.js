@@ -6,10 +6,43 @@ export { fetchAction } from './actions';
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
 export const updateWhen = {
-	notPresent: () => {
-		return function fetchDataNotPresent( fetch, data ) {
-			return data === fetch.defaultValue;
-		}
+	notFetched: updateWhenNotFetched,
+}
+
+/**
+ * Checks if fetch has been successfully fetched yet.
+ *
+ * @param timeout { number } The amount of time between fetch attempts (default 10 seconds)
+ */
+function updateWhenNotFetched( timeout = 10000 ) {
+	return function updateWhenNotFetched_inner( fetch, fetchState ) {
+		const lastFetch = fetchState.lastFetchTime || 0;
+		const lastError = fetchState.lastErrorTime || 0;
+		const fetched = lastFetch > lastError;
+
+		// Make sure to not rapidly ping the server.
+		const timeoutReached = lastFetch + timeout < Date.now();
+
+		return ! fetched && timeoutReached;
+	}
+}
+
+/**
+ * Gets fetch state from the redux store state.
+ *
+ * @param fetch { Object } Fetch object for which to get the fetch state
+ * @param state { Object } Redux store state
+ * @return { Object } fetch state node, contains { data, error, lastFetched, lastUsed }
+ */
+function getFetchState( fetch, state ) {
+	const { fetchData } = state;
+	const serviceData = fetchData[ fetch.service ] || {};
+	const fetchState = serviceData && serviceData[ fetch.key ] || {};
+
+	if ( fetchState.hasOwnProperty( 'data' ) ) {
+		return fetchState;
+	} else {
+		return { ...fetchState, data: fetch.defaultValue };
 	}
 }
 
@@ -28,11 +61,13 @@ export function fetchConnect( mapFetchProps ) {
 				super( props, context );
 				this.store = props.store || context.store;
 				this.clearCache();
+				this.fetchProps = mapFetchProps( props );
+				this.updateFetchPropsData();
 			}
 
 			clearCache() {
 				this.fetchProps = {};
-				this.fetchPropsData = {};
+				this.fetchPropsState = {};
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -70,29 +105,22 @@ export function fetchConnect( mapFetchProps ) {
 			updateFetchPropsData( fetchUpdates = false ) {
 				for ( let name in this.fetchProps ) {
 					const fetch = this.fetchProps[ name ];
-					const data = this.fetchPropsData[ name ];
-					const storeData = this.getStoreData( fetch );
+					const propState = this.fetchPropsState[ name ];
+					const fetchState = getFetchState( fetch, this.store.getState() );
 
-					if ( data !== storeData ) {
-						this.fetchPropsData[ name ] = storeData;
+					if ( propState !== fetchState ) {
+						this.fetchPropsState[ name ] = fetchState;
 						this.haveFetchPropsChanged = true;
 					}
 
-					if ( fetchUpdates && fetch.shouldUpdate( fetch, storeData ) ) {
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
 			}
 
-			getStoreData( fetch ) {
-				const { fetchData } = this.store.getState();
-				const serviceData = fetchData[ fetch.service ];
-				const data = serviceData && serviceData[ fetch.key ] || fetch.defaultValue;
-				return data;
-			}
-
 			render() {
-				let combinedProps = { ...this.props, ...this.fetchPropsData };
+				let combinedProps = { ...this.props, ...this.fetchPropsState };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;

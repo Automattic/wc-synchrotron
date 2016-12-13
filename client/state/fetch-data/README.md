@@ -62,7 +62,7 @@ function fetchApiData( queryString ) {
     service,
     key,
     defaultValue: [],
-    shouldUpdate: updateWhen.notPresent(),
+    shouldUpdate: updateWhen.notFetched( 20000 ),
     action: ( state ) => fetchAction( service, key, fullUrl, params );
   };
 }
@@ -72,6 +72,14 @@ function fetchApiData( queryString ) {
 
 ```js
 import { fetchConnect } from 'fetch-data';
+
+function myReactComponent( props ) {
+  return (
+    <div>
+      { myApiData.data }
+    </div>
+  );
+}
 
 function mapFetchProps( props ) {
   const { apiQuery } = props;
@@ -88,4 +96,19 @@ By doing this, the react component will gain a property called `myApiData` that
 will be set to the current cached state of the fetched data, or to `defaultValue`
 if the fetched data is not available. When the data becomes fetched, this component
 will update with the new value in its props.
+
+The resulting "fetch-state" object that `fetchConnect` provides to your component is in the following format:
+
+```js
+{
+  data: < Last data fetched, or defaultValue >
+  error: < Last error, if exists >
+  lastFetchTime: < Date.now() timestamp of last fetch request >
+  lastSuccessTime: < Date.now() timestamp of last successful response >
+  lastErrorTime: < Date.now() timestamp of last error response >
+}
+```
+
+Note that `data` is the only property that is guaranteed to exist.
+All other fields will not exist unless they hold valid data.
 
