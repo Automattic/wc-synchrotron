@@ -19,7 +19,7 @@ function dataFetching( state, action ) {
 function dataFetched( state, action ) {
 	const { service, key, data } = action.payload;
 
-	let newState = updateData( state, service, key, data );
+	let newState = updateValue( state, service, key, data );
 	newState = clearErrors( newState, service, key );
 	newState = updateLastSuccessTime( newState, service, key, Date.now() );
 
@@ -35,59 +35,63 @@ function dataFetchError( state, action ) {
 
 // Internal utility functions.
 
-function updateData( state, service, key, data ) {
-	const prevService = state[ service ] || {};
-	const prevKey = prevService[ key ] || {};
+function updateValue( state, service, key, value ) {
+	const serviceNode = state[ service ] || {};
+	const keyNode = serviceNode[ key ] || {};
 
 	return { ...state,
-		[ service ]: { ...prevService,
-			[ key ]: data,
+		[ service ]: { ...serviceNode,
+			[ key ]: { ...keyNode,
+				value,
+			},
 		},
 	};
 }
 
 function updateLastFetchTime( state, service, key, time ) {
-	return setStatus( state, service, key, ( prevStatus ) => {
+	return setStatus( state, service, key, ( status ) => {
 		return {
-			...prevStatus,
+			...status,
 			lastFetchTime: time,
 		};
 	} );
 }
 
 function updateLastSuccessTime( state, service, key, time ) {
-	return setStatus( state, service, key, ( prevStatus ) => {
+	return setStatus( state, service, key, ( status ) => {
 		return {
-			...prevStatus,
+			...status,
 			lastSuccessTime: time,
 		};
 	} );
 }
 
 function appendError( state, service, key, error ) {
-	return setStatus( state, service, key, ( prevStatus ) => {
+	return setStatus( state, service, key, ( status ) => {
 		return {
-			...prevStatus,
-			errors: [ ...prevStatus.errors, error ],
+			...status,
+			errors: [ ...status.errors, error ],
 		};
 	} );
 }
 
 function clearErrors( state, service, key ) {
-	return setStatus( state, service, key, ( prevStatus ) => {
-		const { errors, ...noErrorsStatus } = prevStatus;
+	return setStatus( state, service, key, ( status ) => {
+		const { errors, ...noErrorsStatus } = status;
 		return noErrorsStatus;
 	} );
 }
 
 function setStatus( state, service, key, updater ) {
-	const serviceStatus = service + '_status';
-	const prevStatus = state[ serviceStatus ] || {};
-	const prevKeyStatus = prevStatus[ key ] || {};
+	const serviceNode = state[ service ] || {};
+	const keyNode = serviceNode[ key ] || {};
+	const status = keyNode.status || {};
 
 	return { ...state,
-		[ serviceStatus ]: { ...prevStatus,
-			[ key ]: updater( prevKeyStatus ),
+		[ service ]: { ...serviceNode,
+			[ key ]: { ...keyNode,
+				status: updater( status ),
+			},
 		},
 	};
 }

@@ -91,7 +91,7 @@ describe( 'fetch-data', () => {
 				fetchData: {
 					[ service ]: {
 						[ endpoint + query1 ]: {
-							data: initialValue,
+							value: initialValue,
 						}
 					}
 				}
@@ -105,7 +105,7 @@ describe( 'fetch-data', () => {
 			tree.reRender( props );
 
 			expect( tree.props.query ).to.equal( query1 );
-			expect( tree.props.fetchResult.data ).to.equal( initialValue );
+			expect( tree.props.fetchResult ).to.equal( initialValue );
 		} );
 
 		it( 'should fetch when the query changes', () => {
@@ -113,7 +113,7 @@ describe( 'fetch-data', () => {
 				fetchData: {
 					[ service ]: {
 						[ endpoint + query1 ]: {
-							initialValue,
+							value: initialValue,
 						}
 					}
 				}

@@ -38,15 +38,13 @@ function updateWhenNotFetched( timeout = 10000 ) {
  * @param state { Object } Redux store state
  * @return { Object } fetched data, or fetch.defaultValue if not available.
  */
-function getFetchData( fetch, state ) {
+export function getFetchData( fetch, state ) {
 	const { fetchData } = state;
-	const serviceData = fetchData[ fetch.service ] || {};
+	const serviceNode = fetchData[ fetch.service ] || {};
+	const keyNode = serviceNode[ fetch.key ] || {};
+	const value = keyNode.value || fetch.defaultValue;
 
-	if ( serviceData.hasOwnProperty( fetch.key ) ) {
-		return serviceData[ fetch.key ];
-	} else {
-		return fetch.defaultValue;
-	}
+	return value;
 }
 
 /**
@@ -56,11 +54,13 @@ function getFetchData( fetch, state ) {
  * @param state { Object } Redux store state
  * @return { Object } fetch status object `{ lastFetchTime, lastSuccessTime, errors }`
  */
-function getFetchStatus( fetch, state ) {
+export function getFetchStatus( fetch, state ) {
 	const { fetchData } = state;
-	const serviceStatus = fetchData[ fetch.service + '_status' ] || {};
+	const serviceNode = fetchData[ fetch.service ] || {};
+	const keyNode = serviceNode[ fetch.key ] || {};
+	const status = keyNode.status || {};
 
-	return serviceStatus[ fetch.key ] || {};
+	return status;
 }
 
 /**
