@@ -12,69 +12,83 @@ export default handleActions( {
 
 function dataFetching( state, action ) {
 	const { service, key } = action.payload;
-	const lastFetchTime = Date.now();
 
-	const serviceNode = state[ service ] || {};
-	const dataNode = serviceNode[ key ] || {};
-
-	const newDataNode = Object.assign( {}, dataNode, {
-		lastFetchTime,
-	} );
-
-	const newServiceNode = Object.assign( {}, serviceNode, {
-		[ key ]: newDataNode,
-	} );
-
-	return Object.assign( {}, state, {
-		[ service ]: newServiceNode,
-	} );
+	return updateLastFetchTime( state, service, key, Date.now() );
 }
 
 function dataFetched( state, action ) {
 	const { service, key, data } = action.payload;
-	const lastSuccessTime = Date.now();
 
-	const serviceNode = state[ service ] || {};
-	const dataNode = serviceNode[ key ] || {};
+	let newState = updateData( state, service, key, data );
+	newState = clearErrors( newState, service, key );
+	newState = updateLastSuccessTime( newState, service, key, Date.now() );
 
-	const newDataNode = Object.assign( {}, dataNode, {
-		data,
-		lastSuccessTime,
-	} );
-
-	// Successful fetch, clear error.
-	delete newDataNode.error;
-	delete newDataNode.lastErrorTime;
-
-	const newServiceNode = Object.assign( {}, serviceNode, {
-		[ key ]: newDataNode,
-	} );
-
-	return Object.assign( {}, state, {
-		[ service ]: newServiceNode,
-	} );
+	return newState;
 }
 
 function dataFetchError( state, action ) {
 	const { service, key, error } = action.payload;
-	const lastErrorTime = Data.now();
 
-	const serviceNode = state[ service ] || {};
-	const dataNode = serviceNode[ key ] || {};
+	// Stamp the error with the time it was received.
+	return appendError( state, service, key, { ...error, time: Date.now() } );
+}
 
-	const newDataNode = Object.assign( {}, dataNode, {
-		error,
-		lastErrorTime,
+// Internal utility functions.
+
+function updateData( state, service, key, data ) {
+	const prevService = state[ service ] || {};
+	const prevKey = prevService[ key ] || {};
+
+	return { ...state,
+		[ service ]: { ...prevService,
+			[ key ]: data,
+		},
+	};
+}
+
+function updateLastFetchTime( state, service, key, time ) {
+	return setStatus( state, service, key, ( prevStatus ) => {
+		return {
+			...prevStatus,
+			lastFetchTime: time,
+		};
 	} );
+}
 
-	const newServiceNode = Object.assign( {}, serviceNode, {
-		[ key ]: newDataNode,
+function updateLastSuccessTime( state, service, key, time ) {
+	return setStatus( state, service, key, ( prevStatus ) => {
+		return {
+			...prevStatus,
+			lastSuccessTime: time,
+		};
 	} );
+}
 
-	return Object.assign( {}, state, {
-		[ service ]: newServiceNode,
+function appendError( state, service, key, error ) {
+	return setStatus( state, service, key, ( prevStatus ) => {
+		return {
+			...prevStatus,
+			errors: [ ...prevStatus.errors, error ],
+		};
 	} );
+}
 
-	return state;
+function clearErrors( state, service, key ) {
+	return setStatus( state, service, key, ( prevStatus ) => {
+		const { errors, ...noErrorsStatus } = prevStatus;
+		return noErrorsStatus;
+	} );
+}
+
+function setStatus( state, service, key, updater ) {
+	const serviceStatus = service + '_status';
+	const prevStatus = state[ serviceStatus ] || {};
+	const prevKeyStatus = prevStatus[ key ] || {};
+
+	return { ...state,
+		[ serviceStatus ]: { ...prevStatus,
+			[ key ]: updater( prevKeyStatus ),
+		},
+	};
 }
 

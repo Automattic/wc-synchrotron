@@ -65,8 +65,8 @@ class ProductList extends React.Component {
 				</div>
 				<ProductsBody
 					products={ products.products }
-					categories={ categories.data }
-					taxClasses={ taxClasses.data }
+					categories={ categories }
+					taxClasses={ taxClasses }
 					edits={ edits }
 					editable={ edits }
 					disabled={ Boolean( saving ) }

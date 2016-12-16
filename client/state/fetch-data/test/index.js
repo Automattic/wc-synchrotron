@@ -113,7 +113,7 @@ describe( 'fetch-data', () => {
 				fetchData: {
 					[ service ]: {
 						[ endpoint + query1 ]: {
-							data: initialValue,
+							initialValue,
 						}
 					}
 				}
@@ -140,7 +140,7 @@ describe( 'fetch-data', () => {
 			tree.reRender( { query: query2, store } );
 
 			expect( tree.props.query ).to.equal( query2 );
-			expect( tree.props.fetchResult.data ).to.equal( fetchValue );
+			expect( tree.props.fetchResult ).to.equal( fetchValue );
 		} );
 	} );
 } );

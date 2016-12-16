@@ -15,15 +15,19 @@ export const updateWhen = {
  * @param timeout { number } The amount of time between fetch attempts (default 10 seconds)
  */
 function updateWhenNotFetched( timeout = 10000 ) {
-	return function updateWhenNotFetched_inner( fetch, fetchState ) {
-		const lastFetch = fetchState.lastFetchTime || 0;
-		const lastError = fetchState.lastErrorTime || 0;
-		const fetched = lastFetch > lastError;
+	return function updateWhenNotFetched_inner( fetch, fetchStatus ) {
+		const fetched = fetchStatus.lastFetchTime && ! fetchStatus.errors;
 
-		// Make sure to not rapidly ping the server.
-		const timeoutReached = lastFetch + timeout < Date.now();
+		if ( fetched ) {
+			return false;
+		} else {
+			const lastFetch = fetchStatus.lastFetchTime || 0;
 
-		return ! fetched && timeoutReached;
+			// Make sure to not rapidly ping the server.
+			const timeoutReached = lastFetch + timeout < Date.now();
+
+			return timeoutReached;
+		}
 	}
 }
 
@@ -32,18 +36,31 @@ function updateWhenNotFetched( timeout = 10000 ) {
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
  * @param state { Object } Redux store state
- * @return { Object } fetch state node, contains { data, error, lastFetched, lastUsed }
+ * @return { Object } fetched data, or fetch.defaultValue if not available.
  */
-function getFetchState( fetch, state ) {
+function getFetchData( fetch, state ) {
 	const { fetchData } = state;
 	const serviceData = fetchData[ fetch.service ] || {};
-	const fetchState = serviceData && serviceData[ fetch.key ] || {};
 
-	if ( fetchState.hasOwnProperty( 'data' ) ) {
-		return fetchState;
+	if ( serviceData.hasOwnProperty( fetch.key ) ) {
+		return serviceData[ fetch.key ];
 	} else {
-		return { ...fetchState, data: fetch.defaultValue };
+		return fetch.defaultValue;
 	}
+}
+
+/**
+ * Gets status metadata for given fetch, from the redux store.
+ *
+ * @param fetch { Object } Fetch object for which to get the status
+ * @param state { Object } Redux store state
+ * @return { Object } fetch status object `{ lastFetchTime, lastSuccessTime, errors }`
+ */
+function getFetchStatus( fetch, state ) {
+	const { fetchData } = state;
+	const serviceStatus = fetchData[ fetch.service + '_status' ] || {};
+
+	return serviceStatus[ fetch.key ] || {};
 }
 
 /**
@@ -67,7 +84,7 @@ export function fetchConnect( mapFetchProps ) {
 
 			clearCache() {
 				this.fetchProps = {};
-				this.fetchPropsState = {};
+				this.fetchPropsData = {};
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -104,23 +121,25 @@ export function fetchConnect( mapFetchProps ) {
 
 			updateFetchPropsData( fetchUpdates = false ) {
 				for ( let name in this.fetchProps ) {
+					const reduxState = this.store.getState();
 					const fetch = this.fetchProps[ name ];
-					const propState = this.fetchPropsState[ name ];
-					const fetchState = getFetchState( fetch, this.store.getState() );
+					const propData = this.fetchPropsData[ name ];
+					const fetchData = getFetchData( fetch, reduxState );
+					const fetchStatus = getFetchStatus( fetch, reduxState );
 
-					if ( propState !== fetchState ) {
-						this.fetchPropsState[ name ] = fetchState;
+					if ( propData !== fetchData ) {
+						this.fetchPropsData[ name ] = fetchData;
 						this.haveFetchPropsChanged = true;
 					}
 
-					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState ) ) {
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchStatus ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
 			}
 
 			render() {
-				let combinedProps = { ...this.props, ...this.fetchPropsState };
+				let combinedProps = { ...this.props, ...this.fetchPropsData };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;

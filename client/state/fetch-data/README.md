@@ -20,7 +20,7 @@ A `fetch` object is defined as such:
   service: 'my-api',
   key: '/my/api/endpoint?query=abc',
   defaultValue: [],
-  shouldUpdate: ( fetch, data ) => {  },
+  shouldUpdate: ( fetch, fetchStatus ) => {  },
   action: ( state ) => fetchAction( service, key, url, params ),
 }
 ```
@@ -33,7 +33,7 @@ A `fetch` object is defined as such:
 This will handle both successful and error results from the fetch, and update the `fetch-data` cache state in redux accordingly.
 
 The following `updateWhen` helper functions are available for `shouldUpdate`. See below for an example.
-* `notPresent()` - Simply checks if the fetch data is available yet or not.
+* `notFetched( timeout )` - Simply checks if the fetch data is available or not, and accepts a timeout to preventing rapid fire requests.
 
 #### How to use:
 
@@ -76,7 +76,7 @@ import { fetchConnect } from 'fetch-data';
 function myReactComponent( props ) {
   return (
     <div>
-      { myApiData.data }
+      { myApiData }
     </div>
   );
 }
@@ -96,19 +96,4 @@ By doing this, the react component will gain a property called `myApiData` that
 will be set to the current cached state of the fetched data, or to `defaultValue`
 if the fetched data is not available. When the data becomes fetched, this component
 will update with the new value in its props.
-
-The resulting "fetch-state" object that `fetchConnect` provides to your component is in the following format:
-
-```js
-{
-  data: < Last data fetched, or defaultValue >
-  error: < Last error, if exists >
-  lastFetchTime: < Date.now() timestamp of last fetch request >
-  lastSuccessTime: < Date.now() timestamp of last successful response >
-  lastErrorTime: < Date.now() timestamp of last error response >
-}
-```
-
-Note that `data` is the only property that is guaranteed to exist.
-All other fields will not exist unless they hold valid data.
 
