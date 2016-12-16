@@ -72,6 +72,7 @@ function fetchApiData( queryString ) {
 
 ```js
 import { fetchConnect } from 'fetch-data';
+import { fetchApiData } from 'fetch-data-enabled-api';
 
 function myReactComponent( props ) {
   return (
@@ -96,4 +97,36 @@ By doing this, the react component will gain a property called `myApiData` that
 will be set to the current cached state of the fetched data, or to `defaultValue`
 if the fetched data is not available. When the data becomes fetched, this component
 will update with the new value in its props.
+
+3. If you want to display or use status information about the fetch,
+the `fetchConnect` component provides `getFetchStatus()` as a convenience function.
+
+Example:
+```js
+render() {
+  const { lastFetchTime, lastSuccessTime } = this.props.getFetchStatus( 'myApiData' );
+  const fetchSeconds = ( lastSuccessTime - lastFetchTime ) / 1000;
+
+  return (
+    <span>Fetch took { fetchSeconds || '?' } seconds.</span>
+  );
+}
+```
+
+4. If you don't want to use the `fetchConnect` higher order component, you can also use
+the selector functions directly:
+
+Example:
+```js
+import { getFetchData, getFetchStatus } from 'fetch-data';
+import { fetchApiData } from 'fetch-data-enabled-api';
+
+const fetch = fetchApiData( 'api_query' );
+const apiData = getFetchData( fetch, reduxState );
+const fetchStatus = getFetchStatus( fetch, reduxState );
+
+```
+
+In this example, the entire redux state is passed in and the selector will
+retrieve the fetch state data from the appropriate part of the redux state tree.
 

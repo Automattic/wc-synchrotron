@@ -80,6 +80,8 @@ export function fetchConnect( mapFetchProps ) {
 				this.clearCache();
 				this.fetchProps = mapFetchProps( props );
 				this.updateFetchPropsData();
+
+				this.getFetchStatus = this.getFetchStatus.bind( this );
 			}
 
 			clearCache() {
@@ -138,8 +140,20 @@ export function fetchConnect( mapFetchProps ) {
 				}
 			}
 
+			/**
+			 * Convenience function that will look up the status for a given fetch.
+			 * @param propName The given property name for a mapped fetch.
+			 * @return The current status of the fetch in the form of `{ lastFetchTime, lastSuccessTime, errors }`
+			 */
+			getFetchStatus( propName ) {
+				const reduxState = this.store.getState() || {};
+
+				const fetch = this.fetchProps[ propName ];
+				return getFetchStatus( fetch, reduxState );
+			}
+
 			render() {
-				let combinedProps = { ...this.props, ...this.fetchPropsData };
+				let combinedProps = { ...this.props, ...this.fetchPropsData, getFetchStatus: this.getFetchStatus };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;
