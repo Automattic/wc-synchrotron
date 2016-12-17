@@ -121,9 +121,14 @@ Example:
 import { getFetchData, getFetchStatus } from 'fetch-data';
 import { fetchApiData } from 'fetch-data-enabled-api';
 
+// Do this when setting up your fetch.
 const fetch = fetchApiData( 'api_query' );
-const apiData = getFetchData( fetch, reduxState );
-const fetchStatus = getFetchStatus( fetch, reduxState );
+const dataSelector = selectFetchData( fetch );
+const statusSelector = selectFetchStatus( fetch );
+
+// Do this for rendering
+const apiData = dataSelector( reduxState );
+const fetchStatus = dataSelector( reduxState );
 
 ```
 
