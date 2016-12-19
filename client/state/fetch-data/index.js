@@ -2,6 +2,25 @@ import { createElement, Component, PropTypes } from 'react';
 
 export { fetchAction } from './actions';
 
+// Global: Last Used Timestamps
+// Format: {
+//   [ 'service' ]: {
+//	   [ 'key' ]: <timestamp>
+//   }
+// }
+const lastUsedTimestamps = {};
+
+function setLastUsedTimestamp( service, key ) {
+	let serviceTimestamps = lastUsedTimestamps[ service ];
+
+	if ( ! serviceTimestamps ) {
+		serviceTimestamps = {};
+		lastUsedTimestamps[ service ] = serviceTimestamps;
+	}
+
+	serviceTimestamps[ key ] = Date.now();
+}
+
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
@@ -40,6 +59,8 @@ function updateWhenNotFetched( timeout = 10000 ) {
  */
 export function selectFetchData( fetch ) {
 	return ( state ) => {
+		setLastUsedTimestamp( fetch.service, fetch.key );
+
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
 		const keyNode = serviceNode[ fetch.key ] || {};
