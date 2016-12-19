@@ -20,7 +20,7 @@ A `fetch` object is defined as such:
   service: 'my-api',
   key: '/my/api/endpoint?query=abc',
   defaultValue: [],
-  shouldUpdate: ( fetch, data ) => {  },
+  shouldUpdate: ( fetch, fetchStatus ) => {  },
   action: ( state ) => fetchAction( service, key, url, params ),
 }
 ```
@@ -33,7 +33,7 @@ A `fetch` object is defined as such:
 This will handle both successful and error results from the fetch, and update the `fetch-data` cache state in redux accordingly.
 
 The following `updateWhen` helper functions are available for `shouldUpdate`. See below for an example.
-* `notPresent()` - Simply checks if the fetch data is available yet or not.
+* `notFetched( timeout )` - Simply checks if the fetch data is available or not, and accepts a timeout to preventing rapid fire requests.
 
 #### How to use:
 
@@ -72,11 +72,12 @@ function fetchApiData( queryString ) {
 
 ```js
 import { fetchConnect } from 'fetch-data';
+import { fetchApiData } from 'fetch-data-enabled-api';
 
 function myReactComponent( props ) {
   return (
     <div>
-      { myApiData.data }
+      { myApiData }
     </div>
   );
 }
@@ -97,18 +98,40 @@ will be set to the current cached state of the fetched data, or to `defaultValue
 if the fetched data is not available. When the data becomes fetched, this component
 will update with the new value in its props.
 
-The resulting "fetch-state" object that `fetchConnect` provides to your component is in the following format:
+3. If you want to display or use status information about the fetch,
+the `fetchConnect` component provides `getFetchStatus()` as a convenience function.
 
+Example:
 ```js
-{
-  data: < Last data fetched, or defaultValue >
-  error: < Last error, if exists >
-  lastFetchTime: < Date.now() timestamp of last fetch request >
-  lastSuccessTime: < Date.now() timestamp of last successful response >
-  lastErrorTime: < Date.now() timestamp of last error response >
+render() {
+  const { lastFetchTime, lastSuccessTime } = this.props.getFetchStatus( 'myApiData' );
+  const fetchSeconds = ( lastSuccessTime - lastFetchTime ) / 1000;
+
+  return (
+    <span>Fetch took { fetchSeconds || '?' } seconds.</span>
+  );
 }
 ```
 
-Note that `data` is the only property that is guaranteed to exist.
-All other fields will not exist unless they hold valid data.
+4. If you don't want to use the `fetchConnect` higher order component, you can also use
+the selector functions directly:
+
+Example:
+```js
+import { getFetchData, getFetchStatus } from 'fetch-data';
+import { fetchApiData } from 'fetch-data-enabled-api';
+
+// Do this when setting up your fetch.
+const fetch = fetchApiData( 'api_query' );
+const dataSelector = selectFetchData( fetch );
+const statusSelector = selectFetchStatus( fetch );
+
+// Do this for rendering
+const apiData = dataSelector( reduxState );
+const fetchStatus = dataSelector( reduxState );
+
+```
+
+In this example, the entire redux state is passed in and the selector will
+retrieve the fetch state data from the appropriate part of the redux state tree.
 

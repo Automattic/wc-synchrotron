@@ -15,34 +15,56 @@ export const updateWhen = {
  * @param timeout { number } The amount of time between fetch attempts (default 10 seconds)
  */
 function updateWhenNotFetched( timeout = 10000 ) {
-	return function updateWhenNotFetched_inner( fetch, fetchState ) {
-		const lastFetch = fetchState.lastFetchTime || 0;
-		const lastError = fetchState.lastErrorTime || 0;
-		const fetched = lastFetch > lastError;
+	return function updateWhenNotFetched_inner( fetch, fetchStatus ) {
+		const fetched = fetchStatus.lastFetchTime && ! fetchStatus.errors;
 
-		// Make sure to not rapidly ping the server.
-		const timeoutReached = lastFetch + timeout < Date.now();
+		if ( fetched ) {
+			return false;
+		} else {
+			const lastFetch = fetchStatus.lastFetchTime || 0;
 
-		return ! fetched && timeoutReached;
+			// Make sure to not rapidly ping the server.
+			const timeoutReached = lastFetch + timeout < Date.now();
+
+			return timeoutReached;
+		}
 	}
 }
 
 /**
- * Gets fetch state from the redux store state.
+ * Creates selector function for fetch data.
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
- * @param state { Object } Redux store state
- * @return { Object } fetch state node, contains { data, error, lastFetched, lastUsed }
+ * @return { function } A fetch selector that takes the current redux state and
+ *                      returns the fetch data, or fetch.defaultValue if not available.
  */
-function getFetchState( fetch, state ) {
-	const { fetchData } = state;
-	const serviceData = fetchData[ fetch.service ] || {};
-	const fetchState = serviceData && serviceData[ fetch.key ] || {};
+export function selectFetchData( fetch ) {
+	return ( state ) => {
+		const { fetchData } = state;
+		const serviceNode = fetchData[ fetch.service ] || {};
+		const keyNode = serviceNode[ fetch.key ] || {};
+		const value = keyNode.value || fetch.defaultValue;
 
-	if ( fetchState.hasOwnProperty( 'data' ) ) {
-		return fetchState;
-	} else {
-		return { ...fetchState, data: fetch.defaultValue };
+		return value;
+	}
+}
+
+/**
+ * Creates selector function for fetch status.
+ *
+ * @param fetch { Object } Fetch object for which to get the status
+ * @return { function } A fetch selector that takes the current redux state and
+ *                      returns the fetch status object:
+ *                      `{ lastFetchTime, lastSuccessTime, errors }`
+ */
+export function selectFetchStatus( fetch ) {
+	return ( state ) => {
+		const { fetchData } = state;
+		const serviceNode = fetchData[ fetch.service ] || {};
+		const keyNode = serviceNode[ fetch.key ] || {};
+		const status = keyNode.status || {};
+
+		return status;
 	}
 }
 
@@ -61,13 +83,17 @@ export function fetchConnect( mapFetchProps ) {
 				super( props, context );
 				this.store = props.store || context.store;
 				this.clearCache();
-				this.fetchProps = mapFetchProps( props );
+				this.updateFetchProps( props );
 				this.updateFetchPropsData();
+
+				this.getFetchStatus = this.getFetchStatus.bind( this );
 			}
 
 			clearCache() {
 				this.fetchProps = {};
-				this.fetchPropsState = {};
+				this.fetchDataSelectors = {};
+				this.fetchStatusSelectors = {};
+				this.fetchPropsData = {};
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -86,7 +112,7 @@ export function fetchConnect( mapFetchProps ) {
 
 				// Every time this component gets new props,
 				// update the fetch props because they can depend on them.
-				this.fetchProps = mapFetchProps( nextProps );
+				this.updateFetchProps( nextProps );
 				this.updateFetchPropsData( true );
 			}
 
@@ -102,25 +128,49 @@ export function fetchConnect( mapFetchProps ) {
 				this.updateFetchPropsData();
 			}
 
-			updateFetchPropsData( fetchUpdates = false ) {
+			updateFetchProps( props ) {
+				this.fetchProps = mapFetchProps( props );
+
 				for ( let name in this.fetchProps ) {
 					const fetch = this.fetchProps[ name ];
-					const propState = this.fetchPropsState[ name ];
-					const fetchState = getFetchState( fetch, this.store.getState() );
 
-					if ( propState !== fetchState ) {
-						this.fetchPropsState[ name ] = fetchState;
+					this.fetchDataSelectors[ name ] = selectFetchData( fetch );
+					this.fetchStatusSelectors[ name ] = selectFetchStatus( fetch );
+				}
+			}
+
+			updateFetchPropsData( fetchUpdates = false ) {
+				for ( let name in this.fetchProps ) {
+					const reduxState = this.store.getState();
+					const fetch = this.fetchProps[ name ];
+					const propData = this.fetchPropsData[ name ];
+					const fetchData = this.fetchDataSelectors[ name ]( reduxState );
+					const fetchStatus = this.fetchStatusSelectors[ name ]( reduxState );
+
+					if ( propData !== fetchData ) {
+						this.fetchPropsData[ name ] = fetchData;
 						this.haveFetchPropsChanged = true;
 					}
 
-					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchState ) ) {
+					if ( fetchUpdates && fetch.shouldUpdate( fetch, fetchStatus ) ) {
 						this.store.dispatch( fetch.action( this.store.getState() ) );
 					}
 				}
 			}
 
+			/**
+			 * Convenience function that will look up the status for a given fetch.
+			 * @param propName The given property name for a mapped fetch.
+			 * @return The current status of the fetch in the form of `{ lastFetchTime, lastSuccessTime, errors }`
+			 */
+			getFetchStatus( propName ) {
+				const reduxState = this.store.getState();
+
+				return this.fetchStatusSelectors[ propName ]( reduxState );
+			}
+
 			render() {
-				let combinedProps = { ...this.props, ...this.fetchPropsState };
+				let combinedProps = { ...this.props, ...this.fetchPropsData, getFetchStatus: this.getFetchStatus };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;
