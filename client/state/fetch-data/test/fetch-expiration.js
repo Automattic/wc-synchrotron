@@ -4,19 +4,69 @@ import { deleteFetch } from '../actions';
 
 describe( 'expiration', () => {
 	describe( '#FetchExpiration()', () => {
-		describe( '#fetchRequested()', () => {
-			const fetchNoExpire = { service: 'myService', key: 'myKey' };
-			const fetchExpire20 = { service: 'myService', key: 'myKey', expirationMinutes: 20 };
-			const fetchExpire10 = { service: 'myService', key: 'myKey', expirationMinutes: 10 };
-			const earlier = new Date( 2016, 12, 20, 17, 2, 35 );
-			const now = new Date( 2016, 12, 20, 17, 13, 20 );
+		const fetchNoExpire = { service: 'myService', key: 'myKey' };
+		const fetchExpire20 = { service: 'myService', key: 'myKey', expirationMinutes: 20 };
+		const fetchExpire10 = { service: 'myService', key: 'myKey', expirationMinutes: 10 };
 
+		const fetch2NoExpire = { service: 'myService', key: 'myKey2' };
+		const fetch2Expire15 = { service: 'myService', key: 'myKey2', expirationMinutes: 15 };
+
+		const earlier = new Date( 2016, 12, 20, 17, 2, 35 );
+		const now = new Date( 2016, 12, 20, 17, 13, 20 );
+		const nowPlus10 = new Date( 2016, 12, 20, 17, 23, 20 );
+		const nowPlus15 = new Date( 2016, 12, 20, 17, 28, 20 );
+		const nowPlus20 = new Date( 2016, 12, 20, 17, 33, 20 );
+
+		describe( '#getFetchExpiration', () => {
+			it ( 'should return null if no expiration is set.', () => {
+				const expiration = new FetchExpiration( () => {} );
+
+				expiration.fetchRequested( fetchNoExpire, now );
+				const fetchExpiration = expiration.getFetchExpiration( expiration.meta[ 'myService' ][ 'myKey' ] );
+
+				expect( fetchExpiration ).to.not.exist;
+			} );
+
+			it ( 'should be valid if expiration is set.', () => {
+				const expiration = new FetchExpiration( () => {} );
+
+				expiration.fetchRequested( fetchExpire20, now );
+				const fetchExpiration = expiration.getFetchExpiration( expiration.meta[ 'myService' ][ 'myKey' ] );
+
+				expect( fetchExpiration ).to.eql( nowPlus20 );
+			} );
+		} );
+		describe( '#findNextExpiration', () => {
+			it ( 'should return null if no expirations are set.', () => {
+				const expiration = new FetchExpiration( () => {} );
+
+				expiration.fetchRequested( fetchNoExpire, now );
+				expiration.fetchRequested( fetch2NoExpire, now );
+
+				const nextExpiration = expiration.findNextExpiration();
+				expect( nextExpiration ).to.not.exist;
+			} );
+
+			it ( 'should return nearest expiration of all fetches.', () => {
+				const expiration = new FetchExpiration( () => {} );
+
+				expiration.fetchRequested( fetchNoExpire, now );
+				expiration.fetchRequested( fetch2Expire15, now );
+
+				expect( expiration.findNextExpiration() ).to.eql( nowPlus15 );
+
+				expiration.fetchRequested( fetchExpire10, now );
+
+				expect( expiration.findNextExpiration() ).to.eql( nowPlus10 );
+			} );
+		} );
+		describe( '#fetchRequested()', () => {
 			it ( 'should store lastUsed timestamp', () => {
 				const expiration = new FetchExpiration( () => {} );
 
 				expiration.fetchRequested( fetchNoExpire, now );
 
-				expect( expiration.getFetchMeta( 'myService', 'myKey', 'lastUsed' ) ).to.equal( now );
+				expect( expiration.getFetchMeta( 'myService', 'myKey', 'lastUsed' ) ).to.eql( now );
 				expect( expiration.getFetchMeta( 'myService', 'myKey', 'expirationMinutes' ) ).to.not.exist;
 			} );
 
@@ -26,7 +76,7 @@ describe( 'expiration', () => {
 				expiration.fetchRequested( fetchNoExpire, earlier );
 				expiration.fetchRequested( fetchNoExpire, now );
 
-				expect( expiration.getFetchMeta( 'myService', 'myKey', 'lastUsed' ) ).to.equal( now );
+				expect( expiration.getFetchMeta( 'myService', 'myKey', 'lastUsed' ) ).to.eql( now );
 			} );
 
 			it ( 'should overwrite expiration when not present before', () => {
@@ -46,6 +96,21 @@ describe( 'expiration', () => {
 
 				expect( expiration.getFetchMeta( 'myService', 'myKey', 'expirationMinutes' ) ).to.equal( 20 );
 			} );
+
+			it ( 'should automatically update nextCleanup when a fetch with shorter expiration is added.', () => {
+				const expiration = new FetchExpiration( () => {} );
+
+				expiration.fetchRequested( fetchExpire20, now );
+				const nextCleanup1 = expiration.nextCleanup;
+
+				expiration.fetchRequested( fetch2Expire15, now );
+				const nextCleanup2 = expiration.nextCleanup;
+
+				// nextCleanup should have moved 5 minutes earlier.
+				expect( nextCleanup2 ).to.eql( new Date( nextCleanup1.getTime() - ( 5 * 60 * 1000 ) ) );
+			} );
+		} );
+		describe( '#cleanExpired()', () => {
 
 			it ( 'upon expiration, should clear meta and dispatch action to clear stored data', () => {
 				const actions = [];

@@ -18,16 +18,16 @@ export default class FetchExpiration {
 		 *  }
 		 */
 		this.meta = {};
+		this.nextCleanup = null;
 		this.dispach = dispatch;
 	}
 
-	fetchRequested( fetch, time = Date.now() ) {
+	fetchRequested( fetch, time = new Date() ) {
+		this.setFetchMeta( fetch.service, fetch.key, 'lastUsed', new Date( time ) );
 		this.updateExpiration( fetch );
-
-		this.setFetchMeta( fetch.service, fetch.key, 'lastUsed', time );
 	}
 
-	cleanExpired( dispatch = this.dispatch, now = Date.now() ) {
+	cleanExpired( dispatch = this.dispatch, now = new Date() ) {
 		log( 'cleaning out all expired fetches...' );
 
 		const expiredFetches = [];
@@ -58,23 +58,68 @@ export default class FetchExpiration {
 
 	isExpired( fetchMeta, now ) {
 		const { lastUsed, expirationMinutes } = fetchMeta;
-		const expirationTime = lastUsed.getTime() + ( expirationMinutes * 60 * 1000 );
+		const expirationTimeMsecs = lastUsed.getTime() + ( expirationMinutes * 60 * 1000 );
 
-		return now.getTime() > expirationTime;
+		return now > expirationTimeMsecs;
 	}
 
 	updateExpiration( fetch ) {
 		const { service, key } = fetch;
 
 		if ( fetch.expirationMinutes ) {
+			const fetchMeta = this.meta[ service ][ key ];
+
 			const newMins = fetch.expirationMinutes;
-			const oldMins = this.getFetchMeta( service, key, 'expirationMinutes' );
+			const oldMins = fetchMeta.expirationMinutes;
 
 			// If the new expiration is longer, use it instead.
 			if ( ! oldMins || newMins > oldMins ) {
-				this.setFetchMeta( service, key, 'expirationMinutes', newMins );
+				fetchMeta[ 'expirationMinutes' ] = newMins;
+			}
+
+			// Either way, update next cleanup as needed.
+			const fetchExpire = this.getFetchExpiration( fetchMeta );
+			this.updateNextCleanup( fetchExpire );
+		}
+	}
+
+	updateNextCleanup( nextExpire ) {
+		if ( nextExpire ) {
+			if ( ! this.nextCleanup || nextExpire < this.nextCleanup ) {
+				this.nextCleanup = nextExpire;
+				console.log( 'setting nextCleanup to: ' + this.nextCleanup );
 			}
 		}
+	}
+
+	getFetchExpiration( fetchMeta ) {
+		const { lastUsed, expirationMinutes } = fetchMeta;
+		let fetchExpire = null;
+
+		if ( expirationMinutes && lastUsed ) {
+			fetchExpire = new Date( lastUsed.getTime() + ( expirationMinutes * 60 * 1000 ) );
+		}
+
+		return fetchExpire;
+	}
+
+	findNextExpiration() {
+		let nextExpire = null;
+
+		for ( let service in this.meta ) {
+			const serviceMeta = this.meta[ service ];
+			for ( let key in serviceMeta ) {
+				const fetchMeta = serviceMeta[ key ];
+				const fetchExpire = this.getFetchExpiration( fetchMeta );
+
+				// If this fetch expires earlier than the others, use this one.
+				if ( ! nextExpire || fetchExpire < nextExpire ) {
+					nextExpire = fetchExpire;
+				}
+			}
+		}
+
+		return nextExpire;
 	}
 
 	getFetchMeta( service, key, name ) {

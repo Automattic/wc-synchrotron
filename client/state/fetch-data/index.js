@@ -51,7 +51,7 @@ function updateWhenNotFetched( timeout = 10000 ) {
  */
 export function selectFetchData( fetch ) {
 	return ( state ) => {
-		fetchExpiration.fetchRequested( fetch, Date.now() );
+		fetchExpiration.fetchRequested( fetch );
 
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
