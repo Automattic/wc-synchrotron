@@ -1,7 +1,11 @@
+import debug from 'debug';
+import { deleteFetch } from './actions';
+
+const log = debug( 'synchrotron:fetch-data' );
 
 export default class FetchExpiration {
 
-	constructor() {
+	constructor( dispatch ) {
 		/**
 		 * Metadata for fetches.
 		 *
@@ -14,12 +18,49 @@ export default class FetchExpiration {
 		 *  }
 		 */
 		this.meta = {};
+		this.dispach = dispatch;
 	}
 
 	fetchRequested( fetch, time = Date.now() ) {
 		this.updateExpiration( fetch );
 
 		this.setFetchMeta( fetch.service, fetch.key, 'lastUsed', time );
+	}
+
+	cleanExpired( dispatch = this.dispatch, now = Date.now() ) {
+		log( 'cleaning out all expired fetches...' );
+
+		const expiredFetches = [];
+
+		for ( let service in this.meta ) {
+			const serviceMeta = this.meta[ service ];
+			for ( let key in serviceMeta ) {
+				const fetchMeta = serviceMeta[ key ];
+				if ( this.isExpired( fetchMeta, now ) ) {
+					expiredFetches.push( fetchMeta );
+				}
+			}
+		}
+
+		expiredFetches.forEach( ( fetchMeta ) => {
+			this.deleteFetch( fetchMeta.service, fetchMeta.key, dispatch );
+		} );
+	}
+
+	deleteFetch( service, key, dispatch = this.dispatch ) {
+		log( 'deleting fetch: ' + service + ":" + key );
+
+		const serviceMeta = this.meta[ service ];
+
+		delete serviceMeta[ key ];
+		dispatch( deleteFetch( service, key ) );
+	}
+
+	isExpired( fetchMeta, now ) {
+		const { lastUsed, expirationMinutes } = fetchMeta;
+		const expirationTime = lastUsed.getTime() + ( expirationMinutes * 60 * 1000 );
+
+		return now.getTime() > expirationTime;
 	}
 
 	updateExpiration( fetch ) {
@@ -55,7 +96,7 @@ export default class FetchExpiration {
 		// If key doesn't exist, add it now.
 		let keyMeta = serviceMeta[ key ];
 		if ( ! keyMeta ) {
-			keyMeta = {};
+			keyMeta = { service, key };
 			serviceMeta[ key ] = keyMeta;
 		}
 

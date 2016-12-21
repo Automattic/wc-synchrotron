@@ -4,7 +4,14 @@ import FetchExpiration from './fetch-expiration';
 export { fetchAction } from './actions';
 
 // Global fetch expiration data.
-const expiration = new FetchExpiration();
+let fetchExpiration = null;
+
+/**
+ * Initializes fetch-data with the ability to dispatch actions.
+ */
+export function initialize( dispatch ) {
+	fetchExpiration = new FetchExpiration( dispatch );
+}
 
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
@@ -44,7 +51,7 @@ function updateWhenNotFetched( timeout = 10000 ) {
  */
 export function selectFetchData( fetch ) {
 	return ( state ) => {
-		expiration.fetchRequested( fetch, Date.now() );
+		fetchExpiration.fetchRequested( fetch, Date.now() );
 
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
