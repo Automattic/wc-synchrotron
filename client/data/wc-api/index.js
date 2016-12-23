@@ -36,6 +36,7 @@ export function fetchCategories() {
 		key: url,
 		defaultValue: [],
 		shouldUpdate: updateWhen.notFetched( 10000 ), // Timeout of 10 seconds to keep it from pinging too rapidly.
+		expirationMinutes: 60,
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }
@@ -57,6 +58,7 @@ export function fetchTaxClasses() {
 		key: url,
 		defaultValue: [],
 		shouldUpdate: updateWhen.notFetched( 10000 ), // Timeout of 10 seconds to keep it from pinging too rapidly.
+		expirationMinutes: 60,
 		action: ( state ) => createRequestAction( url, state ),
 	};
 }

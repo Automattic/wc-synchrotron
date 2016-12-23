@@ -3,12 +3,15 @@ import React from 'react';
 import sd from 'skin-deep';
 import { createMockStore } from 'redux-test-utils';
 
-import { fetchConnect, updateWhen } from '../';
+import { initialize, fetchConnect, updateWhen } from '../';
 import reducer from '../reducer';
 
 // Constants used in the tests below.
 const service = 'my-service';
 const endpoint = 'my/endpoint';
+
+// Satisfy the initialization
+initialize( () => {} );
 
 function fetchActionSuccess( service, key, data ) {
 	// Simulates a successful API fetch.

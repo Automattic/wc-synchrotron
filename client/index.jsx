@@ -13,6 +13,7 @@ import AdminNotices from './admin-notices';
 import screenData from './utils/screen-data';
 import { initialize as initializeApi } from './wc-api-redux';
 import { configureApi } from './data/wc-api';
+import { initialize as initFetchData } from './state/fetch-data';
 
 const data = screenData( 'wc_synchrotron_data' );
 
@@ -30,6 +31,9 @@ store.dispatch( initializeApi( data.api_root, data.nonce ) );
 
 // Configure the WooCommerce API
 store.dispatch( configureApi( data.api_root, data.nonce ) );
+
+// Initialize fetch-data (needs to be able to dispatch fetch-related actions)
+initFetchData( store.dispatch, window );
 
 const rootComponent  =
 	<Provider store={ store }>

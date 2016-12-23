@@ -1,6 +1,17 @@
 import { createElement, Component, PropTypes } from 'react';
+import FetchExpiration from './fetch-expiration';
 
 export { fetchAction } from './actions';
+
+// Global fetch expiration data.
+let fetchExpiration = null;
+
+/**
+ * Initializes fetch-data with the ability to dispatch actions.
+ */
+export function initialize( dispatch, windowTimers ) {
+	fetchExpiration = new FetchExpiration( dispatch, windowTimers );
+}
 
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
@@ -40,6 +51,8 @@ function updateWhenNotFetched( timeout = 10000 ) {
  */
 export function selectFetchData( fetch ) {
 	return ( state ) => {
+		fetchExpiration.fetchRequested( fetch );
+
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
 		const keyNode = serviceNode[ fetch.key ] || {};
