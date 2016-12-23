@@ -9,8 +9,8 @@ let fetchExpiration = null;
 /**
  * Initializes fetch-data with the ability to dispatch actions.
  */
-export function initialize( dispatch ) {
-	fetchExpiration = new FetchExpiration( dispatch );
+export function initialize( dispatch, windowTimers ) {
+	fetchExpiration = new FetchExpiration( dispatch, windowTimers );
 }
 
 /**

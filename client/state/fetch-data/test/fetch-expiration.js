@@ -11,11 +11,11 @@ describe( 'expiration', () => {
 		const fetch2NoExpire = { service: 'myService', key: 'myKey2' };
 		const fetch2Expire15 = { service: 'myService', key: 'myKey2', expirationMinutes: 15 };
 
-		const earlier = new Date( 2016, 12, 20, 17, 2, 35 );
-		const now = new Date( 2016, 12, 20, 17, 13, 20 );
-		const nowPlus10 = new Date( 2016, 12, 20, 17, 23, 20 );
-		const nowPlus15 = new Date( 2016, 12, 20, 17, 28, 20 );
-		const nowPlus20 = new Date( 2016, 12, 20, 17, 33, 20 );
+		const earlier = new Date( 2016, 11, 20, 17, 2, 35 );
+		const now = new Date( 2016, 11, 20, 17, 13, 20 );
+		const nowPlus10 = new Date( 2016, 11, 20, 17, 23, 20 );
+		const nowPlus15 = new Date( 2016, 11, 20, 17, 28, 20 );
+		const nowPlus20 = new Date( 2016, 11, 20, 17, 33, 20 );
 
 		describe( '#getFetchExpiration', () => {
 			it ( 'should return null if no expiration is set.', () => {
@@ -108,6 +108,42 @@ describe( 'expiration', () => {
 
 				// nextCleanup should have moved 5 minutes earlier.
 				expect( nextCleanup2 ).to.eql( new Date( nextCleanup1.getTime() - ( 5 * 60 * 1000 ) ) );
+			} );
+
+			it ( 'should schedule an expiration timer, when an expiration is provided.', () => {
+				const expireMargin = 1000;
+				let timeout = null;
+				const windowTimers = {
+					setTimeout: ( cb, msecs ) => {
+						timeout = { cb, msecs };
+						return 232;
+					},
+					clearTimeout: ( id ) => {
+						if ( 232 === id ) {
+							timeout = null;
+						}
+					},
+				};
+				const expiration = new FetchExpiration( ( action ) => {}, windowTimers, expireMargin );
+
+				expiration.fetchRequested( fetchExpire20, now );
+
+				expect( timeout ).to.exist;
+				expect( timeout.cb ).to.exist;
+				expect( timeout.msecs ).to.equal( 20 * 60 * 1000 + expireMargin );
+
+				// Add a fetch with a shorter expiration.
+				expiration.fetchRequested( fetch2Expire15, now );
+
+				expect( timeout ).to.exist;
+				expect( timeout.msecs ).to.equal( 15 * 60 * 1000 + expireMargin );
+
+				// Call the callback, as if the timeout was reached.
+				const cb = timeout.cb;
+				cb();
+
+				expect( expiration.getFetchMeta( 'myService', 'myKey', 'lastUsed' ) ).to.not.exist;
+				expect( expiration.getFetchMeta( 'myService', 'myKey', 'expirationMinutes' ) ).to.not.exist;
 			} );
 		} );
 		describe( '#cleanExpired()', () => {

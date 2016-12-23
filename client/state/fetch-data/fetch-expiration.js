@@ -5,7 +5,7 @@ const log = debug( 'synchrotron:fetch-data' );
 
 export default class FetchExpiration {
 
-	constructor( dispatch ) {
+	constructor( dispatch, windowTimers, expireMargin = 1000 ) {
 		/**
 		 * Metadata for fetches.
 		 *
@@ -19,41 +19,51 @@ export default class FetchExpiration {
 		 */
 		this.meta = {};
 		this.nextCleanup = null;
-		this.dispach = dispatch;
+		this.dispatch = dispatch;
+		this.windowTimers = windowTimers;
+		this.expireMargin = expireMargin;
+
+		this.cleanExpired = this.cleanExpired.bind( this );
+		this.updateNextCleanup = this.updateNextCleanup.bind( this );
 	}
 
-	fetchRequested( fetch, time = new Date() ) {
-		this.setFetchMeta( fetch.service, fetch.key, 'lastUsed', new Date( time ) );
-		this.updateExpiration( fetch );
+	fetchRequested( fetch, now = new Date() ) {
+		log( 'fetch ' + fetch.service + ':' + fetch.key + ' requested at ' + now );
+		this.setFetchMeta( fetch.service, fetch.key, 'lastUsed', new Date( now ) );
+		this.updateExpiration( fetch, now );
 	}
 
 	cleanExpired( dispatch = this.dispatch, now = new Date() ) {
-		log( 'cleaning out all expired fetches...' );
+		log( 'cleaning out all expired fetches at: ' + now );
 
-		const expiredFetches = [];
+		const newMeta = {};
+		const actions = [];
 
+		// Iterate the entire list of fetches,
+		// Queue up actions for the ones that have expired.
 		for ( let service in this.meta ) {
 			const serviceMeta = this.meta[ service ];
+			newMeta[ service ] = {};
+
 			for ( let key in serviceMeta ) {
 				const fetchMeta = serviceMeta[ key ];
+
 				if ( this.isExpired( fetchMeta, now ) ) {
-					expiredFetches.push( fetchMeta );
+					log( 'deleting fetch ' + service + ':' + key );
+					actions.push( deleteFetch( service, key ) );
+				} else {
+					// Only copy over non-expired fetches.
+					newMeta[ service ][ key ] = fetchMeta;
 				}
 			}
 		}
 
-		expiredFetches.forEach( ( fetchMeta ) => {
-			this.deleteFetch( fetchMeta.service, fetchMeta.key, dispatch );
-		} );
-	}
+		this.meta = newMeta;
+		this.nextCleanup = null;
 
-	deleteFetch( service, key, dispatch = this.dispatch ) {
-		log( 'deleting fetch: ' + service + ":" + key );
-
-		const serviceMeta = this.meta[ service ];
-
-		delete serviceMeta[ key ];
-		dispatch( deleteFetch( service, key ) );
+		// Send of all the actions at once, so as to not disturb this.meta.
+		// Note: This requires redux-multi
+		dispatch( actions );
 	}
 
 	isExpired( fetchMeta, now ) {
@@ -63,7 +73,7 @@ export default class FetchExpiration {
 		return now > expirationTimeMsecs;
 	}
 
-	updateExpiration( fetch ) {
+	updateExpiration( fetch, now ) {
 		const { service, key } = fetch;
 
 		if ( fetch.expirationMinutes ) {
@@ -79,17 +89,45 @@ export default class FetchExpiration {
 
 			// Either way, update next cleanup as needed.
 			const fetchExpire = this.getFetchExpiration( fetchMeta );
-			this.updateNextCleanup( fetchExpire );
+			this.updateNextCleanup( fetchExpire, now );
 		}
 	}
 
-	updateNextCleanup( nextExpire ) {
+	updateNextCleanup( nextExpire, now, dispatch = this.dispatch ) {
 		if ( nextExpire ) {
-			if ( ! this.nextCleanup || nextExpire < this.nextCleanup ) {
-				this.nextCleanup = nextExpire;
-				console.log( 'setting nextCleanup to: ' + this.nextCleanup );
+			const proposedCleanup = new Date( nextExpire.getTime() + this.expireMargin );
+
+			if ( ! this.nextCleanup || proposedCleanup < this.nextCleanup ) {
+				this.nextCleanup = proposedCleanup;
+				log( 'setting nextCleanup to: ' + this.nextCleanup );
+
+				this.adjustTimer( this.nextCleanup, now );
 			}
+		} else {
+			log( 'no expirations found, no nextCleanup scheduled.' );
 		}
+	}
+
+	adjustTimer( nextCleanup, now ) {
+		if ( ! this.windowTimers ) {
+			// No WindowTimers object available, abort.
+			return;
+		}
+
+		// Clear the existing timer, if there is one.
+		if ( this.timerId ) {
+			this.windowTimers.clearTimeout( this.timerId );
+		}
+
+		// Set up a new timer for the proposed time.
+		const millisecondsFromNow = nextCleanup.getTime() - now.getTime();
+		this.timerId = this.windowTimers.setTimeout(
+			() => {
+				this.cleanExpired();
+				this.updateNextCleanup( this.findNextExpiration(), new Date() );
+			},
+			millisecondsFromNow
+		);
 	}
 
 	getFetchExpiration( fetchMeta ) {

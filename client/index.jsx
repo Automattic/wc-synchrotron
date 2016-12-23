@@ -33,7 +33,7 @@ store.dispatch( initializeApi( data.api_root, data.nonce ) );
 store.dispatch( configureApi( data.api_root, data.nonce ) );
 
 // Initialize fetch-data (needs to be able to dispatch fetch-related actions)
-initFetchData( store.dispatch );
+initFetchData( store.dispatch, window );
 
 const rootComponent  =
 	<Provider store={ store }>
