@@ -2,6 +2,11 @@ import { createElement, Component, PropTypes } from 'react';
 
 export { fetchAction } from './actions';
 
+// TODO: Make this into a class for cohesiveness and testing purposes.
+
+// Global for fetch-data to track the active service/fetch subscriptions in the app.
+const subscriptions = new Map();
+
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
@@ -32,13 +37,80 @@ function updateWhenNotFetched( timeout = 10000 ) {
 }
 
 /**
+ * Subscribes to a fetch.
+ *
+ * Note: This should be unsubscribed when the UI element no longer needs the
+ * data from the fetch.
+ *
+ * @param fetch { Object } Fetch object for subscription.
+ */
+export function fetchSubscribe( fetch ) {
+	const { service, key } = fetch;
+
+	console.log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
+
+	let serviceSubscriptions = subscriptions.get( service );
+	if ( ! serviceSubscriptions ) {
+		// Need to add this service to the list.
+		serviceSubscriptions = new Map();
+		subscriptions.set( service, serviceSubscriptions );
+	}
+
+	let keySubscriptions = serviceSubscriptions.get( key );
+	if ( ! keySubscriptions ) {
+		// Need to add this key to the list.
+		keySubscriptions = new Set();
+		serviceSubscriptions.set( key, keySubscriptions );
+	}
+
+	if ( keySubscriptions.has( fetch ) ) {
+		throw new Error( 'Cannot subscribe. Fetch already subscribed.' );
+	}
+
+	keySubscriptions.add( fetch );
+}
+
+/**
+ * Unsubscribes from a fetch.
+ *
+ * Note: This should be done when a UI element no longer needs the data from
+ * the fetch. This allows that data to be cleared out and garbage collected.
+ *
+ * @param fetch { Object } Fetch object for subscription.
+ */
+export function fetchUnsubscribe( fetch ) {
+	const { service, key } = fetch;
+
+	console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
+
+	const serviceSubscriptions = subscriptions.get( service ) || new Map();
+	const keySubscriptions = serviceSubscriptions.get( key ) || new Set();
+
+	if ( ! keySubscriptions.has( fetch ) ) {
+		throw new Error( 'Cannot unsubscribe. Fetch not subscribed.' );
+	}
+
+	keySubscriptions.delete( fetch );
+
+	if ( 0 === keySubscriptions.size ) {
+		// No other fetches for this key, so remove the key.
+		serviceSubscriptions.delete( key );
+
+		if ( 0 === serviceSubscriptions.size ) {
+			// No other keys for this service, so remove the service.
+			subscriptions.delete( service );
+		}
+	}
+}
+
+/**
  * Creates selector function for fetch data.
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
  * @return { function } A fetch selector that takes the current redux state and
  *                      returns the fetch data, or fetch.defaultValue if not available.
  */
-export function selectFetchData( fetch ) {
+function selectFetchData( fetch ) {
 	return ( state ) => {
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
@@ -57,7 +129,7 @@ export function selectFetchData( fetch ) {
  *                      returns the fetch status object:
  *                      `{ lastFetchTime, lastSuccessTime, errors }`
  */
-export function selectFetchStatus( fetch ) {
+function selectFetchStatus( fetch ) {
 	return ( state ) => {
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
@@ -82,18 +154,23 @@ export function fetchConnect( mapFetchProps ) {
 			constructor( props, context ) {
 				super( props, context );
 				this.store = props.store || context.store;
+				this.fetchProps = {};
+
 				this.clearCache();
-				this.updateFetchProps( props );
+				console.log( 'FetchConnect.constructor() - after clearCache()' );
+				this.updateFetchProps( mapFetchProps( props ) );
 				this.updateFetchPropsData();
 
 				this.getFetchStatus = this.getFetchStatus.bind( this );
 			}
 
 			clearCache() {
-				this.fetchProps = {};
+				console.log( 'FetchConnect.clearCache()' );
 				this.fetchDataSelectors = {};
 				this.fetchStatusSelectors = {};
+
 				this.fetchPropsData = {};
+
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -108,35 +185,58 @@ export function fetchConnect( mapFetchProps ) {
 			}
 
 			componentWillReceiveProps( nextProps ) {
+				console.log( 'FetchConnect.componentWillRecieveProps()' );
 				this.haveOwnPropsChanged = true;
 
 				// Every time this component gets new props,
 				// update the fetch props because they can depend on them.
-				this.updateFetchProps( nextProps );
+				this.updateFetchProps( mapFetchProps( nextProps ) );
 				this.updateFetchPropsData( true );
 			}
 
 			componentWillUnmount() {
+				console.log( 'componentWillUnmount()' );
 				if ( this.unsubscribe ) {
 					this.unsubscribe();
 					this.unsubscribe = null;
 				}
 				this.clearCache();
+				this.updateFetchProps( {} );
 			}
 
 			handleChange() {
 				this.updateFetchPropsData();
 			}
 
-			updateFetchProps( props ) {
-				this.fetchProps = mapFetchProps( props );
+			updateFetchProps( newFetchProps ) {
+				const oldFetchProps = this.fetchProps;
 
-				for ( let name in this.fetchProps ) {
-					const fetch = this.fetchProps[ name ];
+				// Unsubscribe from any fetches that aren't in the new list.
+				for ( let name in oldFetchProps ) {
+					const oldFetch = oldFetchProps[ name ];
 
-					this.fetchDataSelectors[ name ] = selectFetchData( fetch );
-					this.fetchStatusSelectors[ name ] = selectFetchStatus( fetch );
+					if ( oldFetch !== newFetchProps[ name ] ) {
+						fetchUnsubscribe( oldFetchProps[ name ] );
+						console.log( 'oldFetch: ' + oldFetchProps[ name ] );
+						console.log( 'newFetch: ' + newFetchProps[ name ] );
+					}
 				}
+
+				// Subscribe to any fetches that weren't in the old list.
+				for ( let name in newFetchProps ) {
+					const newFetch = newFetchProps[ name ];
+
+					if ( newFetch !== oldFetchProps[ name ] ) {
+						fetchSubscribe( newFetchProps[ name ] );
+						console.log( 'oldFetch: ' + oldFetchProps[ name ] );
+						console.log( 'newFetch: ' + newFetchProps[ name ] );
+					}
+
+					this.fetchDataSelectors[ name ] = selectFetchData( newFetch );
+					this.fetchStatusSelectors[ name ] = selectFetchStatus( newFetch );
+				}
+
+				this.fetchProps = newFetchProps;
 			}
 
 			updateFetchPropsData( fetchUpdates = false ) {
