@@ -68,6 +68,8 @@ export function fetchSubscribe( fetch ) {
 	}
 
 	keySubscriptions.add( fetch );
+
+	return createFetchHandle( fetch );
 }
 
 /**
@@ -78,7 +80,7 @@ export function fetchSubscribe( fetch ) {
  *
  * @param fetch { Object } Fetch object for subscription.
  */
-export function fetchUnsubscribe( fetch ) {
+function fetchUnsubscribe( fetch ) {
 	const { service, key } = fetch;
 
 	console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
@@ -107,11 +109,12 @@ export function fetchUnsubscribe( fetch ) {
  * Creates selector function for current fetch value and status.
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
- * @return { Object } An object with two selector functions: value and status.
- *                    Each takes the current redux state and returns the fetch
- *                    value or status, respectively.
+ * @return { Object } An object with the following functions:
+ *	value( state ): Takes redux state and returns current fetch value (or defaultValue if not available).
+ *	status( state ): Takes redux state and returns current fetch status (error, etc.)
+ *	unsubscribe(): Unsubscribes this fetch.
  */
-function selectFetch( fetch ) {
+function createFetchHandle( fetch ) {
 	const getKeyNode = ( fetch, state ) => {
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
@@ -126,6 +129,9 @@ function selectFetch( fetch ) {
 		status: ( state ) => {
 			const keyNode = getKeyNode( fetch, state );
 			return keyNode.status || {};
+		},
+		unsubscribe: () => {
+			fetchUnsubscribe( fetch );
 		},
 	};
 }
@@ -156,7 +162,7 @@ export function fetchConnect( mapFetchProps ) {
 
 			clearCache() {
 				console.log( 'FetchConnect.clearCache()' );
-				this.fetchSelectors = {};
+				this.fetchHandles = {};
 				this.fetchPropsData = {};
 
 				this.haveOwnPropsChanged = true;
@@ -204,7 +210,7 @@ export function fetchConnect( mapFetchProps ) {
 					const oldFetch = oldFetchProps[ name ];
 
 					if ( oldFetch !== newFetchProps[ name ] ) {
-						fetchUnsubscribe( oldFetchProps[ name ] );
+						this.fetchHandles[ name ].unsubscribe();
 					}
 				}
 
@@ -213,9 +219,7 @@ export function fetchConnect( mapFetchProps ) {
 					const newFetch = newFetchProps[ name ];
 
 					if ( newFetch !== oldFetchProps[ name ] ) {
-						fetchSubscribe( newFetchProps[ name ] );
-
-						this.fetchSelectors[ name ] = selectFetch( newFetch );
+						this.fetchHandles[ name ] = fetchSubscribe( newFetchProps[ name ] );
 					}
 				}
 
@@ -227,7 +231,7 @@ export function fetchConnect( mapFetchProps ) {
 					const reduxState = this.store.getState();
 					const fetch = this.fetchProps[ name ];
 					const propData = this.fetchPropsData[ name ];
-					const selectors = this.fetchSelectors[ name ];
+					const selectors = this.fetchHandles[ name ];
 					const fetchData = selectors.value( reduxState );
 					const fetchStatus = selectors.status( reduxState );
 
@@ -250,7 +254,7 @@ export function fetchConnect( mapFetchProps ) {
 			getFetchStatus( propName ) {
 				const reduxState = this.store.getState();
 
-				return this.fetchSelectors[ propName ].status( reduxState );
+				return this.fetchHandles[ propName ].status( reduxState );
 			}
 
 			render() {
