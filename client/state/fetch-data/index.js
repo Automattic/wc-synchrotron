@@ -104,40 +104,32 @@ export function fetchUnsubscribe( fetch ) {
 }
 
 /**
- * Creates selector function for fetch data.
+ * Creates selector function for fetch data and status.
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
- * @return { function } A fetch selector that takes the current redux state and
- *                      returns the fetch data, or fetch.defaultValue if not available.
+ * @return { Object } An object with two selector functions: data and status.
+ *                    Each takes the current redux state and returns the fetch
+ *                    data or status, respectively.
  */
-function selectFetchData( fetch ) {
-	return ( state ) => {
-		const { fetchData } = state;
-		const serviceNode = fetchData[ fetch.service ] || {};
-		const keyNode = serviceNode[ fetch.key ] || {};
-		const value = keyNode.value || fetch.defaultValue;
+function selectFetch( fetch ) {
+	return {
+		data: ( state ) => {
+			const { fetchData } = state;
+			const serviceNode = fetchData[ fetch.service ] || {};
+			const keyNode = serviceNode[ fetch.key ] || {};
+			const value = keyNode.value || fetch.defaultValue;
 
-		return value;
-	}
-}
+			return value;
+		},
+		status: ( state ) => {
+			const { fetchData } = state;
+			const serviceNode = fetchData[ fetch.service ] || {};
+			const keyNode = serviceNode[ fetch.key ] || {};
+			const status = keyNode.status || {};
 
-/**
- * Creates selector function for fetch status.
- *
- * @param fetch { Object } Fetch object for which to get the status
- * @return { function } A fetch selector that takes the current redux state and
- *                      returns the fetch status object:
- *                      `{ lastFetchTime, lastSuccessTime, errors }`
- */
-function selectFetchStatus( fetch ) {
-	return ( state ) => {
-		const { fetchData } = state;
-		const serviceNode = fetchData[ fetch.service ] || {};
-		const keyNode = serviceNode[ fetch.key ] || {};
-		const status = keyNode.status || {};
-
-		return status;
-	}
+			return status;
+		},
+	};
 }
 
 /**
@@ -166,9 +158,7 @@ export function fetchConnect( mapFetchProps ) {
 
 			clearCache() {
 				console.log( 'FetchConnect.clearCache()' );
-				this.fetchDataSelectors = {};
-				this.fetchStatusSelectors = {};
-
+				this.fetchSelectors = {};
 				this.fetchPropsData = {};
 
 				this.haveOwnPropsChanged = true;
@@ -217,8 +207,6 @@ export function fetchConnect( mapFetchProps ) {
 
 					if ( oldFetch !== newFetchProps[ name ] ) {
 						fetchUnsubscribe( oldFetchProps[ name ] );
-						console.log( 'oldFetch: ' + oldFetchProps[ name ] );
-						console.log( 'newFetch: ' + newFetchProps[ name ] );
 					}
 				}
 
@@ -228,12 +216,9 @@ export function fetchConnect( mapFetchProps ) {
 
 					if ( newFetch !== oldFetchProps[ name ] ) {
 						fetchSubscribe( newFetchProps[ name ] );
-						console.log( 'oldFetch: ' + oldFetchProps[ name ] );
-						console.log( 'newFetch: ' + newFetchProps[ name ] );
-					}
 
-					this.fetchDataSelectors[ name ] = selectFetchData( newFetch );
-					this.fetchStatusSelectors[ name ] = selectFetchStatus( newFetch );
+						this.fetchSelectors[ name ] = selectFetch( newFetch );
+					}
 				}
 
 				this.fetchProps = newFetchProps;
@@ -244,8 +229,9 @@ export function fetchConnect( mapFetchProps ) {
 					const reduxState = this.store.getState();
 					const fetch = this.fetchProps[ name ];
 					const propData = this.fetchPropsData[ name ];
-					const fetchData = this.fetchDataSelectors[ name ]( reduxState );
-					const fetchStatus = this.fetchStatusSelectors[ name ]( reduxState );
+					const selectors = this.fetchSelectors[ name ];
+					const fetchData = selectors.data( reduxState );
+					const fetchStatus = selectors.status( reduxState );
 
 					if ( propData !== fetchData ) {
 						this.fetchPropsData[ name ] = fetchData;
@@ -266,7 +252,7 @@ export function fetchConnect( mapFetchProps ) {
 			getFetchStatus( propName ) {
 				const reduxState = this.store.getState();
 
-				return this.fetchStatusSelectors[ propName ]( reduxState );
+				return this.fetchSelectors[ propName ].status( reduxState );
 			}
 
 			render() {
