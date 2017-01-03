@@ -104,30 +104,28 @@ export function fetchUnsubscribe( fetch ) {
 }
 
 /**
- * Creates selector function for fetch data and status.
+ * Creates selector function for current fetch value and status.
  *
  * @param fetch { Object } Fetch object for which to get the fetch state
- * @return { Object } An object with two selector functions: data and status.
+ * @return { Object } An object with two selector functions: value and status.
  *                    Each takes the current redux state and returns the fetch
- *                    data or status, respectively.
+ *                    value or status, respectively.
  */
 function selectFetch( fetch ) {
-	return {
-		data: ( state ) => {
-			const { fetchData } = state;
-			const serviceNode = fetchData[ fetch.service ] || {};
-			const keyNode = serviceNode[ fetch.key ] || {};
-			const value = keyNode.value || fetch.defaultValue;
+	const getKeyNode = ( fetch, state ) => {
+		const { fetchData } = state;
+		const serviceNode = fetchData[ fetch.service ] || {};
+		return serviceNode[ fetch.key ] || {};
+	};
 
-			return value;
+	return {
+		value: ( state ) => {
+			const keyNode = getKeyNode( fetch, state );
+			return keyNode.value || fetch.defaultValue;
 		},
 		status: ( state ) => {
-			const { fetchData } = state;
-			const serviceNode = fetchData[ fetch.service ] || {};
-			const keyNode = serviceNode[ fetch.key ] || {};
-			const status = keyNode.status || {};
-
-			return status;
+			const keyNode = getKeyNode( fetch, state );
+			return keyNode.status || {};
 		},
 	};
 }
@@ -230,7 +228,7 @@ export function fetchConnect( mapFetchProps ) {
 					const fetch = this.fetchProps[ name ];
 					const propData = this.fetchPropsData[ name ];
 					const selectors = this.fetchSelectors[ name ];
-					const fetchData = selectors.data( reduxState );
+					const fetchData = selectors.value( reduxState );
 					const fetchStatus = selectors.status( reduxState );
 
 					if ( propData !== fetchData ) {
