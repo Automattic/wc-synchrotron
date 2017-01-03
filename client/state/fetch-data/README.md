@@ -71,7 +71,7 @@ function fetchApiData( queryString ) {
 2. From your React Component, use `mapFetchProps` and `fetchConnect` to create a Higher Order Component to use the `fetch` you've created.
 
 ```js
-import { fetchConnect } from 'fetch-data';
+import fetchConnect from 'fetch-data/fetch-connect';
 import { fetchApiData } from 'fetch-data-enabled-api';
 
 function myReactComponent( props ) {

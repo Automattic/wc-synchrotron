@@ -7,7 +7,7 @@ import ProductsBody from './body';
 import Button from 'components/button';
 import screenData from '../../utils/screen-data';
 import * as wcApi from '../../data/wc-api';
-import { fetchConnect } from '../../state/fetch-data';
+import fetchConnect from '../../state/fetch-data/fetch-connect';
 
 // TODO: Combine product-specific code from index and body into one file.
 // TODO: Make the entire list-table component general and move it to client/components
