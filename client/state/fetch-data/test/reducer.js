@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import reducer from '../reducer';
-import { dataFetched } from '../actions';
+import { dataFetched, clearData } from '../actions';
 
 describe( 'fetch-data/reducer', () => {
 	it( 'should have an empty initial state', () => {
@@ -62,6 +62,41 @@ describe( 'fetch-data/reducer', () => {
 			expect( state2[ 'myService' ] ).to.exist;
 			expect( state2[ 'myService' ][ 'myKey' ] ).to.exist;
 			expect( state2[ 'myService' ][ 'myKey' ].value ).to.equal( myObject2 );
+		} );
+	} );
+
+	describe( '#clearData()', () => {
+		const service = 'myService1';
+
+		const key1 = 'myKey1';
+		const data1 = [ 1, 2, 3 ];
+
+		const key2 = 'myKey2';
+		const data2 = [ 4, 5, 6 ];
+
+		const state0 = {
+			[ service ]: {
+				[ key1 ]: data1,
+				[ key2 ]: data2,
+			},
+		};
+
+		it( 'should clear out one key and leave the other', () => {
+			const action1 = clearData( service, key1 );
+			const state1 = reducer( state0, action1 );
+
+			expect( state1[ service ] ).to.exist;
+			expect( state1[ service ][ key1 ] ).to.not.exist;
+			expect( state1[ service ][ key2 ] ).to.exist;
+		} );
+
+		it( 'should clear out the service if no keys are left', () => {
+			const action1 = clearData( service, key1 );
+			const state1 = reducer( state0, action1 );
+			const action2 = clearData( service, key2 );
+			const state2 = reducer( state1, action2 );
+
+			expect( state2[ service ] ).to.not.exist;
 		} );
 	} );
 } );
