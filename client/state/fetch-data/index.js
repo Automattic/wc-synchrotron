@@ -1,4 +1,8 @@
+import debug from 'debug';
+
 export { fetchAction } from './actions';
+
+const log = debug( 'synchrotron:fetch-data' );
 
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
@@ -29,7 +33,7 @@ function updateWhenNotFetched( timeout = 10000 ) {
 	}
 }
 
-class FetchData {
+export class FetchData {
 	constructor() {
 		this.subscriptions = new Map();
 	}
@@ -45,7 +49,7 @@ class FetchData {
 	subscribe( fetch ) {
 		const { service, key } = fetch;
 
-		console.log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
+		log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
 
 		let serviceSubscriptions = this.subscriptions.get( service );
 		if ( ! serviceSubscriptions ) {
@@ -81,7 +85,7 @@ class FetchData {
 	unsubscribe( fetch ) {
 		const { service, key } = fetch;
 
-		console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
+		log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
 
 		const serviceSubscriptions = this.subscriptions.get( service ) || new Map();
 		const keySubscriptions = serviceSubscriptions.get( key ) || new Set();

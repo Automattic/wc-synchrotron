@@ -118,7 +118,8 @@ export default function fetchConnect( mapFetchProps ) {
 				return this.fetchHandles[ propName ].status( reduxState );
 			}
 
-			render() { let combinedProps = { ...this.props, ...this.fetchPropsData, getFetchStatus: this.getFetchStatus };
+			render() {
+				let combinedProps = { ...this.props, ...this.fetchPropsData, getFetchStatus: this.getFetchStatus };
 
 				this.haveOwnPropsChanged = false;
 				this.haveFetchPropsChanged = false;
