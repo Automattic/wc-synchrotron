@@ -1,10 +1,5 @@
 export { fetchAction } from './actions';
 
-// TODO: Make this into a class for cohesiveness and testing purposes.
-
-// Global for fetch-data to track the active service/fetch subscriptions in the app.
-const subscriptions = new Map();
-
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
@@ -34,6 +29,120 @@ function updateWhenNotFetched( timeout = 10000 ) {
 	}
 }
 
+class FetchData {
+	constructor() {
+		this.subscriptions = new Map();
+	}
+
+	/**
+	 * Subscribes to a fetch.
+	 *
+	 * Note: This should be unsubscribed when the UI element no longer needs the
+	 * data from the fetch.
+	 *
+	 * @param fetch { Object } Fetch object for subscription.
+	 */
+	subscribe( fetch ) {
+		const { service, key } = fetch;
+
+		console.log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
+
+		let serviceSubscriptions = this.subscriptions.get( service );
+		if ( ! serviceSubscriptions ) {
+			// Need to add this service to the list.
+			serviceSubscriptions = new Map();
+			this.subscriptions.set( service, serviceSubscriptions );
+		}
+
+		let keySubscriptions = serviceSubscriptions.get( key );
+		if ( ! keySubscriptions ) {
+			// Need to add this key to the list.
+			keySubscriptions = new Set();
+			serviceSubscriptions.set( key, keySubscriptions );
+		}
+
+		if ( keySubscriptions.has( fetch ) ) {
+			throw new Error( 'Cannot subscribe. Fetch already subscribed.' );
+		}
+
+		keySubscriptions.add( fetch );
+
+		return this.createFetchHandle( fetch );
+	}
+
+	/**
+	 * Unsubscribes from a fetch.
+	 *
+	 * Note: This should be done when a UI element no longer needs the data from
+	 * the fetch. This allows that data to be cleared out and garbage collected.
+	 *
+	 * @param fetch { Object } Fetch object for subscription.
+	 */
+	unsubscribe( fetch ) {
+		const { service, key } = fetch;
+
+		console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
+
+		const serviceSubscriptions = this.subscriptions.get( service ) || new Map();
+		const keySubscriptions = serviceSubscriptions.get( key ) || new Set();
+
+		if ( ! keySubscriptions.has( fetch ) ) {
+			throw new Error( 'Cannot unsubscribe. Fetch not subscribed.' );
+		}
+
+		keySubscriptions.delete( fetch );
+
+		if ( 0 === keySubscriptions.size ) {
+			// No other fetches for this key, so remove the key.
+			serviceSubscriptions.delete( key );
+
+			if ( 0 === serviceSubscriptions.size ) {
+				// No other keys for this service, so remove the service.
+				this.subscriptions.delete( service );
+			}
+		}
+	}
+
+	/**
+	 * Gets a state key node from the redux state.
+	 *
+	 * @param fetch { Object } The fetch for the service/key.
+	 * @param state { Object } The entire redux state.
+	 */
+	getStateKeyNode( fetch, state ) {
+		const { fetchData } = state;
+		const serviceNode = fetchData[ fetch.service ] || {};
+		return serviceNode[ fetch.key ] || {};
+	}
+
+	/**
+	 * Creates selector function for current fetch value and status.
+	 *
+	 * @param fetch { Object } Fetch object for which to get the fetch state
+	 * @return { Object } An object with the following functions:
+	 *	value( state ): Takes redux state and returns current fetch value (or defaultValue if not available).
+	 *	status( state ): Takes redux state and returns current fetch status (error, etc.)
+	 *	unsubscribe(): Unsubscribes this fetch.
+	 */
+	createFetchHandle( fetch ) {
+		return {
+			value: ( state ) => {
+				const keyNode = this.getStateKeyNode( fetch, state );
+				return keyNode.value || fetch.defaultValue;
+			},
+			status: ( state ) => {
+				const keyNode = this.getStateKeyNode( fetch, state );
+				return keyNode.status || {};
+			},
+			unsubscribe: () => {
+				this.unsubscribe( fetch );
+			},
+		};
+	}
+}
+
+const fetchDataInstance = new FetchData();
+
 /**
  * Subscribes to a fetch.
  *
@@ -43,94 +152,6 @@ function updateWhenNotFetched( timeout = 10000 ) {
  * @param fetch { Object } Fetch object for subscription.
  */
 export function fetchSubscribe( fetch ) {
-	const { service, key } = fetch;
-
-	console.log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
-
-	let serviceSubscriptions = subscriptions.get( service );
-	if ( ! serviceSubscriptions ) {
-		// Need to add this service to the list.
-		serviceSubscriptions = new Map();
-		subscriptions.set( service, serviceSubscriptions );
-	}
-
-	let keySubscriptions = serviceSubscriptions.get( key );
-	if ( ! keySubscriptions ) {
-		// Need to add this key to the list.
-		keySubscriptions = new Set();
-		serviceSubscriptions.set( key, keySubscriptions );
-	}
-
-	if ( keySubscriptions.has( fetch ) ) {
-		throw new Error( 'Cannot subscribe. Fetch already subscribed.' );
-	}
-
-	keySubscriptions.add( fetch );
-
-	return createFetchHandle( fetch );
-}
-
-/**
- * Unsubscribes from a fetch.
- *
- * Note: This should be done when a UI element no longer needs the data from
- * the fetch. This allows that data to be cleared out and garbage collected.
- *
- * @param fetch { Object } Fetch object for subscription.
- */
-function fetchUnsubscribe( fetch ) {
-	const { service, key } = fetch;
-
-	console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
-
-	const serviceSubscriptions = subscriptions.get( service ) || new Map();
-	const keySubscriptions = serviceSubscriptions.get( key ) || new Set();
-
-	if ( ! keySubscriptions.has( fetch ) ) {
-		throw new Error( 'Cannot unsubscribe. Fetch not subscribed.' );
-	}
-
-	keySubscriptions.delete( fetch );
-
-	if ( 0 === keySubscriptions.size ) {
-		// No other fetches for this key, so remove the key.
-		serviceSubscriptions.delete( key );
-
-		if ( 0 === serviceSubscriptions.size ) {
-			// No other keys for this service, so remove the service.
-			subscriptions.delete( service );
-		}
-	}
-}
-
-/**
- * Creates selector function for current fetch value and status.
- *
- * @param fetch { Object } Fetch object for which to get the fetch state
- * @return { Object } An object with the following functions:
- *	value( state ): Takes redux state and returns current fetch value (or defaultValue if not available).
- *	status( state ): Takes redux state and returns current fetch status (error, etc.)
- *	unsubscribe(): Unsubscribes this fetch.
- */
-function createFetchHandle( fetch ) {
-	const getKeyNode = ( fetch, state ) => {
-		const { fetchData } = state;
-		const serviceNode = fetchData[ fetch.service ] || {};
-		return serviceNode[ fetch.key ] || {};
-	};
-
-	return {
-		value: ( state ) => {
-			const keyNode = getKeyNode( fetch, state );
-			return keyNode.value || fetch.defaultValue;
-		},
-		status: ( state ) => {
-			const keyNode = getKeyNode( fetch, state );
-			return keyNode.status || {};
-		},
-		unsubscribe: () => {
-			fetchUnsubscribe( fetch );
-		},
-	};
+	return fetchDataInstance.subscribe( fetch );
 }
 
