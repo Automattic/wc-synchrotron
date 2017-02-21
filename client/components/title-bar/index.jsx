@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Gridicon from 'gridicons/react/gridicon';
+import Gridicon from 'gridicons';
 
 export default class TitleBar extends React.Component {
 	propTypes: {

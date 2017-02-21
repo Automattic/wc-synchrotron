@@ -3,7 +3,7 @@ import { localize } from 'i18n-calypso';
 import SectionNav from 'components/section-nav';
 import NavTabs from 'components/section-nav/tabs';
 import NavItem from 'components/section-nav/item';
-import Gridicon from 'gridicons/react/gridicon';
+import Gridicon from 'gridicons';
 
 class Sections extends React.Component {
 	propTypes: {

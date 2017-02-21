@@ -1,5 +1,5 @@
 import React from 'react';
-import Gridicon from 'gridicons/react/gridicon';
+import Gridicon from 'gridicons';
 import FormCheckbox from 'components/forms/form-checkbox';
 import FormSelect from 'components/forms/form-select';
 import FormTextInput from 'components/forms/form-text-input';

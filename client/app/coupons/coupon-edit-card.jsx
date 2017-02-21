@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import Accordion from 'components/accordion';
 import Card from 'components/card';
-import Gridicon from 'components/gridicon';
+import Gridicon from 'gridicons';
 import FormCheckbox from 'components/forms/form-checkbox';
 import FormLabel from 'components/forms/form-label';
 import FormTextInput from 'components/forms/form-text-input';

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Card from 'components/card';
-import Gridicon from 'components/gridicon';
+import Gridicon from 'gridicons';
 
 export default class CouponCard extends React.Component {
 	propTypes: {
@@ -41,4 +41,3 @@ export default class CouponCard extends React.Component {
 		);
 	}
 }
-
