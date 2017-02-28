@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { localize } from 'i18n-calypso';
 import Button from 'components/button';
-import Gridicon from 'gridicons/react/gridicon';
+import Gridicon from 'gridicons';
 import ColumnMenu from './column-menu';
 
 class ColumnSelectIcon extends React.Component {

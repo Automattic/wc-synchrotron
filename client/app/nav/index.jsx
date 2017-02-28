@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { localize } from 'i18n-calypso';
-import Gridicon from 'gridicons/react/gridicon';
+import Gridicon from 'gridicons';
 import Sidebar from 'layout/sidebar';
 import SidebarMenu from 'layout/sidebar/menu';
 import SidebarHeading from 'layout/sidebar/heading';
