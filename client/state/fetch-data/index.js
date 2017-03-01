@@ -2,6 +2,11 @@ import { createElement, Component, PropTypes } from 'react';
 
 export { fetchAction } from './actions';
 
+// TODO: Make this into a class for cohesiveness and testing purposes.
+
+// Global for fetch-data to track the active service/fetch subscriptions in the app.
+const subscriptions = new Map();
+
 /**
  * A collection of functions to be used with `shouldUpdate` on a `fetch` object.
  */
@@ -32,40 +37,103 @@ function updateWhenNotFetched( timeout = 10000 ) {
 }
 
 /**
- * Creates selector function for fetch data.
+ * Subscribes to a fetch.
  *
- * @param fetch { Object } Fetch object for which to get the fetch state
- * @return { function } A fetch selector that takes the current redux state and
- *                      returns the fetch data, or fetch.defaultValue if not available.
+ * Note: This should be unsubscribed when the UI element no longer needs the
+ * data from the fetch.
+ *
+ * @param fetch { Object } Fetch object for subscription.
  */
-export function selectFetchData( fetch ) {
-	return ( state ) => {
-		const { fetchData } = state;
-		const serviceNode = fetchData[ fetch.service ] || {};
-		const keyNode = serviceNode[ fetch.key ] || {};
-		const value = keyNode.value || fetch.defaultValue;
+export function fetchSubscribe( fetch ) {
+	const { service, key } = fetch;
 
-		return value;
+	console.log( 'fetch-data: Subscribing to fetch ' + service + ':' + key );
+
+	let serviceSubscriptions = subscriptions.get( service );
+	if ( ! serviceSubscriptions ) {
+		// Need to add this service to the list.
+		serviceSubscriptions = new Map();
+		subscriptions.set( service, serviceSubscriptions );
+	}
+
+	let keySubscriptions = serviceSubscriptions.get( key );
+	if ( ! keySubscriptions ) {
+		// Need to add this key to the list.
+		keySubscriptions = new Set();
+		serviceSubscriptions.set( key, keySubscriptions );
+	}
+
+	if ( keySubscriptions.has( fetch ) ) {
+		throw new Error( 'Cannot subscribe. Fetch already subscribed.' );
+	}
+
+	keySubscriptions.add( fetch );
+
+	return createFetchHandle( fetch );
+}
+
+/**
+ * Unsubscribes from a fetch.
+ *
+ * Note: This should be done when a UI element no longer needs the data from
+ * the fetch. This allows that data to be cleared out and garbage collected.
+ *
+ * @param fetch { Object } Fetch object for subscription.
+ */
+function fetchUnsubscribe( fetch ) {
+	const { service, key } = fetch;
+
+	console.log( 'fetch-data: Unsubscribing from fetch ' + service + ':' + key );
+
+	const serviceSubscriptions = subscriptions.get( service ) || new Map();
+	const keySubscriptions = serviceSubscriptions.get( key ) || new Set();
+
+	if ( ! keySubscriptions.has( fetch ) ) {
+		throw new Error( 'Cannot unsubscribe. Fetch not subscribed.' );
+	}
+
+	keySubscriptions.delete( fetch );
+
+	if ( 0 === keySubscriptions.size ) {
+		// No other fetches for this key, so remove the key.
+		serviceSubscriptions.delete( key );
+
+		if ( 0 === serviceSubscriptions.size ) {
+			// No other keys for this service, so remove the service.
+			subscriptions.delete( service );
+		}
 	}
 }
 
 /**
- * Creates selector function for fetch status.
+ * Creates selector function for current fetch value and status.
  *
- * @param fetch { Object } Fetch object for which to get the status
- * @return { function } A fetch selector that takes the current redux state and
- *                      returns the fetch status object:
- *                      `{ lastFetchTime, lastSuccessTime, errors }`
+ * @param fetch { Object } Fetch object for which to get the fetch state
+ * @return { Object } An object with the following functions:
+ *	value( state ): Takes redux state and returns current fetch value (or defaultValue if not available).
+ *	status( state ): Takes redux state and returns current fetch status (error, etc.)
+ *	unsubscribe(): Unsubscribes this fetch.
  */
-export function selectFetchStatus( fetch ) {
-	return ( state ) => {
+function createFetchHandle( fetch ) {
+	const getKeyNode = ( fetch, state ) => {
 		const { fetchData } = state;
 		const serviceNode = fetchData[ fetch.service ] || {};
-		const keyNode = serviceNode[ fetch.key ] || {};
-		const status = keyNode.status || {};
+		return serviceNode[ fetch.key ] || {};
+	};
 
-		return status;
-	}
+	return {
+		value: ( state ) => {
+			const keyNode = getKeyNode( fetch, state );
+			return keyNode.value || fetch.defaultValue;
+		},
+		status: ( state ) => {
+			const keyNode = getKeyNode( fetch, state );
+			return keyNode.status || {};
+		},
+		unsubscribe: () => {
+			fetchUnsubscribe( fetch );
+		},
+	};
 }
 
 /**
@@ -82,18 +150,21 @@ export function fetchConnect( mapFetchProps ) {
 			constructor( props, context ) {
 				super( props, context );
 				this.store = props.store || context.store;
+				this.fetchProps = {};
+
 				this.clearCache();
-				this.updateFetchProps( props );
+				console.log( 'FetchConnect.constructor() - after clearCache()' );
+				this.updateFetchProps( mapFetchProps( props ) );
 				this.updateFetchPropsData();
 
 				this.getFetchStatus = this.getFetchStatus.bind( this );
 			}
 
 			clearCache() {
-				this.fetchProps = {};
-				this.fetchDataSelectors = {};
-				this.fetchStatusSelectors = {};
+				console.log( 'FetchConnect.clearCache()' );
+				this.fetchHandles = {};
 				this.fetchPropsData = {};
+
 				this.haveOwnPropsChanged = true;
 				this.haveFetchPropsChanged = true;
 			}
@@ -108,19 +179,22 @@ export function fetchConnect( mapFetchProps ) {
 			}
 
 			componentWillReceiveProps( nextProps ) {
+				console.log( 'FetchConnect.componentWillRecieveProps()' );
 				this.haveOwnPropsChanged = true;
 
 				// Every time this component gets new props,
 				// update the fetch props because they can depend on them.
-				this.updateFetchProps( nextProps );
+				this.updateFetchProps( mapFetchProps( nextProps ) );
 				this.updateFetchPropsData( true );
 			}
 
 			componentWillUnmount() {
+				console.log( 'componentWillUnmount()' );
 				if ( this.unsubscribe ) {
 					this.unsubscribe();
 					this.unsubscribe = null;
 				}
+				this.updateFetchProps( {} );
 				this.clearCache();
 			}
 
@@ -128,15 +202,28 @@ export function fetchConnect( mapFetchProps ) {
 				this.updateFetchPropsData();
 			}
 
-			updateFetchProps( props ) {
-				this.fetchProps = mapFetchProps( props );
+			updateFetchProps( newFetchProps ) {
+				const oldFetchProps = this.fetchProps;
 
-				for ( let name in this.fetchProps ) {
-					const fetch = this.fetchProps[ name ];
+				// Unsubscribe from any fetches that aren't in the new list.
+				for ( let name in oldFetchProps ) {
+					const oldFetch = oldFetchProps[ name ];
 
-					this.fetchDataSelectors[ name ] = selectFetchData( fetch );
-					this.fetchStatusSelectors[ name ] = selectFetchStatus( fetch );
+					if ( oldFetch !== newFetchProps[ name ] ) {
+						this.fetchHandles[ name ].unsubscribe();
+					}
 				}
+
+				// Subscribe to any fetches that weren't in the old list.
+				for ( let name in newFetchProps ) {
+					const newFetch = newFetchProps[ name ];
+
+					if ( newFetch !== oldFetchProps[ name ] ) {
+						this.fetchHandles[ name ] = fetchSubscribe( newFetchProps[ name ] );
+					}
+				}
+
+				this.fetchProps = newFetchProps;
 			}
 
 			updateFetchPropsData( fetchUpdates = false ) {
@@ -144,8 +231,9 @@ export function fetchConnect( mapFetchProps ) {
 					const reduxState = this.store.getState();
 					const fetch = this.fetchProps[ name ];
 					const propData = this.fetchPropsData[ name ];
-					const fetchData = this.fetchDataSelectors[ name ]( reduxState );
-					const fetchStatus = this.fetchStatusSelectors[ name ]( reduxState );
+					const selectors = this.fetchHandles[ name ];
+					const fetchData = selectors.value( reduxState );
+					const fetchStatus = selectors.status( reduxState );
 
 					if ( propData !== fetchData ) {
 						this.fetchPropsData[ name ] = fetchData;
@@ -166,7 +254,7 @@ export function fetchConnect( mapFetchProps ) {
 			getFetchStatus( propName ) {
 				const reduxState = this.store.getState();
 
-				return this.fetchStatusSelectors[ propName ]( reduxState );
+				return this.fetchHandles[ propName ].status( reduxState );
 			}
 
 			render() {
