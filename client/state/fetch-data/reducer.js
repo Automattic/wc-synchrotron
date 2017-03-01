@@ -7,6 +7,7 @@ const initialState = {
 export default handleActions( {
 	[ TYPES.FETCHING ]: dataFetching,
 	[ TYPES.FETCHED ]: dataFetched,
+	[ TYPES.CLEAR ]: clearData,
 	[ TYPES.ERROR ]: dataFetchError,
 }, initialState );
 
@@ -24,6 +25,23 @@ function dataFetched( state, action ) {
 	newState = updateLastSuccessTime( newState, service, key, Date.now() );
 
 	return newState;
+}
+
+function clearData( state, action ) {
+	const { service, key } = action.payload;
+
+	const serviceNode = state[ service ];
+	const keyNode = serviceNode[ key ];
+
+	if ( Object.keys( serviceNode ).length === 1 ) {
+		// This key is the last one, remove the whole service node.
+		const { [ service ]: deletedService, ...newState } = state;
+		return newState;
+	} else {
+		// There are other keys for this service, so only delete the key.
+		const { [ key ]: deletedKey, ...newServiceNode } = serviceNode;
+		return { ...state, [ service ]: newServiceNode };
+	}
 }
 
 function dataFetchError( state, action ) {
