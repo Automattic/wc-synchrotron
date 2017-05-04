@@ -1,7 +1,9 @@
 # WooCommerce Synchrotron
-The new JavaScript and API powered interface for WooCommerce
+A concept for a JavaScript and API powered interface for WooCommerce
 
-Synchrotron is a completely new user experience for WooCommerce.
+**NOTICE: This project is no longer worked on or supported. Instead, check out the [WooCommerce Calypso Extension](https://github.com/Automattic/wp-calypso/tree/master/client/extensions/woocommerce)**
+
+Synchrotron is a completely new way to visualize working with WooCommerce.
 Starting with the Admin console, Synchrotron uses the latest in web technology
 to increase performance and ease of use for WooCommerce store owners.
 
