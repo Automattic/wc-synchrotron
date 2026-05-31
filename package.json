@@ -47,7 +47,7 @@
     "i18n-calypso": "1.6.2",
     "lodash.find": "4.5.0",
     "lodash.omit": "4.5.0",
-    "moment": "2.10.6",
+    "moment": "2.29.4",
     "moment-timezone": "^0.4.0",
     "react": "15.3.0",
     "react-addons-create-fragment": "15.3.0",
